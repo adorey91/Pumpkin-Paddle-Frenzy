@@ -1,0 +1,2 @@
+# Pumpkin-Paddle-Frenzy
+ In this game, you’ll float across a lake, navigating past other racers and obstacles. Your objective is to race as far as you can before crashing or sinking. Collect apples along the way to use as currency in the store, where you can upgrade your abilities and improve your chances of staying afloat. Each run is a new challenge, with endless opportunities to refine your skills and push your limits.
