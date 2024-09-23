@@ -6,6 +6,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    [Header("Managers")]
+    [SerializeField] private UiManager uiManager;
+
     public enum GameState { MainMenu, Gameplay, Pause, GameEnd };
     public GameState state;
     private GameState currentState;
@@ -53,21 +56,26 @@ public class GameManager : MonoBehaviour
 
     private void MainMenu()
     {
-
+        uiManager.MainMenu_UI();
     }
 
     private void Gameplay()
     {
+        uiManager.Gameplay_UI();
+    }
 
+    private void Upgrade()
+    {
+        uiManager.Upgrades_UI();
     }
 
     private void Pause()
     {
-
+        uiManager.Pause_UI();
     }
 
     private void GameEnd()
     {
-
+        uiManager.GameEnd_UI();
     }
 }
