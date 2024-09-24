@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
+
+
+
     public void LoadScene(string sceneName)
     {
         switch(sceneName)
@@ -13,7 +16,9 @@ public class LevelManager : MonoBehaviour
             case "Gameplay": GameManager.instance.LoadState("Gameplay"); break;
             case "GameEnd": GameManager.instance.LoadState("GameEnd"); break;
         }
-
         SceneManager.LoadScene(sceneName);
     }
+
+
+
 }
