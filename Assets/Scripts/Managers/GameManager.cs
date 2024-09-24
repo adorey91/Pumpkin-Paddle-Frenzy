@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static GameManager;
@@ -20,6 +19,10 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Values")]
     public int moveSpeed;
+
+    // player
+    [SerializeField] private GameObject player;
+
 
     private void Start()
     {
@@ -81,11 +84,13 @@ public class GameManager : MonoBehaviour
     private void MainMenu()
     {
         uiManager.MainMenu_UI();
+        player.SetActive(false);
     }
 
     private void Gameplay()
     {
         uiManager.Gameplay_UI();
+        player.SetActive(true);
     }
 
     private void Upgrade()
@@ -101,6 +106,7 @@ public class GameManager : MonoBehaviour
     private void GameEnd()
     {
         uiManager.GameEnd_UI();
+        player.SetActive(false);
     }
 
     public void Quit() => Application.Quit();

@@ -17,6 +17,8 @@ public class CharacterController : MonoBehaviour
     public int healthAmount;
     public int staminaAmount;
 
+   
+
     private void Start()
     {
         instance = this;
