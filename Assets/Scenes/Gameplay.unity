@@ -417,6 +417,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 501721431893819336, guid: c0d3eb55e28356149ad4a1c2644a2600, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 721960897436849806, guid: c0d3eb55e28356149ad4a1c2644a2600, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2903780618345891838, guid: c0d3eb55e28356149ad4a1c2644a2600, type: 3}
       propertyPath: apples
       value: 
@@ -439,6 +447,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4353034516812055646, guid: c0d3eb55e28356149ad4a1c2644a2600, type: 3}
       propertyPath: moveSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5041329470682474968, guid: c0d3eb55e28356149ad4a1c2644a2600, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5166200145525371620, guid: c0d3eb55e28356149ad4a1c2644a2600, type: 3}
+      propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7404460360798634888, guid: c0d3eb55e28356149ad4a1c2644a2600, type: 3}
