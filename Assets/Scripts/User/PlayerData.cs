@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class PlayerData : MonoBehaviour
+public class PlayerData
 {
-    public UpgradeAsset currentHealthUpgrade;
-    public UpgradeAsset currentStaminaUpgrade;
+    //public UpgradeAsset currentHealthUpgrade;
+    //public UpgradeAsset currentStaminaUpgrade;
     public int healthAmount;
-    public int staminaAmount;
+    public float staminaDrain;
     public int appleCount;
 }
