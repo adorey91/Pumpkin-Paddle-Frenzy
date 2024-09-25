@@ -7,6 +7,7 @@ public class UiManager : MonoBehaviour
     [Header("Ui Panels")]
     [SerializeField] private GameObject ui_MainMenu;
     [SerializeField] private GameObject ui_Pause;
+    [SerializeField] private GameObject ui_Options;
     [SerializeField] private GameObject ui_Upgrades;
     [SerializeField] private GameObject ui_Instructions;
     [SerializeField] private GameObject ui_Gameplay;
@@ -15,9 +16,11 @@ public class UiManager : MonoBehaviour
 
     public void MainMenu_UI() => SetActiveUI(ui_MainMenu);
     public void Pause_UI() => SetActiveUI(ui_Pause);
+    public void Options_UI() => SetActiveUI(ui_Options);
     public void Gameplay_UI() => SetActiveUI(ui_Gameplay);
     public void GameEnd_UI() => SetActiveUI(ui_GameEnd);
     public void Upgrades_UI() => SetActiveUI(ui_Upgrades);
+    public void Instructions_UI() => SetActiveUI(ui_Instructions);
 
     private void SetActiveUI(GameObject activeUI)
     {
@@ -26,6 +29,8 @@ public class UiManager : MonoBehaviour
         ui_Gameplay.SetActive(false);
         ui_GameEnd.SetActive(false);
         ui_Upgrades.SetActive(false);
+        ui_Options.SetActive(false);
+        ui_Instructions.SetActive(false);
 
         activeUI.SetActive(true);
     }
