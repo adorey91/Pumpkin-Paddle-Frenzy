@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgrade: 0
   upgradeSprite: {fileID: 0}
-  upgradeStatTo: 0
+  upgradeStatTo: 6

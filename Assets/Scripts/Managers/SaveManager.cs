@@ -9,6 +9,8 @@ public class SaveManager : MonoBehaviour
 {
     [SerializeField] private Button saveButton;
 
+   
+
     public void CheckForSave()
     {
         if(File.Exists(GetSavePath() + "/playerInfo.dat"))
@@ -28,15 +30,17 @@ public class SaveManager : MonoBehaviour
         Debug.Log(Application.persistentDataPath);
 
         PlayerData data = new PlayerData();
-
-        data.currentHealthUpgrade = CharacterController.instance.currentHealthUpgrade;
-        data.currentStaminaUpgrade = CharacterController.instance.currentStaminaUpgrade;
+        //if(CharacterController.instance.currentHealthUpgrade != null)
+        //    data.currentHealthUpgrade = CharacterController.instance.currentHealthUpgrade;
+        //if(CharacterController.instance.currentStaminaUpgrade != null)
+        //    data.currentStaminaUpgrade = CharacterController.instance.currentStaminaUpgrade;
         data.healthAmount = CharacterController.instance.healthAmount;
-        data.staminaAmount = CharacterController.instance.staminaAmount;
+        data.staminaDrain = CharacterController.instance.staminaDrain;
         data.appleCount = CharacterController.instance.appleCount;
 
         bf.Serialize(file, data);
         file.Close();
+        Debug.Log("Game Saved");
 
         saveButton.interactable = false;
     }
@@ -49,11 +53,12 @@ public class SaveManager : MonoBehaviour
             FileStream file = File.Open(Application.persistentDataPath + "/playerInfo.dat", FileMode.Open);
             PlayerData data = (PlayerData)bf.Deserialize(file);
             file.Close();
-
-            CharacterController.instance.currentHealthUpgrade = data.currentHealthUpgrade;
-            CharacterController.instance.currentStaminaUpgrade = data.currentStaminaUpgrade;
+            //if(data.currentHealthUpgrade != null)
+            //    CharacterController.instance.currentHealthUpgrade = data.currentHealthUpgrade;
+            //if (data.currentStaminaUpgrade != null)
+            //    CharacterController.instance.currentStaminaUpgrade = data.currentStaminaUpgrade;
             CharacterController.instance.healthAmount = data.healthAmount;
-            CharacterController.instance.staminaAmount = data.staminaAmount;
+            CharacterController.instance.staminaDrain = data.staminaDrain;
             CharacterController.instance.appleCount = data.appleCount;
         }
     }
