@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     [Header("Managers")]
     [SerializeField] private UiManager uiManager;
 
-    public enum GameState { MainMenu, Gameplay, Upgrades, Pause, Options, GameEnd };
+    public enum GameState { MainMenu, Gameplay, Pause, Options, GameEnd };
     public GameState state;
     private GameState currentState;
     private GameState beforeOptions;
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
 
 
         // TO BE USED FOR DEBUGGING ONLY
-        switch (SceneManager.GetActiveScene().name)
+        switch(SceneManager.GetActiveScene().name)
         {
             case "MainMenu": SetState(GameState.MainMenu); break;
             case "Gameplay": SetState(GameState.Gameplay); break;
@@ -63,11 +63,10 @@ public class GameManager : MonoBehaviour
     {
         state = _state;
 
-        switch (state)
+        switch(state)
         {
             case GameState.MainMenu: MainMenu(); break;
-            case GameState.Gameplay: Gameplay(); break;
-            case GameState.Upgrades: Upgrades(); break;
+            case GameState.Gameplay: Gameplay();  break;
             case GameState.Pause: Pause(); break;
             case GameState.GameEnd: GameEnd(); break;
         }
@@ -75,7 +74,7 @@ public class GameManager : MonoBehaviour
 
     public void EscapeState()
     {
-        switch (state)
+        switch(state)
         {
             case GameState.Pause: SetState(GameState.Gameplay); break;
             case GameState.Gameplay: SetState(GameState.Pause); break;
@@ -90,23 +89,17 @@ public class GameManager : MonoBehaviour
 
     private void Gameplay()
     {
-        Time.timeScale = 1;
-        ScoreManager.Instance.ResetRun();
-        CharacterController.instance.PlayerReset();
         uiManager.Gameplay_UI();
         player.SetActive(true);
     }
 
-    private void Upgrades()
+    private void Upgrade()
     {
-        Time.timeScale = 0;
         uiManager.Upgrades_UI();
-        player.SetActive(false);
     }
 
     private void Pause()
     {
-        Time.timeScale = 0;
         uiManager.Pause_UI();
     }
 
@@ -116,9 +109,5 @@ public class GameManager : MonoBehaviour
         player.SetActive(false);
     }
 
-    public void Quit()
-    {
-        Application.Quit();
-        Debug.Log("Quitting Game");
-    }
+    public void Quit() => Application.Quit();
 }

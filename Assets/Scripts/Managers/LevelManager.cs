@@ -6,12 +6,7 @@ using UnityEngine.SceneManagement;
 public class LevelManager : MonoBehaviour
 {
 
-    public static LevelManager Instance;
 
-    private void Start()
-    {
-        Instance = this;
-    }
 
     public void LoadScene(string sceneName)
     {
