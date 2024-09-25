@@ -13,7 +13,7 @@ public class SaveManager : MonoBehaviour
 
     public void CheckForSave()
     {
-        if(File.Exists(GetSavePath() + "/playerInfo.dat"))
+        if (File.Exists(GetSavePath() + "/playerInfo.dat"))
         {
             // should ask if player wants to play this save
         }
@@ -34,9 +34,10 @@ public class SaveManager : MonoBehaviour
         //    data.currentHealthUpgrade = CharacterController.instance.currentHealthUpgrade;
         //if(CharacterController.instance.currentStaminaUpgrade != null)
         //    data.currentStaminaUpgrade = CharacterController.instance.currentStaminaUpgrade;
-        data.healthAmount = CharacterController.instance.healthAmount;
-        data.staminaDrain = CharacterController.instance.staminaDrain;
-        data.appleCount = CharacterController.instance.appleCount;
+
+        data.healthAmount = HealthSystem.maxHealth;
+        data.staminaDrain = HealthSystem.staminaDrain;
+        data.appleCount = ScoreManager.appleCount;
 
         bf.Serialize(file, data);
         file.Close();
@@ -57,9 +58,11 @@ public class SaveManager : MonoBehaviour
             //    CharacterController.instance.currentHealthUpgrade = data.currentHealthUpgrade;
             //if (data.currentStaminaUpgrade != null)
             //    CharacterController.instance.currentStaminaUpgrade = data.currentStaminaUpgrade;
-            CharacterController.instance.healthAmount = data.healthAmount;
-            CharacterController.instance.staminaDrain = data.staminaDrain;
-            CharacterController.instance.appleCount = data.appleCount;
+
+            HealthSystem.maxHealth = data.healthAmount;
+            HealthSystem.staminaDrain = data.staminaDrain;
+            ScoreManager.appleCount = data.appleCount;
+
         }
     }
 

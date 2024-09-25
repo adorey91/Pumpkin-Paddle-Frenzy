@@ -4,38 +4,87 @@ using UnityEngine;
 
 public class ObstacleSpawner : MonoBehaviour
 {
-    private float timeUntilObstacleSpawn;
-    private float timeUntilAppleSpawn;
-
-    public float appleSpawnTime = 4;
-    public float obstacleSpawnTime = 3;
+    public float appleSpawnTime = 4f;
+    public float obstacleSpawnTime = 3f;
 
     public GameObject[] obstacles;
     public GameObject apples;
 
-    [SerializeField]private List<GameObject> itemList = new List<GameObject>();
+    [SerializeField] private Queue<GameObject> pooledObstacles = new Queue<GameObject>();
+    [SerializeField] private Queue<GameObject> pooledApples = new Queue<GameObject>();
 
+    public int poolSize = 10; // Number of objects to pre-instantiate in the object pool
+    
+    private Coroutine obstacleSpawnCoroutine;
+    private Coroutine appleSpawnCoroutine;
 
-    private void Update()
+    private void Start()
     {
-        SpawnLoop();
+        InitializeObjectPool();
+        StartSpawning();
+    }
+    public void StartSpawning()
+    {
+        // Start the obstacle and apple spawning coroutines
+        obstacleSpawnCoroutine = StartCoroutine(SpawnObstacles());
+        appleSpawnCoroutine = StartCoroutine(SpawnApples());
     }
 
-    private void SpawnLoop()
+    private void InitializeObjectPool()
     {
-        timeUntilObstacleSpawn += Time.deltaTime;
-        if (timeUntilObstacleSpawn >= obstacleSpawnTime)
+        // Pre-instantiate obstacle objects
+        for (int i = 0; i < poolSize; i++)
         {
+            // Randomly choose an obstacle to pool
             GameObject randomObstacle = obstacles[Random.Range(0, obstacles.Length)];
-            SpawnItem(randomObstacle);
-            timeUntilObstacleSpawn = 0f;
+            GameObject obj = Instantiate(randomObstacle, Vector2.zero, Quaternion.identity, transform);
+            obj.SetActive(false);
+            pooledObstacles.Enqueue(obj);
         }
 
-        timeUntilAppleSpawn += Time.deltaTime;
-        if(timeUntilAppleSpawn >= appleSpawnTime)
+        // Pre-instantiate apples
+        for (int i = 0; i < poolSize / 2; i++)
         {
-            SpawnItem(apples);
-            timeUntilAppleSpawn = 0f;
+            GameObject obj = Instantiate(apples, Vector2.zero, Quaternion.identity, transform);
+            obj.SetActive(false);
+            pooledApples.Enqueue(obj);
+        }
+    }
+
+    private IEnumerator SpawnObstacles()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(obstacleSpawnTime);
+
+            GameObject randomObstacle = GetPooledObject(pooledObstacles, obstacles[Random.Range(0, obstacles.Length)]);
+            SpawnItem(randomObstacle);
+        }
+    }
+
+    private IEnumerator SpawnApples()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(appleSpawnTime);
+
+            GameObject apple = GetPooledObject(pooledApples, apples);
+            SpawnItem(apple);
+        }
+    }
+
+    private GameObject GetPooledObject(Queue<GameObject> pool, GameObject prefab)
+    {
+        if (pool.Count > 0)
+        {
+            GameObject obj = pool.Dequeue();
+            obj.SetActive(true);
+            return obj;
+        }
+        else
+        {
+            GameObject newObj = Instantiate(prefab);
+            return newObj;
         }
 
     }
@@ -45,20 +94,24 @@ public class ObstacleSpawner : MonoBehaviour
         float randomX = Random.Range(-7, 7);
         Vector2 spawnLoc = new Vector2(randomX, transform.position.y);
 
+
         var obstacle = Instantiate(item, spawnLoc, Quaternion.identity, transform);
         itemList.Add(obstacle);
     }
 
-    public void DestroyItems()
+    public void ReturnToPool(GameObject item)
     {
-        if(itemList.Count > 0)
-        {
-            foreach(var item in itemList)
-                Destroy(item);
-            
-            itemList.Clear();
-        }
-        timeUntilObstacleSpawn = 0f;
-        timeUntilAppleSpawn = 0f;
+        // Disable the object and return it to the appropriate pool
+        item.SetActive(false);
+
+        if (item.CompareTag("Obstacle"))
+            pooledObstacles.Enqueue(item);
+        else if (item.CompareTag("Apple"))
+            pooledApples.Enqueue(item);
+    }
+
+    public void StopRoutines()
+    {
+        StopAllCoroutines();
     }
 }

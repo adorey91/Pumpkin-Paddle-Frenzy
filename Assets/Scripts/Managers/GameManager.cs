@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
 
     [Header("Managers")]
     [SerializeField] private UiManager uiManager;
+    [SerializeField] private HealthSystem healthSystem;
+    [SerializeField] private ScoreManager scoreManager;
+    [SerializeField] private ObstacleSpawner obstacleSpawner;
 
     public enum GameState { MainMenu, Gameplay, Upgrades, Pause, Options, GameEnd };
     public GameState state;
@@ -40,9 +43,11 @@ public class GameManager : MonoBehaviour
         {
             case "MainMenu": SetState(GameState.MainMenu); break;
             case "Gameplay": SetState(GameState.Gameplay); break;
+            case "Upgrades": SetState(GameState.Upgrades); break;
             case "GameEnd": SetState(GameState.GameEnd); break;
         }
     }
+
 
     public void LoadState(string stateName)
     {
@@ -61,7 +66,9 @@ public class GameManager : MonoBehaviour
 
     private void SetState(GameState _state)
     {
+        ResetRun();
         state = _state;
+        currentState = state;
 
         switch (state)
         {
@@ -90,23 +97,21 @@ public class GameManager : MonoBehaviour
 
     private void Gameplay()
     {
-        Time.timeScale = 1;
-        ScoreManager.Instance.ResetRun();
-        CharacterController.instance.PlayerReset();
+        IsGamePaused(false);
         uiManager.Gameplay_UI();
         player.SetActive(true);
     }
 
     private void Upgrades()
     {
-        Time.timeScale = 0;
+        IsGamePaused(true);
         uiManager.Upgrades_UI();
         player.SetActive(false);
     }
 
     private void Pause()
     {
-        Time.timeScale = 0;
+        IsGamePaused(true);
         uiManager.Pause_UI();
     }
 
@@ -120,5 +125,24 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
         Debug.Log("Quitting Game");
+
+    private void IsGamePaused(bool game)
+    {
+        if(game)
+            Time.timeScale = 0;
+        else
+            Time.timeScale = 1;
+    }
+
+    private void ResetRun()
+    {
+        if (currentState == GameState.Upgrades)
+        {
+            obstacleSpawner.StopRoutines();
+            obstacleSpawner.StartSpawning();
+            healthSystem.ResetHealthStats();
+            scoreManager.ResetRun();
+        }
+
     }
 }

@@ -17,7 +17,7 @@ public class ScoreManager : MonoBehaviour
     private void Start()
     {
         Instance = this;
-        attemptNumber = 0;
+        attemptNumber = 1;
         attemptText.text = $"Attempts: {attemptNumber}";
         UpdateText();
     }
@@ -34,6 +34,7 @@ public class ScoreManager : MonoBehaviour
         attemptNumber++;
         attemptText.text = $"Attempts: {attemptNumber}";
     }
+
     public void UpdateText()
     {
         appleTextThisRun.text = $"x {applesThisRun}";
