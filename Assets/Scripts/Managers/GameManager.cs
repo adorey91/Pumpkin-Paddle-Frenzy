@@ -125,6 +125,7 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
         Debug.Log("Quitting Game");
+    }
 
     private void IsGamePaused(bool game)
     {
@@ -138,7 +139,7 @@ public class GameManager : MonoBehaviour
     {
         if (currentState == GameState.Upgrades)
         {
-            obstacleSpawner.StopRoutines();
+            obstacleSpawner.DestroyItemsAndReset();
             obstacleSpawner.StartSpawning();
             healthSystem.ResetHealthStats();
             scoreManager.ResetRun();

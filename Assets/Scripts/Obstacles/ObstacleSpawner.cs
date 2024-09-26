@@ -10,19 +10,16 @@ public class ObstacleSpawner : MonoBehaviour
     public GameObject[] obstacles;
     public GameObject apples;
 
-    [SerializeField] private Queue<GameObject> pooledObstacles = new Queue<GameObject>();
-    [SerializeField] private Queue<GameObject> pooledApples = new Queue<GameObject>();
+    [SerializeField] private List<GameObject> itemList = new List<GameObject>();
 
-    public int poolSize = 10; // Number of objects to pre-instantiate in the object pool
-    
     private Coroutine obstacleSpawnCoroutine;
     private Coroutine appleSpawnCoroutine;
 
     private void Start()
     {
-        InitializeObjectPool();
         StartSpawning();
     }
+
     public void StartSpawning()
     {
         // Start the obstacle and apple spawning coroutines
@@ -30,24 +27,19 @@ public class ObstacleSpawner : MonoBehaviour
         appleSpawnCoroutine = StartCoroutine(SpawnApples());
     }
 
-    private void InitializeObjectPool()
+    public void StopSpawning()
     {
-        // Pre-instantiate obstacle objects
-        for (int i = 0; i < poolSize; i++)
+        // Stop both coroutines when needed
+        if (obstacleSpawnCoroutine != null)
         {
-            // Randomly choose an obstacle to pool
-            GameObject randomObstacle = obstacles[Random.Range(0, obstacles.Length)];
-            GameObject obj = Instantiate(randomObstacle, Vector2.zero, Quaternion.identity, transform);
-            obj.SetActive(false);
-            pooledObstacles.Enqueue(obj);
+            StopCoroutine(obstacleSpawnCoroutine);
+            obstacleSpawnCoroutine = null;
         }
 
-        // Pre-instantiate apples
-        for (int i = 0; i < poolSize / 2; i++)
+        if (appleSpawnCoroutine != null)
         {
-            GameObject obj = Instantiate(apples, Vector2.zero, Quaternion.identity, transform);
-            obj.SetActive(false);
-            pooledApples.Enqueue(obj);
+            StopCoroutine(appleSpawnCoroutine);
+            appleSpawnCoroutine = null;
         }
     }
 
@@ -57,7 +49,7 @@ public class ObstacleSpawner : MonoBehaviour
         {
             yield return new WaitForSeconds(obstacleSpawnTime);
 
-            GameObject randomObstacle = GetPooledObject(pooledObstacles, obstacles[Random.Range(0, obstacles.Length)]);
+            GameObject randomObstacle = obstacles[Random.Range(0, obstacles.Length)];
             SpawnItem(randomObstacle);
         }
     }
@@ -68,50 +60,28 @@ public class ObstacleSpawner : MonoBehaviour
         {
             yield return new WaitForSeconds(appleSpawnTime);
 
-            GameObject apple = GetPooledObject(pooledApples, apples);
-            SpawnItem(apple);
+            SpawnItem(apples);
         }
-    }
-
-    private GameObject GetPooledObject(Queue<GameObject> pool, GameObject prefab)
-    {
-        if (pool.Count > 0)
-        {
-            GameObject obj = pool.Dequeue();
-            obj.SetActive(true);
-            return obj;
-        }
-        else
-        {
-            GameObject newObj = Instantiate(prefab);
-            return newObj;
-        }
-
     }
 
     private void SpawnItem(GameObject item)
     {
         float randomX = Random.Range(-7, 7);
         Vector2 spawnLoc = new Vector2(randomX, transform.position.y);
-
-
-        var obstacle = Instantiate(item, spawnLoc, Quaternion.identity, transform);
+        GameObject obstacle = Instantiate(item, spawnLoc, Quaternion.identity);
         itemList.Add(obstacle);
     }
 
-    public void ReturnToPool(GameObject item)
+    // This method clears spawned items and resets state
+    public void DestroyItemsAndReset()
     {
-        // Disable the object and return it to the appropriate pool
-        item.SetActive(false);
+        foreach (var item in itemList)
+        {
+            Destroy(item);
+        }
 
-        if (item.CompareTag("Obstacle"))
-            pooledObstacles.Enqueue(item);
-        else if (item.CompareTag("Apple"))
-            pooledApples.Enqueue(item);
-    }
+        itemList.Clear();
 
-    public void StopRoutines()
-    {
-        StopAllCoroutines();
+        // Optionally reset timers or any variables here
     }
 }

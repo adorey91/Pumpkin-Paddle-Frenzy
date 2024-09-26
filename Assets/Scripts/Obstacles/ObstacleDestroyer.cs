@@ -17,8 +17,8 @@ public class ObstacleDestroyer : MonoBehaviour
 
         if (obstacle != null)
         {
-            // Return the obstacle to the pool instead of destroying it
-            spawner.ReturnToPool(collision.gameObject);
+            // Remove the obstacle from the spawner's list
+            Destroy(obstacle.gameObject);
         }
     }
 }

@@ -28,11 +28,7 @@ public class UiManager : MonoBehaviour
     public void MainMenu_UI() => SetActiveUI(ui_MainMenu);
     public void Pause_UI() => SetActiveUI(ui_Pause);
     public void Options_UI() => SetActiveUI(ui_Options);
-    public void Gameplay_UI()
-    {
-        objSpawner.DestroyItems();
-        SetActiveUI(ui_Gameplay);
-    }
+    public void Gameplay_UI() => SetActiveUI(ui_Gameplay);
     public void GameEnd_UI() => SetActiveUI(ui_GameEnd);
     public void Upgrades_UI() => SetActiveUI(ui_Upgrades);
     public void Instructions_UI() => SetActiveUI(ui_Instructions);
