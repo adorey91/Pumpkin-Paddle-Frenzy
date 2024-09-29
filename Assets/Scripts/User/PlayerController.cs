@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,17 +14,27 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb2D;
     private Vector2 movement;
     [Range(2, 10)] public float speed = 4f;
+    [SerializeField] private GameObject playerSprite;
 
-    private void Start()
+    // health
+    [SerializeField] private HealthSystem healthSystem;
+    // sound
+    [SerializeField] private SoundManager soundManager;
+    // score
+    [SerializeField] private ScoreManager scoreManager;
+
+
+    private void Awake()
     {
         instance = this;
-
         rb2D = GetComponent<Rigidbody2D>();
     }
 
+
     private void FixedUpdate()
     {
-        Movement();
+        if (GameManager.instance.isPlaying)
+            Movement();
     }
 
     private void Movement()
@@ -31,6 +42,19 @@ public class PlayerController : MonoBehaviour
         movement.y = 0;
         rb2D.MovePosition(rb2D.position + movement * speed * Time.deltaTime);
     }
+
+    public void ActiveSprite(bool isActive)
+    {
+        if (playerSprite == null)
+        {
+            Debug.LogError("playerSprite is null!");
+            playerSprite = gameObject.GetComponentInChildren<GameObject>();
+            return;
+        }
+
+        playerSprite.SetActive(isActive);
+    }
+
 
     public void Move(InputAction.CallbackContext context)
     {
@@ -43,6 +67,29 @@ public class PlayerController : MonoBehaviour
         {
             if (GameManager.instance.state == GameManager.GameState.Gameplay || GameManager.instance.state == GameManager.GameState.Pause)
                 GameManager.instance.EscapeState();
+        }
+    }
+
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.GetComponent<Obstacle>())
+        {
+            Obstacle obs = collision.gameObject.GetComponent<Obstacle>();
+
+            switch (obs.obstacleType)
+            {
+                case Obstacle.ObstacleType.Currency:
+                    scoreManager.applesThisRun++;
+                    scoreManager.appleCount++;
+                    scoreManager.UpdateText();
+                    soundManager.PlaySfxAudio("Collect");
+                    break;
+                case Obstacle.ObstacleType.AvoidThis:
+                    healthSystem.TakeDamage();
+                    soundManager.PlaySfxAudio("Crash");
+                    break;
+            }
+            Destroy(collision.gameObject);
         }
     }
 }

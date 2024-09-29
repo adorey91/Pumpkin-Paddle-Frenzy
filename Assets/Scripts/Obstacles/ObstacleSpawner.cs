@@ -1,87 +1,65 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ObstacleSpawner : MonoBehaviour
 {
-    public float appleSpawnTime = 4f;
-    public float obstacleSpawnTime = 3f;
+    [SerializeField] private GameObject[] obstaclePrefabs;
+    [SerializeField] private Transform obstacleParent;
+    public float obstacleSpawnTime = 2f;
+    public float obstacleSpeed = 1f;
 
-    public GameObject[] obstacles;
-    public GameObject apples;
 
-    [SerializeField] private List<GameObject> itemList = new List<GameObject>();
+    private float timeUntilObstacleSpawn;
 
-    private Coroutine obstacleSpawnCoroutine;
-    private Coroutine appleSpawnCoroutine;
-
-    private void Start()
+    private void Update()
     {
-        StartSpawning();
+        if (GameManager.instance.isPlaying) 
+            SpawnLoop();
+        else
+            DestroyObstacles();
+
     }
 
-    public void StartSpawning()
+    private void SpawnLoop()
     {
-        // Start the obstacle and apple spawning coroutines
-        obstacleSpawnCoroutine = StartCoroutine(SpawnObstacles());
-        appleSpawnCoroutine = StartCoroutine(SpawnApples());
-    }
-
-    public void StopSpawning()
-    {
-        // Stop both coroutines when needed
-        if (obstacleSpawnCoroutine != null)
+        timeUntilObstacleSpawn += Time.deltaTime;
+        if (timeUntilObstacleSpawn >= obstacleSpawnTime)
         {
-            StopCoroutine(obstacleSpawnCoroutine);
-            obstacleSpawnCoroutine = null;
-        }
-
-        if (appleSpawnCoroutine != null)
-        {
-            StopCoroutine(appleSpawnCoroutine);
-            appleSpawnCoroutine = null;
+            Spawn();
+            timeUntilObstacleSpawn = 0f;
         }
     }
 
-    private IEnumerator SpawnObstacles()
+    private void Spawn()
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(obstacleSpawnTime);
+        float randomX = Random.Range(-7f, 7f);
 
-            GameObject randomObstacle = obstacles[Random.Range(0, obstacles.Length)];
-            SpawnItem(randomObstacle);
+        GameObject obstacleToSpawn = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
+        GameObject spawnedObstacle = Instantiate(obstacleToSpawn, new Vector2(randomX, transform.position.y), Quaternion.identity, obstacleParent);
+
+        Rigidbody2D obstacleRB = spawnedObstacle.GetComponent<Rigidbody2D>();
+        obstacleRB.velocity = Vector2.down * obstacleSpeed;
+    }
+
+    private void DestroyObstacles()
+    {
+        // Create a list to hold the child objects
+        List<GameObject> childrenObj = new List<GameObject>();
+        
+        // Loop through all child objects and add them to the list
+        foreach (Transform child in transform)
+        {
+            childrenObj.Add(child.gameObject);
+        }
+        
+        // Now loop through the list and destroy each child object
+        foreach (GameObject child in childrenObj)
+        {
+            Destroy(child);
         }
     }
 
-    private IEnumerator SpawnApples()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(appleSpawnTime);
-
-            SpawnItem(apples);
-        }
-    }
-
-    private void SpawnItem(GameObject item)
-    {
-        float randomX = Random.Range(-7, 7);
-        Vector2 spawnLoc = new Vector2(randomX, transform.position.y);
-        GameObject obstacle = Instantiate(item, spawnLoc, Quaternion.identity);
-        itemList.Add(obstacle);
-    }
-
-    // This method clears spawned items and resets state
-    public void DestroyItemsAndReset()
-    {
-        foreach (var item in itemList)
-        {
-            Destroy(item);
-        }
-
-        itemList.Clear();
-
-        // Optionally reset timers or any variables here
-    }
 }

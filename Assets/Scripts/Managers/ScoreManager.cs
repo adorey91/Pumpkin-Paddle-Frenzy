@@ -5,9 +5,8 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
-    public static ScoreManager Instance;
-    public static int appleCount;
-    public static int applesThisRun;
+    public int appleCount;
+    public int applesThisRun;
     private int attemptNumber;
 
     [SerializeField] private TMP_Text appleTextThisRun;
@@ -16,7 +15,6 @@ public class ScoreManager : MonoBehaviour
 
     private void Start()
     {
-        Instance = this;
         attemptNumber = 1;
         attemptText.text = $"Attempts: {attemptNumber}";
         UpdateText();

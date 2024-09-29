@@ -8,7 +8,8 @@ using UnityEngine.UI;
 public class SaveManager : MonoBehaviour
 {
     [SerializeField] private Button saveButton;
-
+    [SerializeField] private ScoreManager scoreManager;
+    [SerializeField] private HealthSystem healthSystem;
    
 
     public void CheckForSave()
@@ -35,9 +36,9 @@ public class SaveManager : MonoBehaviour
         //if(CharacterController.instance.currentStaminaUpgrade != null)
         //    data.currentStaminaUpgrade = CharacterController.instance.currentStaminaUpgrade;
 
-        data.healthAmount = HealthSystem.maxHealth;
-        data.staminaDrain = HealthSystem.staminaDrain;
-        data.appleCount = ScoreManager.appleCount;
+        data.healthAmount = healthSystem.maxHealth;
+        data.staminaDrain = healthSystem.staminaDrain;
+        data.appleCount = scoreManager.appleCount;
 
         bf.Serialize(file, data);
         file.Close();
@@ -59,9 +60,9 @@ public class SaveManager : MonoBehaviour
             //if (data.currentStaminaUpgrade != null)
             //    CharacterController.instance.currentStaminaUpgrade = data.currentStaminaUpgrade;
 
-            HealthSystem.maxHealth = data.healthAmount;
-            HealthSystem.staminaDrain = data.staminaDrain;
-            ScoreManager.appleCount = data.appleCount;
+            healthSystem.maxHealth = data.healthAmount;
+            healthSystem.staminaDrain = data.staminaDrain;
+            scoreManager.appleCount = data.appleCount;
 
         }
     }

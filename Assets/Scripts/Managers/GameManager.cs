@@ -2,8 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using static GameManager;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,14 +13,22 @@ public class GameManager : MonoBehaviour
     [SerializeField] private HealthSystem healthSystem;
     [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private ObstacleSpawner obstacleSpawner;
+    [SerializeField] private UpgradeManager upgradeManager;
+    [SerializeField] private SoundManager soundManager;
 
-    public enum GameState { MainMenu, Gameplay, Upgrades, Pause, Options, GameEnd };
+
+    public enum GameState { MainMenu, Gameplay, Upgrades, Pause, Options, GameOver };
     public GameState state;
     private GameState currentState;
-    private GameState beforeOptions;
+    [SerializeField] private GameState beforeOptions;
 
     [Header("Game Values")]
-    public int moveSpeed;
+    public float moveSpeed;
+    internal bool isPlaying;
+
+    internal UnityEvent onPlay = new UnityEvent();
+    internal UnityEvent onGameOver = new UnityEvent();
+    internal UnityEvent onPlayerWin = new UnityEvent();
 
     // player
     [SerializeField] private GameObject player;
@@ -37,15 +44,7 @@ public class GameManager : MonoBehaviour
         else if (instance != this)
             Destroy(gameObject);
 
-
-        // TO BE USED FOR DEBUGGING ONLY
-        switch (SceneManager.GetActiveScene().name)
-        {
-            case "MainMenu": SetState(GameState.MainMenu); break;
-            case "Gameplay": SetState(GameState.Gameplay); break;
-            case "Upgrades": SetState(GameState.Upgrades); break;
-            case "GameEnd": SetState(GameState.GameEnd); break;
-        }
+        SetState(GameState.MainMenu);
     }
 
 
@@ -53,16 +52,20 @@ public class GameManager : MonoBehaviour
     {
         if (Enum.TryParse(stateName, out GameState gamestate))
             LoadState(gamestate);
+        else if(stateName == "beforeOptions")
+            LoadState(beforeOptions);
         else
             Debug.LogError(stateName + " doesn't exist");
     }
-    private void LoadState(GameState state)
-    {
-        if (state == GameState.Options)
-            beforeOptions = state;
 
-        SetState(state);
+    private void LoadState(GameState newState)
+    {
+        if (newState == GameState.Options)
+            beforeOptions = currentState;  // Store the current state before entering Options
+
+        SetState(newState);
     }
+
 
     private void SetState(GameState _state)
     {
@@ -74,9 +77,10 @@ public class GameManager : MonoBehaviour
         {
             case GameState.MainMenu: MainMenu(); break;
             case GameState.Gameplay: Gameplay(); break;
-            case GameState.Upgrades: Upgrades(); break;
+            case GameState.Upgrades: PlayerDied(); break;
+            case GameState.Options: Options(); break;
             case GameState.Pause: Pause(); break;
-            case GameState.GameEnd: GameEnd(); break;
+            case GameState.GameOver: GameWin(); break;
         }
     }
 
@@ -91,35 +95,44 @@ public class GameManager : MonoBehaviour
 
     private void MainMenu()
     {
+        PlayerController.instance.ActiveSprite(false);
+        soundManager.PlayAudio("MainMenu");
         uiManager.MainMenu_UI();
-        player.SetActive(false);
     }
 
     private void Gameplay()
     {
-        IsGamePaused(false);
+        onPlay.Invoke();
+        isPlaying = true;
+        PlayerController.instance.ActiveSprite(true);
+        soundManager.PlayAudio("Gameplay");
         uiManager.Gameplay_UI();
-        player.SetActive(true);
     }
 
-    private void Upgrades()
+    private void PlayerDied()
     {
-        IsGamePaused(true);
+        isPlaying = false;
+        onGameOver.Invoke();
+        scoreManager.UpdateText();
+        upgradeManager.UpdateAllButtons();
         uiManager.Upgrades_UI();
-        player.SetActive(false);
     }
 
     private void Pause()
     {
-        IsGamePaused(true);
         uiManager.Pause_UI();
     }
 
-    private void GameEnd()
+    private void Options()
     {
-        uiManager.GameEnd_UI();
-        player.SetActive(false);
+        uiManager.Options_UI();
     }
+
+    private void GameWin()
+    {
+        
+    }
+
 
     public void Quit()
     {
@@ -139,11 +152,11 @@ public class GameManager : MonoBehaviour
     {
         if (currentState == GameState.Upgrades)
         {
-            obstacleSpawner.DestroyItemsAndReset();
-            obstacleSpawner.StartSpawning();
+            // Stop the current spawning coroutines
+            // Clear existing obstacles/apples from the screen
+            // Reset the health and score
             healthSystem.ResetHealthStats();
             scoreManager.ResetRun();
         }
-
     }
 }

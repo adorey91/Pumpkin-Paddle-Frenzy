@@ -14,9 +14,9 @@ public class HealthSystem : MonoBehaviour
     public UpgradeAsset curStaminaUpgrade;
 
     [Header("Amount")]
-    public static int maxHealth = 1;
+    public int maxHealth = 1;
     private int curHealth;
-    public static float staminaDrain = 0.45f;
+    public float staminaDrain = 0.5f;
 
     public void Start()
     {
@@ -38,7 +38,11 @@ public class HealthSystem : MonoBehaviour
             staminaImage.fillAmount -= staminaDrain * drainSpeedMultiplier * Time.deltaTime;
 
             if (staminaImage.fillAmount <= 0)  // Changed from `==` to `<=` for precision
+            {
                 TakeDamage();
+                if (curHealth > 0)
+                    staminaImage.fillAmount = 1;
+            }
         }
     }
 
@@ -51,7 +55,10 @@ public class HealthSystem : MonoBehaviour
         // might want to put in something to show they got hurt?
 
         if (curHealth <= 0)
+        {
+            PlayerController.instance.ActiveSprite(false);
             GameManager.instance.LoadState("Upgrades");
+        }
     }
 
     public void ResetHealthStats()
