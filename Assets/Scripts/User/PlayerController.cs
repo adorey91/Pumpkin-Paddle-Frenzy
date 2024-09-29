@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    public static PlayerController instance;
-
     // movement variables
     [Header("Movement Variables")]
     private Rigidbody2D rb2D;
@@ -26,7 +24,6 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
         rb2D = GetComponent<Rigidbody2D>();
     }
 
@@ -35,6 +32,8 @@ public class PlayerController : MonoBehaviour
     {
         if (GameManager.instance.isPlaying)
             Movement();
+        else
+            transform.position= new Vector2(0,-2.7f);
     }
 
     private void Movement()
@@ -47,8 +46,8 @@ public class PlayerController : MonoBehaviour
     {
         if (playerSprite == null)
         {
-            Debug.LogError("playerSprite is null!");
             playerSprite = gameObject.GetComponentInChildren<GameObject>();
+            Debug.Log("assign sprite");
             return;
         }
 

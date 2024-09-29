@@ -5,14 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
+    [Header("Managers")]
+    [SerializeField] private UiManager uiManager;
 
-    public static LevelManager Instance;
+
     internal List<AsyncOperation> scenesToLoad = new List<AsyncOperation>();
 
-    private void Start()
-    {
-        Instance = this;
-    }
 
     public void LoadScene(string sceneName)
     {
@@ -30,13 +28,13 @@ public class LevelManager : MonoBehaviour
 
     private void LoadAsync(string sceneName)
     {
-        UiManager.instance.UILoadingScreen(); // Show loading screen first
+        uiManager.UILoadingScreen(); // Show loading screen first
         StartCoroutine(LoadSceneAsync(sceneName)); // Load the scene asynchronously
     }
 
     private IEnumerator LoadSceneAsync(string sceneName)
     {
-        yield return new WaitForSeconds(UiManager.instance.fadeTime); // Wait for fade time
+        yield return new WaitForSeconds(uiManager.fadeTime); // Wait for fade time
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
         operation.completed += OperationCompleted;
         scenesToLoad.Add(operation);
@@ -50,7 +48,7 @@ public class LevelManager : MonoBehaviour
 
     private IEnumerator WaitForScreenLoad(string sceneName)
     {
-        yield return new WaitForSeconds(UiManager.instance.fadeTime);
+        yield return new WaitForSeconds(uiManager.fadeTime);
         Debug.Log("Loading Scene Starting");
 
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);

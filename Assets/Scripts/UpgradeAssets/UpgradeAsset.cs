@@ -4,11 +4,11 @@ using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Upgrade", menuName = "Upgrade Objects")]
-[Serializable]
+[System.Serializable]
 public class UpgradeAsset : ScriptableObject
 {
     public enum StateUpgrade {Health, Stamina}
-    public StateUpgrade upgrade;
+    public StateUpgrade type;
     public int upgradeNumber;
     public UpgradeAsset preRequisites;
     public Sprite upgradeSprite;

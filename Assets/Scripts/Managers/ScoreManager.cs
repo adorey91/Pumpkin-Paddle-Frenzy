@@ -7,7 +7,7 @@ public class ScoreManager : MonoBehaviour
 {
     public int appleCount;
     public int applesThisRun;
-    private int attemptNumber;
+    internal int attemptNumber;
 
     [SerializeField] private TMP_Text appleTextThisRun;
     [SerializeField] private TMP_Text totalApples;

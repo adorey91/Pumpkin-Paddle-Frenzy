@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
     internal UnityEvent onPlayerWin = new UnityEvent();
 
     // player
-    [SerializeField] private GameObject player;
+    [SerializeField] private PlayerController player;
 
 
     private void Start()
@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
     {
         if (Enum.TryParse(stateName, out GameState gamestate))
             LoadState(gamestate);
-        else if(stateName == "beforeOptions")
+        else if (stateName == "beforeOptions")
             LoadState(beforeOptions);
         else
             Debug.LogError(stateName + " doesn't exist");
@@ -95,7 +95,8 @@ public class GameManager : MonoBehaviour
 
     private void MainMenu()
     {
-        PlayerController.instance.ActiveSprite(false);
+        player.ActiveSprite(false);
+        healthSystem.UpdateHealthStats();
         soundManager.PlayAudio("MainMenu");
         uiManager.MainMenu_UI();
     }
@@ -104,7 +105,7 @@ public class GameManager : MonoBehaviour
     {
         onPlay.Invoke();
         isPlaying = true;
-        PlayerController.instance.ActiveSprite(true);
+        player.ActiveSprite(true);
         soundManager.PlayAudio("Gameplay");
         uiManager.Gameplay_UI();
     }
@@ -120,6 +121,7 @@ public class GameManager : MonoBehaviour
 
     private void Pause()
     {
+        isPlaying = false;
         uiManager.Pause_UI();
     }
 
@@ -130,7 +132,7 @@ public class GameManager : MonoBehaviour
 
     private void GameWin()
     {
-        
+
     }
 
 
@@ -140,13 +142,6 @@ public class GameManager : MonoBehaviour
         Debug.Log("Quitting Game");
     }
 
-    private void IsGamePaused(bool game)
-    {
-        if(game)
-            Time.timeScale = 0;
-        else
-            Time.timeScale = 1;
-    }
 
     private void ResetRun()
     {
@@ -155,7 +150,7 @@ public class GameManager : MonoBehaviour
             // Stop the current spawning coroutines
             // Clear existing obstacles/apples from the screen
             // Reset the health and score
-            healthSystem.ResetHealthStats();
+            healthSystem.UpdateHealthStats();
             scoreManager.ResetRun();
         }
     }
