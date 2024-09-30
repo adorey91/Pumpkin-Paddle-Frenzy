@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class HealthSystem : MonoBehaviour
 {
+    [Header("UI Stats")]
     [SerializeField] private Image staminaImage;
     [SerializeField] private TMP_Text healthText;
 
@@ -13,20 +14,26 @@ public class HealthSystem : MonoBehaviour
     public UpgradeAsset curHealthUpgrade;
     public UpgradeAsset curStaminaUpgrade;
 
-    [Header("Amount")]
-    public static int maxHealth = 1;
+    [Header("Current Stats")]
+    public int maxHealth = 1;
     private int curHealth;
-    public static float staminaDrain = 0.45f;
+    public float staminaDrain = 0.5f;
+
+    [Header("PlayerSprite")]
+    [SerializeField] private PlayerController player;
+    [SerializeField] private SpriteRenderer playerSprite;
+    public int flickerAmount = 3;
+    public float flickerDuration = 0.1f;
 
     public void Start()
     {
-
-        ResetHealthStats();
+        GameManager.instance.onPlay.AddListener(UpdateHealthStats);
     }
 
     public void Update()
     {
-        StaminaDrain();
+        if (GameManager.instance.isPlaying)
+            StaminaDrain();
     }
 
     private void StaminaDrain()
@@ -38,7 +45,11 @@ public class HealthSystem : MonoBehaviour
             staminaImage.fillAmount -= staminaDrain * drainSpeedMultiplier * Time.deltaTime;
 
             if (staminaImage.fillAmount <= 0)  // Changed from `==` to `<=` for precision
+            {
                 TakeDamage();
+                if (curHealth > 0)
+                    staminaImage.fillAmount = 1;
+            }
         }
     }
 
@@ -48,16 +59,29 @@ public class HealthSystem : MonoBehaviour
         curHealth--;
         healthText.text = $"x {curHealth}";
 
-        // might want to put in something to show they got hurt?
+        StartCoroutine(DamageFlicker());
 
-        if (curHealth <= 0)
-            GameManager.instance.LoadState("Upgrades");
     }
 
-    public void ResetHealthStats()
+    public void UpdateHealthStats()
     {
         staminaImage.fillAmount = 1;
         curHealth = maxHealth;
         healthText.text = $"x {curHealth}";
+    }
+
+    private IEnumerator DamageFlicker()
+    {
+        for (int i = 0; i < flickerAmount; i++)
+        {
+            playerSprite.color = new Color(1f, 1f, 1f, 0.5f);
+            yield return new WaitForSeconds(flickerDuration);
+            playerSprite.color = Color.white;
+            yield return new WaitForSeconds(flickerDuration/2);
+        }
+        if (curHealth <= 0)
+        {
+            GameManager.instance.LoadState("Upgrades");
+        }
     }
 }

@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5228b5c2b46aa9b479bfc9be22cf2e63, type: 3}
   m_Name: StaminaUpgrade_3
   m_EditorClassIdentifier: 
-  upgrade: 1
+  type: 1
+  upgradeNumber: 3
+  preRequisites: {fileID: 11400000, guid: e4404cf7489a2bf40af0d180ded5755f, type: 2}
   upgradeSprite: {fileID: 0}
-  upgradeStatTo: 0
+  upgradeStat: 0.25
+  cost: 30
+  isPurchased: 0

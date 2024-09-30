@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,37 +8,53 @@ using UnityEngine.UI;
 
 public class SaveManager : MonoBehaviour
 {
+    [Header("Managers")]
     [SerializeField] private Button saveButton;
+    [SerializeField] private ScoreManager scoreManager;
+    [SerializeField] private HealthSystem healthSystem;
+    [SerializeField] private UpgradeManager upgradeManager;
+    [SerializeField] private UiManager uiManager;
+    [SerializeField] private LevelManager levelManager;
 
-   
-
-    public void CheckForSave()
+    public void Start()
     {
-        if (File.Exists(GetSavePath() + "/playerInfo.dat"))
-        {
-            // should ask if player wants to play this save
-        }
-        else
-        {
-            // should continue to instructions
-        }
+        GameManager.instance.onGameOver.AddListener(ActivateSaveButton);
     }
 
+    /// <summary>
+    /// Resets all upgrades to not purchased. Then checks for save, if no save, will load instructions. If there is a save, the player can choose to use it or delete it.
+    /// </summary>
+    public void CheckForSave()
+    {
+        upgradeManager.ResetUpgrades();
+
+        if (File.Exists(GetSavePath() + "/playerInfo.dat"))
+            uiManager.Confirmation_UI("save");
+        else
+            uiManager.Instructions_UI();
+    }
+
+    /// <summary>
+    /// Saves game stats.
+    /// </summary>
     public void Save()
     {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(GetSavePath() + "/playerInfo.dat");
-        Debug.Log(Application.persistentDataPath);
 
         PlayerData data = new PlayerData();
-        //if(CharacterController.instance.currentHealthUpgrade != null)
-        //    data.currentHealthUpgrade = CharacterController.instance.currentHealthUpgrade;
-        //if(CharacterController.instance.currentStaminaUpgrade != null)
-        //    data.currentStaminaUpgrade = CharacterController.instance.currentStaminaUpgrade;
 
-        data.healthAmount = HealthSystem.maxHealth;
-        data.staminaDrain = HealthSystem.staminaDrain;
-        data.appleCount = ScoreManager.appleCount;
+        // Save the names of all purchased upgrades
+        foreach (UpgradeAsset purchasedUpgrade in upgradeManager.purchasedUpgrades)
+        {
+            data.purchasedUpgrades.Add(purchasedUpgrade.name); // Add all purchased upgrade names
+        }
+
+        // Save other stats
+        data.healthAmount = healthSystem.maxHealth;
+        data.staminaDrain = healthSystem.staminaDrain;
+        data.appleCount = scoreManager.appleCount;
+        data.attemptsMade = scoreManager.attemptNumber;
 
         bf.Serialize(file, data);
         file.Close();
@@ -46,28 +63,77 @@ public class SaveManager : MonoBehaviour
         saveButton.interactable = false;
     }
 
+    /// <summary>
+    /// Loads gamestats
+    /// </summary>
     public void Load()
     {
         if (File.Exists(GetSavePath() + "/playerInfo.dat"))
         {
             BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(Application.persistentDataPath + "/playerInfo.dat", FileMode.Open);
+            FileStream file = File.Open(GetSavePath() + "/playerInfo.dat", FileMode.Open);
             PlayerData data = (PlayerData)bf.Deserialize(file);
             file.Close();
-            //if(data.currentHealthUpgrade != null)
-            //    CharacterController.instance.currentHealthUpgrade = data.currentHealthUpgrade;
-            //if (data.currentStaminaUpgrade != null)
-            //    CharacterController.instance.currentStaminaUpgrade = data.currentStaminaUpgrade;
 
-            HealthSystem.maxHealth = data.healthAmount;
-            HealthSystem.staminaDrain = data.staminaDrain;
-            ScoreManager.appleCount = data.appleCount;
+            // Clear the list of purchased upgrades before reloading them from saved data
+            upgradeManager.purchasedUpgrades.Clear();
 
+            // Find and apply all upgrades by name
+            foreach (string upgradeName in data.purchasedUpgrades)
+            {
+                UpgradeAsset foundUpgrade = upgradeManager.FindUpgradeByName(upgradeName);
+                if (foundUpgrade != null)
+                {
+                    foundUpgrade.isPurchased = true; // Ensure it's marked as purchased
+                    upgradeManager.purchasedUpgrades.Add(foundUpgrade); // Add to purchased list
+
+                    // Apply the upgrade (to update any relevant player stats)
+                    upgradeManager.ApplyUpgradeToPlayer(foundUpgrade);
+                }
+            }
+
+            // Load other stats
+            healthSystem.maxHealth = data.healthAmount;
+            healthSystem.staminaDrain = data.staminaDrain;
+            scoreManager.appleCount = data.appleCount;
+            scoreManager.attemptNumber = data.attemptsMade;
+
+            // Make sure to update health system and buttons after loading all data
+            healthSystem.UpdateHealthStats();
+            upgradeManager.UpdateAllButtons(); // Update the buttons once the data is fully loaded
+
+            // Load the gameplay scene
+            levelManager.LoadScene("Gameplay");
         }
     }
 
+
+    /// <summary>
+    /// Returns the save path
+    /// </summary>
+    /// <returns></returns>
     private static string GetSavePath()
     {
         return Application.persistentDataPath;
+    }
+
+    /// <summary>
+    /// Deletes Save
+    /// </summary>
+    internal void DeleteSave()
+    {
+        if (File.Exists(GetSavePath() + "/playerInfo.dat"))
+        {
+            File.Delete(GetSavePath() + "/playerInfo.dat");
+            Debug.Log("File Deleted");
+        }
+    }
+
+    /// <summary>
+    /// Used to reactivate save button
+    /// </summary>
+    private void ActivateSaveButton()
+    {
+        saveButton.interactable = true;
     }
 }

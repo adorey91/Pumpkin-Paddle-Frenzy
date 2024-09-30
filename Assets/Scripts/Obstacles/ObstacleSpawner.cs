@@ -1,87 +1,148 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ObstacleSpawner : MonoBehaviour
 {
-    public float appleSpawnTime = 4f;
-    public float obstacleSpawnTime = 3f;
+    GameManager gm;
 
-    public GameObject[] obstacles;
-    public GameObject apples;
+    // obstacle spawning objects
+    [Header("Obstacle Spawning")]
+    [SerializeField] private Transform obstacleParent;
+    [SerializeField] private GameObject finishLine;
+    [SerializeField] private GameObject[] obstaclePrefabs;
+    private GameObject obstacleToSpawn;
 
-    [SerializeField] private List<GameObject> itemList = new List<GameObject>();
+    // base values
+    [Header("Obstacle Spawning Values")]
+    public float obstacleSpawnTime = 2f;
+    [Range(0, 1)] public float obstacleSpawnTimeFactor = 0.1f;
+    public float obstacleSpeed = 1f;
+    [Range(0, 1)] public float obstacleSpeedFactor = 0.2f;
 
-    private Coroutine obstacleSpawnCoroutine;
-    private Coroutine appleSpawnCoroutine;
+    // runtime values, these will change.
+    private float _obstacleSpawnTime;
+    private float _obstacleSpeed;
+
+    private float timeUntilObstacleSpawn;
+    private float timeAlive;
+    private float recalculateTime;
+    private float calculateTime = 8f;
+
+    [Header("Tracker of Spawn Level Progress")]
+    [SerializeField] private TextMeshProUGUI levelProgressText;
+    private int level = 0;
+    private bool finishSpawned = false;
 
     private void Start()
     {
-        StartSpawning();
+        level = 0;
+        gm = GameManager.instance;
+
+        gm.onGameOver.AddListener(ClearObstacles);
+        gm.onPlay.AddListener(ResetFactors);
     }
 
-    public void StartSpawning()
+    private void Update()
     {
-        // Start the obstacle and apple spawning coroutines
-        obstacleSpawnCoroutine = StartCoroutine(SpawnObstacles());
-        appleSpawnCoroutine = StartCoroutine(SpawnApples());
-    }
-
-    public void StopSpawning()
-    {
-        // Stop both coroutines when needed
-        if (obstacleSpawnCoroutine != null)
+        if (GameManager.instance.isPlaying)
         {
-            StopCoroutine(obstacleSpawnCoroutine);
-            obstacleSpawnCoroutine = null;
+            recalculateTime += Time.deltaTime;
+            timeAlive += Time.deltaTime;
+
+            if ((recalculateTime >= calculateTime) && level < gm.winningLevel)
+            {
+                CalculateFactors();
+                recalculateTime = 0;
+                level++;
+                UpdateLevelText();
+            }
+            if (!finishSpawned)
+                    SpawnLoop();
         }
 
-        if (appleSpawnCoroutine != null)
-        {
-            StopCoroutine(appleSpawnCoroutine);
-            appleSpawnCoroutine = null;
-        }
     }
 
-    private IEnumerator SpawnObstacles()
+    /// <summary>
+    /// Spawn look that spawns obstacle at a certain time
+    /// </summary>
+    private void SpawnLoop()
     {
-        while (true)
+        timeUntilObstacleSpawn += Time.deltaTime;
+        if (timeUntilObstacleSpawn >= _obstacleSpawnTime)
         {
-            yield return new WaitForSeconds(obstacleSpawnTime);
-
-            GameObject randomObstacle = obstacles[Random.Range(0, obstacles.Length)];
-            SpawnItem(randomObstacle);
-        }
-    }
-
-    private IEnumerator SpawnApples()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(appleSpawnTime);
-
-            SpawnItem(apples);
+            Spawn();
+            timeUntilObstacleSpawn = 0f;
         }
     }
 
-    private void SpawnItem(GameObject item)
+    /// <summary>
+    /// Spawns obstacles depending on what level you're on. 
+    /// </summary>
+    private void Spawn()
     {
-        float randomX = Random.Range(-7, 7);
-        Vector2 spawnLoc = new Vector2(randomX, transform.position.y);
-        GameObject obstacle = Instantiate(item, spawnLoc, Quaternion.identity);
-        itemList.Add(obstacle);
-    }
-
-    // This method clears spawned items and resets state
-    public void DestroyItemsAndReset()
-    {
-        foreach (var item in itemList)
+        float randomX;
+        if (level == gm.winningLevel)
         {
-            Destroy(item);
+            randomX = 0;
+            obstacleToSpawn = finishLine;
+            finishSpawned = true;
+        }
+        else
+        {
+            randomX = Random.Range(-7f, 7f);
+            obstacleToSpawn = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
         }
 
-        itemList.Clear();
+        GameObject spawnedObstacle = Instantiate(obstacleToSpawn, new Vector2(randomX, transform.position.y), Quaternion.identity, obstacleParent);
 
-        // Optionally reset timers or any variables here
+        Rigidbody2D obstacleRB = spawnedObstacle.GetComponent<Rigidbody2D>();
+        obstacleRB.velocity = Vector2.down * _obstacleSpeed;
+    }
+    
+    /// <summary>
+    /// Clears all obstacles from level
+    /// </summary>
+    private void ClearObstacles()
+    {
+        foreach (Transform child in obstacleParent)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    /// <summary>
+    /// Calculates the obstacle spawn time and the speed
+    /// </summary>
+    private void CalculateFactors()
+    {
+        _obstacleSpawnTime = obstacleSpawnTime / Mathf.Pow(timeAlive, obstacleSpawnTimeFactor);
+        _obstacleSpeed = obstacleSpeed * MathF.Pow(timeAlive, obstacleSpeedFactor);
+    }
+
+    /// <summary>
+    /// Updates the level progress text so players know how far they are from the finish
+    /// </summary>
+    private void UpdateLevelText()
+    {
+        float progress = ((float)level / (float)GameManager.instance.winningLevel) * 100;
+        levelProgressText.text = $"Level Progress: {progress}%";
+    }
+
+    /// <summary>
+    /// Resets level values that need to be reset each run
+    /// </summary>
+    private void ResetFactors()
+    {
+        level = 0;
+        UpdateLevelText();
+        finishSpawned = false;
+        timeAlive = 1f;
+        _obstacleSpawnTime = obstacleSpawnTime;
+        _obstacleSpeed = obstacleSpeed;
     }
 }
