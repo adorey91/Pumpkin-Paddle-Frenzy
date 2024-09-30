@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +8,7 @@ using UnityEngine.UI;
 
 public class SaveManager : MonoBehaviour
 {
+    [Header("Managers")]
     [SerializeField] private Button saveButton;
     [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private HealthSystem healthSystem;
@@ -14,15 +16,27 @@ public class SaveManager : MonoBehaviour
     [SerializeField] private UiManager uiManager;
     [SerializeField] private LevelManager levelManager;
 
+    public void Start()
+    {
+        GameManager.instance.onGameOver.AddListener(ActivateSaveButton);
+    }
 
+    /// <summary>
+    /// Resets all upgrades to not purchased. Then checks for save, if no save, will load instructions. If there is a save, the player can choose to use it or delete it.
+    /// </summary>
     public void CheckForSave()
     {
+        upgradeManager.ResetUpgrades();
+
         if (File.Exists(GetSavePath() + "/playerInfo.dat"))
             uiManager.Confirmation_UI("save");
         else
             uiManager.Instructions_UI();
     }
 
+    /// <summary>
+    /// Saves game stats.
+    /// </summary>
     public void Save()
     {
         BinaryFormatter bf = new BinaryFormatter();
@@ -49,8 +63,9 @@ public class SaveManager : MonoBehaviour
         saveButton.interactable = false;
     }
 
-
-
+    /// <summary>
+    /// Loads gamestats
+    /// </summary>
     public void Load()
     {
         if (File.Exists(GetSavePath() + "/playerInfo.dat"))
@@ -60,15 +75,20 @@ public class SaveManager : MonoBehaviour
             PlayerData data = (PlayerData)bf.Deserialize(file);
             file.Close();
 
+            // Clear the list of purchased upgrades before reloading them from saved data
+            upgradeManager.purchasedUpgrades.Clear();
+
             // Find and apply all upgrades by name
             foreach (string upgradeName in data.purchasedUpgrades)
             {
-                UpgradeAsset foundUpgrade = FindUpgradeByName(upgradeName);
+                UpgradeAsset foundUpgrade = upgradeManager.FindUpgradeByName(upgradeName);
                 if (foundUpgrade != null)
                 {
+                    foundUpgrade.isPurchased = true; // Ensure it's marked as purchased
+                    upgradeManager.purchasedUpgrades.Add(foundUpgrade); // Add to purchased list
+
+                    // Apply the upgrade (to update any relevant player stats)
                     upgradeManager.ApplyUpgradeToPlayer(foundUpgrade);
-                    // Add it back to the purchased upgrades list
-                    upgradeManager.purchasedUpgrades.Add(foundUpgrade); // Rebuild purchased list after loading
                 }
             }
 
@@ -78,28 +98,42 @@ public class SaveManager : MonoBehaviour
             scoreManager.appleCount = data.appleCount;
             scoreManager.attemptNumber = data.attemptsMade;
 
+            // Make sure to update health system and buttons after loading all data
             healthSystem.UpdateHealthStats();
-            upgradeManager.UpdateAllButtons();
+            upgradeManager.UpdateAllButtons(); // Update the buttons once the data is fully loaded
+
+            // Load the gameplay scene
             levelManager.LoadScene("Gameplay");
         }
     }
 
 
+    /// <summary>
+    /// Returns the save path
+    /// </summary>
+    /// <returns></returns>
     private static string GetSavePath()
     {
         return Application.persistentDataPath;
     }
 
-
-    private UpgradeAsset FindUpgradeByName(string upgradeName)
+    /// <summary>
+    /// Deletes Save
+    /// </summary>
+    internal void DeleteSave()
     {
-        // Search for the newUpgrade by name from the UpgradeManager's list
-        foreach (UpgradeAsset upgrade in upgradeManager.allUpgrades)
+        if (File.Exists(GetSavePath() + "/playerInfo.dat"))
         {
-            if (upgrade.name == upgradeName)
-                return upgrade;
+            File.Delete(GetSavePath() + "/playerInfo.dat");
+            Debug.Log("File Deleted");
         }
-        Debug.LogWarning($"Upgrade not found: {upgradeName}");
-        return null;
+    }
+
+    /// <summary>
+    /// Used to reactivate save button
+    /// </summary>
+    private void ActivateSaveButton()
+    {
+        saveButton.interactable = true;
     }
 }

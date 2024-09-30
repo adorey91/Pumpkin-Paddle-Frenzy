@@ -16,25 +16,28 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UpgradeManager upgradeManager;
     [SerializeField] private SoundManager soundManager;
 
-
-    public enum GameState { MainMenu, Gameplay, Upgrades, Pause, Options, GameOver };
+    [Header("Gamestate")]
     public GameState state;
+    public enum GameState { MainMenu, Gameplay, Upgrades, Pause, Options, GameEnd };
     private GameState currentState;
-    [SerializeField] private GameState beforeOptions;
+    private GameState beforeOptions;
 
     [Header("Game Values")]
-    public float moveSpeed;
+    public float moveSpeed; // used to move the scrolling level
+    public int winningLevel;
     internal bool isPlaying;
 
+
+    //[SerializeField] private PlayerController player;
+    internal UnityEvent gamePaused = new UnityEvent();
     internal UnityEvent onPlay = new UnityEvent();
     internal UnityEvent onGameOver = new UnityEvent();
     internal UnityEvent onPlayerWin = new UnityEvent();
 
     // player
-    [SerializeField] private PlayerController player;
 
 
-    private void Start()
+    private void Awake()
     {
         if (instance == null)
         {
@@ -69,7 +72,6 @@ public class GameManager : MonoBehaviour
 
     private void SetState(GameState _state)
     {
-        ResetRun();
         state = _state;
         currentState = state;
 
@@ -80,7 +82,7 @@ public class GameManager : MonoBehaviour
             case GameState.Upgrades: PlayerDied(); break;
             case GameState.Options: Options(); break;
             case GameState.Pause: Pause(); break;
-            case GameState.GameOver: GameWin(); break;
+            case GameState.GameEnd: GameWin(); break;
         }
     }
 
@@ -95,7 +97,7 @@ public class GameManager : MonoBehaviour
 
     private void MainMenu()
     {
-        player.ActiveSprite(false);
+        gamePaused.Invoke();
         healthSystem.UpdateHealthStats();
         soundManager.PlayAudio("MainMenu");
         uiManager.MainMenu_UI();
@@ -105,15 +107,14 @@ public class GameManager : MonoBehaviour
     {
         onPlay.Invoke();
         isPlaying = true;
-        player.ActiveSprite(true);
         soundManager.PlayAudio("Gameplay");
         uiManager.Gameplay_UI();
     }
 
     private void PlayerDied()
     {
-        isPlaying = false;
         onGameOver.Invoke();
+        isPlaying = false;
         scoreManager.UpdateText();
         upgradeManager.UpdateAllButtons();
         uiManager.Upgrades_UI();
@@ -121,6 +122,7 @@ public class GameManager : MonoBehaviour
 
     private void Pause()
     {
+        gamePaused.Invoke();
         isPlaying = false;
         uiManager.Pause_UI();
     }
@@ -132,7 +134,9 @@ public class GameManager : MonoBehaviour
 
     private void GameWin()
     {
-
+        onPlayerWin.Invoke();
+        isPlaying = false;
+        uiManager.GameOver_UI();
     }
 
 
@@ -140,18 +144,5 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
         Debug.Log("Quitting Game");
-    }
-
-
-    private void ResetRun()
-    {
-        if (currentState == GameState.Upgrades)
-        {
-            // Stop the current spawning coroutines
-            // Clear existing obstacles/apples from the screen
-            // Reset the health and score
-            healthSystem.UpdateHealthStats();
-            scoreManager.ResetRun();
-        }
     }
 }

@@ -27,6 +27,16 @@ public class PlayerController : MonoBehaviour
         rb2D = GetComponent<Rigidbody2D>();
     }
 
+    public void Start()
+    {
+        var gm = GameManager.instance;
+
+        gm.onGameOver.AddListener(DisableSprite);
+        gm.gamePaused.AddListener(DisableSprite);
+        gm.onPlayerWin.AddListener(DisableSprite);
+        gm.onPlay.AddListener(ActivateSprite);
+    }
+
 
     private void FixedUpdate()
     {
@@ -42,16 +52,16 @@ public class PlayerController : MonoBehaviour
         rb2D.MovePosition(rb2D.position + movement * speed * Time.deltaTime);
     }
 
-    public void ActiveSprite(bool isActive)
+    public void ActivateSprite()
     {
-        if (playerSprite == null)
-        {
-            playerSprite = gameObject.GetComponentInChildren<GameObject>();
-            Debug.Log("assign sprite");
-            return;
-        }
+        playerSprite.SetActive(true);
+        gameObject.GetComponent<Collider2D>().enabled = true;
+    }
 
-        playerSprite.SetActive(isActive);
+    public void DisableSprite()
+    {
+        playerSprite.SetActive(false);
+        gameObject.GetComponent<Collider2D>().enabled = false;
     }
 
 
@@ -86,6 +96,9 @@ public class PlayerController : MonoBehaviour
                 case Obstacle.ObstacleType.AvoidThis:
                     healthSystem.TakeDamage();
                     soundManager.PlaySfxAudio("Crash");
+                    break;
+                case Obstacle.ObstacleType.Finish:
+                    GameManager.instance.onPlayerWin.Invoke();
                     break;
             }
             Destroy(collision.gameObject);

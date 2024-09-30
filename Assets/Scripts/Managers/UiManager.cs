@@ -10,6 +10,7 @@ public class UiManager : MonoBehaviour
     [Header("Managers")]
     [SerializeField] private SaveManager saveManager;
     [SerializeField] private LevelManager levelManager;
+    [SerializeField] protected UpgradeManager upgradeManager;
 
     [Header("Ui Panels")]
     [SerializeField] private GameObject ui_MainMenu;
@@ -20,9 +21,6 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject ui_Gameplay;
     [SerializeField] private GameObject ui_GameEnd;
     [SerializeField] private GameObject ui_Confirmation;
-
-    [Header("Text Objects")]
-    [SerializeField] private TMP_Text endSceneText;
 
     [Header("Loading Screen Elements")]
     [SerializeField] private GameObject loadingScreen;
@@ -60,9 +58,11 @@ public class UiManager : MonoBehaviour
         switch(name)
         {
             case "save":
-                confirmText.text = "Do you want to load previous save?";
+                confirmText.text = $"Do you want to load previous save? \nIf not, current save will be deleted";
                 yesButton.onClick.AddListener(saveManager.Load);
                 noButton.onClick.AddListener(Instructions_UI);
+                noButton.onClick.AddListener(saveManager.DeleteSave);
+                noButton.onClick.AddListener(upgradeManager.ResetUpgrades);
                 break;
             case "quit":
                 confirmText.text = "Are you sure you want to quit?";

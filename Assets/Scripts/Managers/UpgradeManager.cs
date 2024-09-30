@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class UpgradeManager : MonoBehaviour
 {
+    [Header("Managers")]
+    [SerializeField] private ScoreManager scoreManager;
+    [SerializeField] private HealthSystem healthSystem;
 
     [Header("Upgrades")]
     public UpgradeAsset[] allUpgrades;
@@ -19,17 +22,13 @@ public class UpgradeManager : MonoBehaviour
     [SerializeField] private GameObject[] healthChecks;
     [SerializeField] private GameObject[] staminaChecks;
 
-    [SerializeField] private ScoreManager scoreManager;
-    [SerializeField] private HealthSystem healthSystem;
 
     public List<UpgradeAsset> purchasedUpgrades = new List<UpgradeAsset>(); // All purchased upgrades should go to this list
 
-    private void Start()
-    {
-        UpdateAllButtons();
-    }
-
-
+    /// <summary>
+    /// Function used to purchase upgrades from upgrade "store"
+    /// </summary>
+    /// <param name="upgradeAsset"></param>
     public void PurchaseUpgrade(UpgradeAsset upgradeAsset)
     {
         if (scoreManager.appleCount >= upgradeAsset.cost && !upgradeAsset.isPurchased)
@@ -45,7 +44,21 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
-    #region PlayerUpgrade
+    /// <summary>
+    /// Resets all upgrade assets
+    /// </summary>
+    public void ResetUpgrades()
+    {
+        foreach(var upgradeAsset in allUpgrades)
+        {
+            upgradeAsset.isPurchased = false;
+        }
+    }
+
+    /// <summary>
+    /// Applies upgrade asset back to player
+    /// </summary>
+    /// <param name="upgradeAsset"></param>
     public void ApplyUpgradeToPlayer(UpgradeAsset upgradeAsset)
     {
         if (upgradeAsset != null)
@@ -70,9 +83,25 @@ public class UpgradeManager : MonoBehaviour
         UpdateAllButtons();
     }
 
-    #endregion
+    /// <summary>
+    /// Used to find an upgrade in the all upgrade list by name
+    /// </summary>
+    /// <param name="upgradeName"></param>
+    /// <returns></returns>
+    public UpgradeAsset FindUpgradeByName(string upgradeName)
+    {
+        foreach(UpgradeAsset upgradeAsset in allUpgrades)
+        {
+            if(upgradeAsset.name == upgradeName)
+                return upgradeAsset;
+        }
+        Debug.LogWarning($"Upgrade not found: {upgradeName}");
+        return null;
+    }
 
-    #region ButtonUpdates
+    /// <summary>
+    /// Updates all upgrade buttons based on a private function, that takes the upgrades array, their buttons and the checkmarks
+    /// </summary>
     public void UpdateAllButtons()
     {
         UpdateUpgradeButtons(healthUpgrades, healthButtons, healthChecks);
@@ -90,6 +119,7 @@ public class UpgradeManager : MonoBehaviour
             if (upgrade.isPurchased)
             {
                 button.interactable = false; // Disable button if purchased
+                Debug.Log(button.name + "is disabled");
                 checkMark.SetActive(true); // Show check mark if purchased
             }
             else
@@ -104,10 +134,11 @@ public class UpgradeManager : MonoBehaviour
                         button.interactable = false; // Disable button if prerequisites are not met
                 }
                 else
+                {
                     button.interactable = false; // Disable button if not enough currency
+                }
                 checkMark.SetActive(false); // Hide check mark if not purchased
             }
         }
     }
-    #endregion
 }

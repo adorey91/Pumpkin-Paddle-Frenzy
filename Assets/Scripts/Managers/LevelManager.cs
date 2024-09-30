@@ -7,48 +7,37 @@ public class LevelManager : MonoBehaviour
 {
     [Header("Managers")]
     [SerializeField] private UiManager uiManager;
-
+    private string _sceneName;
 
     internal List<AsyncOperation> scenesToLoad = new List<AsyncOperation>();
 
+    public void Start()
+    {
+        GameManager.instance.onPlayerWin.AddListener(LoadGameOver);    
+    }
+
+    private void LoadGameOver()
+    {
+        GameManager.instance.onPlayerWin.RemoveAllListeners();
+        _sceneName = "GameEnd";
+        LoadAsync(_sceneName);
+    }
 
     public void LoadScene(string sceneName)
     {
+        _sceneName = sceneName;
         LoadAsync(sceneName);
-        switch (sceneName)
-        {
-            case "MainMenu":
-                GameManager.instance.LoadState("MainMenu"); break;
-            case "Gameplay":
-                GameManager.instance.LoadState("Gameplay"); break;
-            case "GameEnd":
-                GameManager.instance.LoadState("GameEnd"); break;
-        }
     }
 
     private void LoadAsync(string sceneName)
     {
         uiManager.UILoadingScreen(); // Show loading screen first
-        StartCoroutine(LoadSceneAsync(sceneName)); // Load the scene asynchronously
-    }
-
-    private IEnumerator LoadSceneAsync(string sceneName)
-    {
-        yield return new WaitForSeconds(uiManager.fadeTime); // Wait for fade time
-        AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
-        operation.completed += OperationCompleted;
-        scenesToLoad.Add(operation);
-
-        // Wait until the loading is complete
-        while (!operation.isDone)
-        {
-            yield return null; // Wait until the scene is done loading
-        }
+        StartCoroutine(WaitForScreenLoad(sceneName)); // Load the scene asynchronously
     }
 
     private IEnumerator WaitForScreenLoad(string sceneName)
     {
-        yield return new WaitForSeconds(uiManager.fadeTime);
+        yield return new WaitForSeconds(uiManager.fadeTime);  // Optionally, fade in loading UI
         Debug.Log("Loading Scene Starting");
 
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
@@ -72,5 +61,10 @@ public class LevelManager : MonoBehaviour
     {
         scenesToLoad.Remove(operation);
         operation.completed -= OperationCompleted;
+
+        // After the scene is loaded, let GameManager handle UI transitions
+       
+        GameManager.instance.LoadState(_sceneName);
+        Debug.Log(_sceneName);
     }
 }

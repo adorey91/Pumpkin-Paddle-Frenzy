@@ -27,13 +27,13 @@ public class HealthSystem : MonoBehaviour
 
     public void Start()
     {
-
-        UpdateHealthStats();
+        GameManager.instance.onPlay.AddListener(UpdateHealthStats);
     }
 
     public void Update()
     {
-        StaminaDrain();
+        if (GameManager.instance.isPlaying)
+            StaminaDrain();
     }
 
     private void StaminaDrain()
@@ -77,13 +77,10 @@ public class HealthSystem : MonoBehaviour
             playerSprite.color = new Color(1f, 1f, 1f, 0.5f);
             yield return new WaitForSeconds(flickerDuration);
             playerSprite.color = Color.white;
-            yield return new WaitForSeconds(flickerDuration);
+            yield return new WaitForSeconds(flickerDuration/2);
         }
-
-        yield return new WaitForSeconds(flickerDuration);
         if (curHealth <= 0)
         {
-            player.ActiveSprite(false);
             GameManager.instance.LoadState("Upgrades");
         }
     }
