@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Apple
+  - Obstacle
   layers:
   - Default
   - TransparentFX
@@ -40,4 +42,19 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 2759805707
+    locked: 0
+  - name: Obstacles
+    uniqueID: 827536393
+    locked: 0
+  - name: PlayerBoat
+    uniqueID: 1010991527
+    locked: 0
+  - name: PlayerPaddle
+    uniqueID: 2429796135
+    locked: 0
+  - name: PlayerSprite
+    uniqueID: 4283669287
     locked: 0
