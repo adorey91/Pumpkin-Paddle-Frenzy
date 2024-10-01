@@ -49,3 +49,12 @@ TagManager:
   - name: Obstacles
     uniqueID: 827536393
     locked: 0
+  - name: PlayerBoat
+    uniqueID: 1010991527
+    locked: 0
+  - name: PlayerPaddle
+    uniqueID: 2429796135
+    locked: 0
+  - name: PlayerSprite
+    uniqueID: 4283669287
+    locked: 0
