@@ -32,8 +32,8 @@ public class UiManager : MonoBehaviour
     [Header("On Screen Buttons")]
     [SerializeField] private GameObject onScreenControlsButtons;
     [SerializeField] private GameObject pauseButton;
-    [SerializeField] private bool activeControls = true;
-    [SerializeField] private bool activePause = true;
+    public bool activeControls = true;
+    public bool activePause = true;
 
     [Header("Confirmation Panel")]
     [SerializeField] private TextMeshProUGUI confirmText;
@@ -103,6 +103,12 @@ public class UiManager : MonoBehaviour
     public void ActivePauseButton()
     {
         activePause = !activePause;
+        pauseButton.SetActive(activePause);
+    }
+
+    public void LoadButtons()
+    {
+        onScreenControlsButtons.SetActive(activeControls);
         pauseButton.SetActive(activePause);
     }
 

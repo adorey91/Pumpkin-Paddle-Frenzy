@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: StaminaUpgrade_3
   m_EditorClassIdentifier: 
   type: 1
-  upgradeNumber: 3
+  number: 3
   preRequisites: {fileID: 11400000, guid: e4404cf7489a2bf40af0d180ded5755f, type: 2}
-  upgradeSprite: {fileID: 0}
-  upgradeStat: 0.25
+  newSprite: {fileID: 0}
+  newStats: 0.2
   cost: 30
   isPurchased: 0
