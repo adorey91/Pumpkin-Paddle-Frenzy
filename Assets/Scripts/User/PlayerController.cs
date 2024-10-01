@@ -55,13 +55,11 @@ public class PlayerController : MonoBehaviour
     public void ActivateSprite()
     {
         playerSprite.SetActive(true);
-        gameObject.GetComponent<Collider2D>().enabled = true;
     }
 
     public void DisableSprite()
     {
         playerSprite.SetActive(false);
-        gameObject.GetComponent<Collider2D>().enabled = false;
     }
 
 
