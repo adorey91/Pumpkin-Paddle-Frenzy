@@ -55,6 +55,8 @@ public class SaveManager : MonoBehaviour
         data.staminaDrain = healthSystem.staminaDrain;
         data.appleCount = scoreManager.appleCount;
         data.attemptsMade = scoreManager.attemptNumber;
+        data.onScreenControls = uiManager.activeControls;
+        data.onScreenPause = uiManager.activePause;
 
         bf.Serialize(file, data);
         file.Close();
@@ -97,10 +99,13 @@ public class SaveManager : MonoBehaviour
             healthSystem.staminaDrain = data.staminaDrain;
             scoreManager.appleCount = data.appleCount;
             scoreManager.attemptNumber = data.attemptsMade;
+            uiManager.activePause = data.onScreenPause;
+            uiManager.activeControls = data.onScreenControls;
 
             // Make sure to update health system and buttons after loading all data
             healthSystem.UpdateHealthStats();
             upgradeManager.UpdateAllButtons(); // Update the buttons once the data is fully loaded
+            uiManager.LoadButtons();
 
             // Load the gameplay scene
             levelManager.LoadScene("Gameplay");
