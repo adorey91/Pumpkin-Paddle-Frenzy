@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -16,6 +13,7 @@ public class ObstacleSpawner : MonoBehaviour
     [SerializeField] private GameObject finishLine;
     [SerializeField] private GameObject[] obstaclePrefabs;
     private GameObject obstacleToSpawn;
+
 
     // base values
     [Header("Obstacle Spawning Values")]
@@ -99,9 +97,14 @@ public class ObstacleSpawner : MonoBehaviour
         }
 
         GameObject spawnedObstacle = Instantiate(obstacleToSpawn, new Vector2(randomX, transform.position.y), Quaternion.identity, obstacleParent);
+        Obstacle obstacle = spawnedObstacle.GetComponent<Obstacle>();
+        obstacle.speed = _obstacleSpeed;
 
-        Rigidbody2D obstacleRB = spawnedObstacle.GetComponent<Rigidbody2D>();
-        obstacleRB.velocity = Vector2.down * _obstacleSpeed;
+        //Rigidbody2D obstacleRB = spawnedObstacle.GetComponent<Rigidbody2D>();
+        //obstacleRB.MovePosition(obstacleRB.position + (Vector2.down * GameManager.instance.moveSpeed * Time.deltaTime));
+        //obstacleRB.MovePosition(obstacleRB.position + (Vector2.down) * _obstacleSpeed * Time.deltaTime);
+        // obstacleRB.velocity = Vector2.down * _obstacleSpeed;
+
     }
     
     /// <summary>
@@ -122,6 +125,11 @@ public class ObstacleSpawner : MonoBehaviour
     {
         _obstacleSpawnTime = obstacleSpawnTime / Mathf.Pow(timeAlive, obstacleSpawnTimeFactor);
         _obstacleSpeed = obstacleSpeed * MathF.Pow(timeAlive, obstacleSpeedFactor);
+
+        foreach(Transform child in obstacleParent)
+        {
+            child.GetComponent<Obstacle>().speed = _obstacleSpeed;
+        }
     }
 
     /// <summary>

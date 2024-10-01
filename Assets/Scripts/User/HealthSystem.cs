@@ -22,6 +22,9 @@ public class HealthSystem : MonoBehaviour
     [Header("PlayerSprite")]
     [SerializeField] private PlayerController player;
     [SerializeField] private SpriteRenderer playerSprite;
+    [SerializeField] private SpriteRenderer boatSprite;
+    [SerializeField] private SpriteRenderer paddleSprite;
+
     public int flickerAmount = 3;
     public float flickerDuration = 0.1f;
 
@@ -74,14 +77,13 @@ public class HealthSystem : MonoBehaviour
     {
         for (int i = 0; i < flickerAmount; i++)
         {
+           
             playerSprite.color = new Color(1f, 1f, 1f, 0.5f);
             yield return new WaitForSeconds(flickerDuration);
             playerSprite.color = Color.white;
             yield return new WaitForSeconds(flickerDuration/2);
         }
         if (curHealth <= 0)
-        {
             GameManager.instance.LoadState("Upgrades");
-        }
     }
 }

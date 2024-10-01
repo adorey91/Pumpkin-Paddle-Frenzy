@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5228b5c2b46aa9b479bfc9be22cf2e63, type: 3}
   m_Name: HealthUpgrade_2
   m_EditorClassIdentifier: 
-  upgrade: 0
-  upgradeNumber: 2
+  type: 0
+  number: 2
   preRequisites: {fileID: 11400000, guid: b18464332b2b02a4db1207340060fb7f, type: 2}
-  upgradeSprite: {fileID: 0}
-  upgradeStat: 4
+  newSprite: {fileID: 0}
+  newStats: 5
   cost: 20
   isPurchased: 0

@@ -98,14 +98,16 @@ public class GameManager : MonoBehaviour
     private void MainMenu()
     {
         gamePaused.Invoke();
-        healthSystem.UpdateHealthStats();
-        soundManager.PlayAudio("MainMenu");
+        moveSpeed = 0;
+        //healthSystem.UpdateHealthStats();
+        //soundManager.PlayAudio("MainMenu");
         uiManager.MainMenu_UI();
     }
 
     private void Gameplay()
     {
         onPlay.Invoke();
+        moveSpeed = 1;
         isPlaying = true;
         soundManager.PlayAudio("Gameplay");
         uiManager.Gameplay_UI();
@@ -114,6 +116,7 @@ public class GameManager : MonoBehaviour
     private void PlayerDied()
     {
         onGameOver.Invoke();
+        moveSpeed = 0;
         isPlaying = false;
         scoreManager.UpdateText();
         upgradeManager.UpdateAllButtons();
@@ -123,6 +126,7 @@ public class GameManager : MonoBehaviour
     private void Pause()
     {
         gamePaused.Invoke();
+        moveSpeed = 0;
         isPlaying = false;
         uiManager.Pause_UI();
     }

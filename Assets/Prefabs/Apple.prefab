@@ -116,7 +116,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72b724fd96d9b6542888f5c86d1db388, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obstacleType: 0
   speed: 1.9
 --- !u!50 &2347628192391415349
 Rigidbody2D:
