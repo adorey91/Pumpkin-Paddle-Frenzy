@@ -22,6 +22,9 @@ public class UpgradeManager : MonoBehaviour
     [SerializeField] private GameObject[] healthChecks;
     [SerializeField] private GameObject[] staminaChecks;
 
+    [Header("Player Sprite")]
+    [SerializeField] private SpriteRenderer healthSprite;
+    [SerializeField] private SpriteRenderer staminaSprite;
 
     public List<UpgradeAsset> purchasedUpgrades = new List<UpgradeAsset>(); // All purchased upgrades should go to this list
 
@@ -67,13 +70,15 @@ public class UpgradeManager : MonoBehaviour
             {
                 case UpgradeAsset.StateUpgrade.Health:
                     healthSystem.curHealthUpgrade = upgradeAsset;
-                    healthSystem.maxHealth = (int)upgradeAsset.upgradeStat;
+                    healthSystem.maxHealth = (int)upgradeAsset.newStats;
+                    healthSprite.sprite = upgradeAsset.newSprite;
                     upgradeAsset.isPurchased = true;
                     Debug.Log("Health: " + healthSystem.maxHealth);
                     break;
                 case UpgradeAsset.StateUpgrade.Stamina:
                     healthSystem.curStaminaUpgrade = upgradeAsset;
-                    healthSystem.staminaDrain = upgradeAsset.upgradeStat;
+                    healthSystem.staminaDrain = upgradeAsset.newStats;
+                    staminaSprite.sprite = upgradeAsset.newSprite;
                     upgradeAsset.isPurchased = true;
                     Debug.Log("Stamina: " + healthSystem.staminaDrain);
                     break;

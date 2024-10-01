@@ -9,10 +9,10 @@ public class UpgradeAsset : ScriptableObject
 {
     public enum StateUpgrade {Health, Stamina}
     public StateUpgrade type;
-    public int upgradeNumber;
+    public int number;
     public UpgradeAsset preRequisites;
-    public Sprite upgradeSprite;
-    public float upgradeStat;
+    public Sprite newSprite;
+    public float newStats;
     public int cost;
     public bool isPurchased;
 }
