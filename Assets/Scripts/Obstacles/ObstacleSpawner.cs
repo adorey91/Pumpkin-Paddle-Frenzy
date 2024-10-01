@@ -14,6 +14,7 @@ public class ObstacleSpawner : MonoBehaviour
     [SerializeField] private GameObject[] obstaclePrefabs;
     private GameObject obstacleToSpawn;
 
+
     // base values
     [Header("Obstacle Spawning Values")]
     public float obstacleSpawnTime = 2f;
@@ -124,6 +125,11 @@ public class ObstacleSpawner : MonoBehaviour
     {
         _obstacleSpawnTime = obstacleSpawnTime / Mathf.Pow(timeAlive, obstacleSpawnTimeFactor);
         _obstacleSpeed = obstacleSpeed * MathF.Pow(timeAlive, obstacleSpeedFactor);
+
+        foreach(Transform child in obstacleParent)
+        {
+            child.GetComponent<Obstacle>().speed = _obstacleSpeed;
+        }
     }
 
     /// <summary>

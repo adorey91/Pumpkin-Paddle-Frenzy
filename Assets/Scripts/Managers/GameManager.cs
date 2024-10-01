@@ -99,8 +99,8 @@ public class GameManager : MonoBehaviour
     {
         gamePaused.Invoke();
         moveSpeed = 0;
-        healthSystem.UpdateHealthStats();
-        soundManager.PlayAudio("MainMenu");
+        //healthSystem.UpdateHealthStats();
+        //soundManager.PlayAudio("MainMenu");
         uiManager.MainMenu_UI();
     }
 
