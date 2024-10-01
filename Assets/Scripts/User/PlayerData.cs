@@ -10,6 +10,8 @@ public class PlayerData
     public float staminaDrain;
     public int appleCount;
     public int attemptsMade;
+    public bool onScreenPause;
+    public bool onScreenControls;
 
     public List<string> purchasedUpgrades = new List<string>(); // saving names of upgrades
 }

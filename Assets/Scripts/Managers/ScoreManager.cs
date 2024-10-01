@@ -18,7 +18,7 @@ public class ScoreManager : MonoBehaviour
 
     private void Start()
     {
-        attemptNumber = 1;
+        attemptNumber = 0;
         attemptText.text = $"Attempts: {attemptNumber}";
         UpdateText();
 
