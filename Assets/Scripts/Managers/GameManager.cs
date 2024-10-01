@@ -45,7 +45,10 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
         else if (instance != this)
+        {
             Destroy(gameObject);
+            Debug.Log("Deleted other manager");
+        }
 
         SetState(GameState.MainMenu);
     }
@@ -99,8 +102,8 @@ public class GameManager : MonoBehaviour
     {
         gamePaused.Invoke();
         moveSpeed = 0;
-        //healthSystem.UpdateHealthStats();
-        //soundManager.PlayAudio("MainMenu");
+        healthSystem.UpdateHealthStats();
+        soundManager.PlayAudio("MainMenu");
         uiManager.MainMenu_UI();
     }
 
