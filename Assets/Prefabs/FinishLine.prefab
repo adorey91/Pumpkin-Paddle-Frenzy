@@ -333,7 +333,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 12.8, y: 3.78}
+    oldSize: {x: 19.2, y: 1.89}
     newSize: {x: 12.8, y: 3.78}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -355,6 +355,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obstacleType: 2
+  speed: 0
 --- !u!50 &5566803771793669181
 Rigidbody2D:
   serializedVersion: 4
@@ -423,7 +424,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9bc5c4659fb256f48bb79406ca69cf90, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1bf38c01340ccdd4faa84a98d0f5ae95, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
