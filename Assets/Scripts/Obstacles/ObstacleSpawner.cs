@@ -36,18 +36,19 @@ public class ObstacleSpawner : MonoBehaviour
     private int level = 0;
     private bool finishSpawned = false;
 
+    private bool startLoop;
+
     private void Start()
     {
         level = 0;
         gm = GameManager.instance;
-
-        gm.onGameOver.AddListener(ClearObstacles);
-        gm.onPlay.AddListener(ResetFactors);
     }
+
+
 
     private void Update()
     {
-        if (GameManager.instance.isPlaying)
+        if (startLoop)
         {
             recalculateTime += Time.deltaTime;
             timeAlive += Time.deltaTime;
@@ -60,10 +61,26 @@ public class ObstacleSpawner : MonoBehaviour
                 UpdateLevelText();
             }
             if (!finishSpawned)
-                    SpawnLoop();
+                SpawnLoop();
         }
-
     }
+
+
+
+    private void OnEnable()
+    {
+        Actions.OnGameplay += ResetFactors;
+        Actions.OnGameOver += ClearObstacles;
+    }
+
+    private void OnDisable()
+    {
+        Actions.OnGameplay -= ResetFactors;
+        Actions.OnGameOver -= ClearObstacles;
+    }
+
+
+
 
     /// <summary>
     /// Spawn look that spawns obstacle at a certain time
@@ -106,12 +123,13 @@ public class ObstacleSpawner : MonoBehaviour
         // obstacleRB.velocity = Vector2.down * _obstacleSpeed;
 
     }
-    
+
     /// <summary>
     /// Clears all obstacles from level
     /// </summary>
     private void ClearObstacles()
     {
+        startLoop = false;
         foreach (Transform child in obstacleParent)
         {
             Destroy(child.gameObject);
@@ -126,7 +144,7 @@ public class ObstacleSpawner : MonoBehaviour
         _obstacleSpawnTime = obstacleSpawnTime / Mathf.Pow(timeAlive, obstacleSpawnTimeFactor);
         _obstacleSpeed = obstacleSpeed * MathF.Pow(timeAlive, obstacleSpeedFactor);
 
-        foreach(Transform child in obstacleParent)
+        foreach (Transform child in obstacleParent)
         {
             child.GetComponent<Obstacle>().speed = _obstacleSpeed;
         }
@@ -152,5 +170,7 @@ public class ObstacleSpawner : MonoBehaviour
         timeAlive = 1f;
         _obstacleSpawnTime = obstacleSpawnTime;
         _obstacleSpeed = obstacleSpeed;
+
+        startLoop = true;
     }
 }

@@ -21,9 +21,27 @@ public class ScoreManager : MonoBehaviour
         attemptNumber = 0;
         attemptText.text = $"Attempts: {attemptNumber}";
         UpdateText();
-
-        GameManager.instance.onGameOver.AddListener(ResetRun);
     }
+
+    private void OnEnable()
+    {
+        Actions.OnCollectApple += CollectApples;
+        Actions.OnGameOver += ResetRun;
+    }
+
+    private void OnDisable()
+    {
+        Actions.OnCollectApple -= CollectApples;
+        Actions.OnGameOver -= ResetRun;
+    }
+
+    private void CollectApples()
+    {
+        applesThisRun++;
+        appleCount++;
+        UpdateText();
+    }
+
 
     /// <summary>
     /// Resets apples this run, text update runs another update function

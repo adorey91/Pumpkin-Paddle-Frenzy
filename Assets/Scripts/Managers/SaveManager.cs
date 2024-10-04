@@ -9,17 +9,12 @@ using UnityEngine.UI;
 public class SaveManager : MonoBehaviour
 {
     [Header("Managers")]
-    [SerializeField] private Button saveButton;
     [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private HealthSystem healthSystem;
     [SerializeField] private UpgradeManager upgradeManager;
     [SerializeField] private UiManager uiManager;
     [SerializeField] private LevelManager levelManager;
 
-    public void Start()
-    {
-        GameManager.instance.onGameOver.AddListener(ActivateSaveButton);
-    }
 
     /// <summary>
     /// Resets all upgrades to not purchased. Then checks for save, if no save, will load instructions. If there is a save, the player can choose to use it or delete it.
@@ -62,7 +57,6 @@ public class SaveManager : MonoBehaviour
         file.Close();
         Debug.Log("Game Saved");
 
-        saveButton.interactable = false;
     }
 
     /// <summary>
@@ -132,13 +126,5 @@ public class SaveManager : MonoBehaviour
             File.Delete(GetSavePath() + "/playerInfo.dat");
             Debug.Log("File Deleted");
         }
-    }
-
-    /// <summary>
-    /// Used to reactivate save button
-    /// </summary>
-    private void ActivateSaveButton()
-    {
-        saveButton.interactable = true;
     }
 }

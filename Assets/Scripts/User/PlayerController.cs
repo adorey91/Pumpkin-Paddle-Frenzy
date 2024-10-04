@@ -12,29 +12,11 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb2D;
     private Vector2 movement;
     [Range(2, 10)] public float speed = 4f;
-    [SerializeField] private GameObject playerSprite;
-
-    // health
-    [SerializeField] private HealthSystem healthSystem;
-    // sound
-    [SerializeField] private SoundManager soundManager;
-    // score
-    [SerializeField] private ScoreManager scoreManager;
-
+    [SerializeField] private GameObject player;
 
     private void Awake()
     {
         rb2D = GetComponent<Rigidbody2D>();
-    }
-
-    public void Start()
-    {
-        var gm = GameManager.instance;
-
-        gm.onGameOver.AddListener(DisableSprite);
-        gm.gamePaused.AddListener(DisableSprite);
-        gm.onPlayerWin.AddListener(DisableSprite);
-        gm.onPlay.AddListener(ActivateSprite);
     }
 
 
@@ -54,14 +36,19 @@ public class PlayerController : MonoBehaviour
 
     public void ActivateSprite()
     {
-        playerSprite.SetActive(true);
+        foreach (Transform spriteTransform in transform)
+        {
+            spriteTransform.gameObject.SetActive(true);
+        }
     }
 
     public void DisableSprite()
     {
-        playerSprite.SetActive(false);
+        foreach (Transform spriteTransform in transform)
+        {
+            spriteTransform.gameObject.SetActive(false);
+        }
     }
-
 
     public void Move(InputAction.CallbackContext context)
     {
@@ -86,20 +73,28 @@ public class PlayerController : MonoBehaviour
             switch (obs.obstacleType)
             {
                 case Obstacle.ObstacleType.Currency:
-                    scoreManager.applesThisRun++;
-                    scoreManager.appleCount++;
-                    scoreManager.UpdateText();
-                    soundManager.PlaySfxAudio("Collect");
+                    Actions.OnCollectApple();
                     break;
                 case Obstacle.ObstacleType.AvoidThis:
-                    healthSystem.TakeDamage();
-                    soundManager.PlaySfxAudio("Crash");
+                    Actions.OnPlayerHurt();
                     break;
                 case Obstacle.ObstacleType.Finish:
-                    GameManager.instance.onPlayerWin.Invoke();
+                    Actions.OnGameOver();
                     break;
             }
             Destroy(collision.gameObject);
         }
+    }
+
+    private void OnEnable()
+    {
+        Actions.OnGameplay += ActivateSprite;
+        Actions.OnGameWin += DisableSprite;
+    }
+
+    private void OnDisable()
+    {
+        Actions.OnGameplay -= ActivateSprite;
+        Actions.OnGameWin -= DisableSprite;
     }
 }

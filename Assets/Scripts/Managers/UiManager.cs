@@ -17,10 +17,15 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject ui_Pause;
     [SerializeField] private GameObject ui_Options;
     [SerializeField] private GameObject ui_Upgrades;
-    [SerializeField] private GameObject ui_Instructions;
     [SerializeField] private GameObject ui_Gameplay;
     [SerializeField] private GameObject ui_GameEnd;
     [SerializeField] private GameObject ui_Confirmation;
+
+    [Header("Instruction UI")]
+    [SerializeField] private GameObject ui_Instructions;
+    [SerializeField] private GameObject ui_HowToApply;
+    [SerializeField] private GameObject ui_Controls;
+
 
     [Header("Loading Screen Elements")]
     [SerializeField] private GameObject loadingScreen;
@@ -90,22 +95,13 @@ public class UiManager : MonoBehaviour
         ui_Options.SetActive(false);
         ui_Instructions.SetActive(false);
         ui_Confirmation.SetActive(false);
+        ui_HowToApply.SetActive(false);
+        ui_Controls.SetActive(false);
 
         activeUI.SetActive(true);
     }
 
-    public void ActiveOnScreenButtons()
-    {
-        activeControls = !activeControls;
-        onScreenControlsButtons.SetActive(activeControls);
-    }
-
-    public void ActivePauseButton()
-    {
-        activePause = !activePause;
-        pauseButton.SetActive(activePause);
-    }
-
+    // Do I need to set the toggles to whatever the onscreen is?
     public void LoadButtons()
     {
         onScreenControlsButtons.SetActive(activeControls);

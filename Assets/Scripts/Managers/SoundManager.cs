@@ -31,6 +31,18 @@ public class SoundManager : MonoBehaviour
         SetVolume("SFX");
     }
 
+    private void OnEnable()
+    {
+        Actions.OnPlayerHurt += PlayEnemyCrash;
+        Actions.OnCollectApple += PlayAppleCollection;
+    }
+
+    private void OnDisable()
+    {
+        Actions.OnPlayerHurt -= PlayEnemyCrash;
+        Actions.OnCollectApple -= PlayAppleCollection;
+    }
+
     /// This should be used for looping audio.
     public void PlayAudio(string audio)
     {
@@ -45,53 +57,35 @@ public class SoundManager : MonoBehaviour
     }
 
 
-    public void PlaySfxAudio(string audio)
+    private void PlayEnemyCrash()
     {
         if (sfxSource == null)
         {
             GameObject foundObject = GameObject.Find("SFXSource");
             sfxSource = GetComponent<AudioSource>();
         }
-
-
-        switch (audio)
-        {
-            case "Crash":
-                if (sfxCrashClip == null)
-                {
-                    Debug.LogError("sfxCrashClip is not assigned!");
-                }
-                else
-                {
-                    sfxSource.PlayOneShot(sfxCrashClip, 1f);
-                }
-                break;
-            case "Collect":
-                if (sfxCollectClip == null)
-                {
-                    Debug.LogError("sfxCollectClip is not assigned!");
-                }
-                else
-                {
-                    sfxSource.PlayOneShot(sfxCollectClip, 1f);
-                }
-                break;
-            case "Click":
-                if (sfxClickButtonClip == null)
-                {
-                    Debug.LogError("sfxClickButtonClip is not assigned!");
-                }
-                else
-                {
-                    sfxSource.PlayOneShot(sfxClickButtonClip, 1f);
-                }
-                break;
-            default:
-                Debug.LogError("Unknown audio type: " + audio);
-                break;
-        }
+            sfxSource.PlayOneShot(sfxCrashClip, 1f);
     }
 
+    private void PlayAppleCollection()
+    {
+        if (sfxSource == null)
+        {
+            GameObject foundObject = GameObject.Find("SFXSource");
+            sfxSource = GetComponent<AudioSource>();
+        }
+        sfxSource.PlayOneShot(sfxCollectClip, 1f);
+    }
+
+    private void PlayButtonClick()
+    {
+        if (sfxSource == null)
+        {
+            GameObject foundObject = GameObject.Find("SFXSource");
+            sfxSource = GetComponent<AudioSource>();
+        }
+        sfxSource.PlayOneShot(sfxClickButtonClip, 1f);
+    }
 
 
     // Sets volume

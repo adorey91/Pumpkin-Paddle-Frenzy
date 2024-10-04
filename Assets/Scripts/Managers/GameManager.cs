@@ -27,16 +27,6 @@ public class GameManager : MonoBehaviour
     public int winningLevel;
     internal bool isPlaying;
 
-
-    //[SerializeField] private PlayerController player;
-    internal UnityEvent gamePaused = new UnityEvent();
-    internal UnityEvent onPlay = new UnityEvent();
-    internal UnityEvent onGameOver = new UnityEvent();
-    internal UnityEvent onPlayerWin = new UnityEvent();
-
-    // player
-
-
     private void Awake()
     {
         if (instance == null)
@@ -45,14 +35,23 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
         else if (instance != this)
-        {
             Destroy(gameObject);
-            Debug.Log("Deleted other manager");
-        }
 
         SetState(GameState.MainMenu);
     }
 
+
+    private void OnEnable()
+    {
+        Actions.OnGameOver += PlayerDied;
+        Actions.OnGameWin += GameWin;
+    }
+
+    private void OnDisable()
+    {
+        Actions.OnGameOver -= PlayerDied;
+        Actions.OnGameWin -= GameWin;
+    }
 
     public void LoadState(string stateName)
     {
@@ -100,7 +99,6 @@ public class GameManager : MonoBehaviour
 
     private void MainMenu()
     {
-        gamePaused.Invoke();
         moveSpeed = 0;
         healthSystem.UpdateHealthStats();
         soundManager.PlayAudio("MainMenu");
@@ -109,7 +107,7 @@ public class GameManager : MonoBehaviour
 
     private void Gameplay()
     {
-        onPlay.Invoke();
+        Actions.OnGameplay();
         moveSpeed = 1;
         isPlaying = true;
         soundManager.PlayAudio("Gameplay");
@@ -118,7 +116,6 @@ public class GameManager : MonoBehaviour
 
     private void PlayerDied()
     {
-        onGameOver.Invoke();
         moveSpeed = 0;
         isPlaying = false;
         scoreManager.UpdateText();
@@ -128,7 +125,6 @@ public class GameManager : MonoBehaviour
 
     private void Pause()
     {
-        gamePaused.Invoke();
         moveSpeed = 0;
         isPlaying = false;
         uiManager.Pause_UI();
@@ -141,8 +137,6 @@ public class GameManager : MonoBehaviour
 
     private void GameWin()
     {
-        onPlayerWin.Invoke();
-        isPlaying = false;
         uiManager.GameOver_UI();
     }
 
