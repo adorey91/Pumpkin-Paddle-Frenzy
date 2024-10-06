@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class ObstacleSpawner : MonoBehaviour
+public class Spawner : MonoBehaviour
 {
     GameManager gm;
 
@@ -17,9 +17,9 @@ public class ObstacleSpawner : MonoBehaviour
 
     // base values
     [Header("Obstacle Spawning Values")]
-    public float obstacleSpawnTime = 2f;
+    private float obstacleSpawnTime = 2f;
     [Range(0, 1)] public float obstacleSpawnTimeFactor = 0.1f;
-    public float obstacleSpeed = 1f;
+    private float obstacleSpeed = 1f;
     [Range(0, 1)] public float obstacleSpeedFactor = 0.2f;
 
     // runtime values, these will change.
@@ -130,6 +130,7 @@ public class ObstacleSpawner : MonoBehaviour
     private void ClearObstacles()
     {
         startLoop = false;
+        Debug.Log(startLoop);
         foreach (Transform child in obstacleParent)
         {
             Destroy(child.gameObject);
@@ -142,7 +143,7 @@ public class ObstacleSpawner : MonoBehaviour
     private void CalculateFactors()
     {
         _obstacleSpawnTime = obstacleSpawnTime / Mathf.Pow(timeAlive, obstacleSpawnTimeFactor);
-        _obstacleSpeed = obstacleSpeed * MathF.Pow(timeAlive, obstacleSpeedFactor);
+        _obstacleSpeed = obstacleSpeed + MathF.Pow(timeAlive, obstacleSpeedFactor);
 
         foreach (Transform child in obstacleParent)
         {

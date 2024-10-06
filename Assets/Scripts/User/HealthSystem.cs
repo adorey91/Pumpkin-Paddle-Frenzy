@@ -36,13 +36,13 @@ public class HealthSystem : MonoBehaviour
 
     private void OnEnable()
     {
-        Actions.OnPlayerHurt += TakeDamage;
+        Actions.OnGameOver += TakeDamage;
         Actions.OnGameplay += UpdateHealthStats;
     }
 
     private void OnDisable()
     {
-        Actions.OnPlayerHurt -= TakeDamage;
+        Actions.OnGameOver -= TakeDamage;
         Actions.OnGameplay -= UpdateHealthStats;
     }
 
@@ -56,7 +56,7 @@ public class HealthSystem : MonoBehaviour
 
             if (staminaImage.fillAmount <= 0)  // Changed from `==` to `<=` for precision
             {
-                Actions.OnPlayerHurt();
+                Actions.OnGameOver();
                 if (curHealth > 0)
                     staminaImage.fillAmount = 1;
             }

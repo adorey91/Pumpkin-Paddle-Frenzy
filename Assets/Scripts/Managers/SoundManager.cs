@@ -33,13 +33,13 @@ public class SoundManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Actions.OnPlayerHurt += PlayEnemyCrash;
+        Actions.OnGameOver += PlayEnemyCrash;
         Actions.OnCollectApple += PlayAppleCollection;
     }
 
     private void OnDisable()
     {
-        Actions.OnPlayerHurt -= PlayEnemyCrash;
+        Actions.OnGameOver -= PlayEnemyCrash;
         Actions.OnCollectApple -= PlayAppleCollection;
     }
 

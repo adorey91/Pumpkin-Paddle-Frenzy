@@ -26,6 +26,8 @@ public class UpgradeManager : MonoBehaviour
     [SerializeField] private SpriteRenderer healthSprite;
     [SerializeField] private SpriteRenderer staminaSprite;
 
+   
+
     public List<UpgradeAsset> purchasedUpgrades = new List<UpgradeAsset>(); // All purchased upgrades should go to this list
 
     /// <summary>

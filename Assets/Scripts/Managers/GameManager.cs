@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UiManager uiManager;
     [SerializeField] private HealthSystem healthSystem;
     [SerializeField] private ScoreManager scoreManager;
-    [SerializeField] private ObstacleSpawner obstacleSpawner;
+    [SerializeField] private Spawner spawner;
     [SerializeField] private UpgradeManager upgradeManager;
     [SerializeField] private SoundManager soundManager;
 

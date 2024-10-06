@@ -76,10 +76,10 @@ public class PlayerController : MonoBehaviour
                     Actions.OnCollectApple();
                     break;
                 case Obstacle.ObstacleType.AvoidThis:
-                    Actions.OnPlayerHurt();
+                    Actions.OnGameOver();
                     break;
                 case Obstacle.ObstacleType.Finish:
-                    Actions.OnGameOver();
+                    Actions.OnGameWin();
                     break;
             }
             Destroy(collision.gameObject);
@@ -89,12 +89,14 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         Actions.OnGameplay += ActivateSprite;
+        Actions.OnGameOver += DisableSprite;
         Actions.OnGameWin += DisableSprite;
     }
 
     private void OnDisable()
     {
         Actions.OnGameplay -= ActivateSprite;
+        Actions.OnGameOver -= DisableSprite;
         Actions.OnGameWin -= DisableSprite;
     }
 }

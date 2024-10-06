@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class ObstacleDestroyer : MonoBehaviour
 {
-    private ObstacleSpawner spawner;  // Reference to the spawner
+    private Spawner spawner;  // Reference to the spawner
 
     private void Start()
     {
-        spawner = FindObjectOfType<ObstacleSpawner>();  // Find the spawner in the scene
+        spawner = FindObjectOfType<Spawner>();  // Find the spawner in the scene
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
