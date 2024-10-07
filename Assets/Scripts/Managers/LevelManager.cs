@@ -36,13 +36,13 @@ public class LevelManager : MonoBehaviour
 
     private void LoadAsync(string sceneName)
     {
-        uiManager.UILoadingScreen(); // Show loading screen first
+        Actions.OnScreenLoad();
         StartCoroutine(WaitForScreenLoad(sceneName)); // Load the scene asynchronously
     }
 
     private IEnumerator WaitForScreenLoad(string sceneName)
     {
-        yield return new WaitForSeconds(uiManager.fadeTime);  // Optionally, fade in loading UI
+        yield return new WaitForSeconds(LoadingScreen.fadeTime);  // Optionally, fade in loading UI
         //Debug.Log("Loading Scene Starting");
 
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);

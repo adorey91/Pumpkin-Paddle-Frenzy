@@ -130,7 +130,7 @@ public class Spawner : MonoBehaviour
     private void ClearObstacles()
     {
         startLoop = false;
-        Debug.Log(startLoop);
+        //Debug.Log(startLoop);
         foreach (Transform child in obstacleParent)
         {
             Destroy(child.gameObject);

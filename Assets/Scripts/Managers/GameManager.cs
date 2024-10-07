@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
         isPlaying = false;
         scoreManager.UpdateText();
         upgradeManager.UpdateAllButtons();
-        uiManager.Upgrades_UI();
+        uiManager.Results_UI();
     }
 
     private void Pause()
