@@ -36,13 +36,13 @@ public class HealthSystem : MonoBehaviour
 
     private void OnEnable()
     {
-        Actions.OnGameOver += TakeDamage;
+        Actions.OnPlayerHurt += TakeDamage;
         Actions.OnGameplay += UpdateHealthStats;
     }
 
     private void OnDisable()
     {
-        Actions.OnGameOver -= TakeDamage;
+        Actions.OnPlayerHurt -= TakeDamage;
         Actions.OnGameplay -= UpdateHealthStats;
     }
 

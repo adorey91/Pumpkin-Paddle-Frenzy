@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
                     Actions.OnCollectApple();
                     break;
                 case Obstacle.ObstacleType.AvoidThis:
-                    //Actions.OnGameOver();
+                    Actions.OnPlayerHurt();
                     break;
                 case Obstacle.ObstacleType.Finish:
                     Actions.OnGameWin();

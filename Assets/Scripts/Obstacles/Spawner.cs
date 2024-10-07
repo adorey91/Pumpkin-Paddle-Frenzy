@@ -65,18 +65,18 @@ public class Spawner : MonoBehaviour
         }
     }
 
-
-
     private void OnEnable()
     {
         Actions.OnGameplay += ResetFactors;
         Actions.OnGameOver += ClearObstacles;
+        Actions.OnGameWin += ClearObstacles;
     }
 
     private void OnDisable()
     {
         Actions.OnGameplay -= ResetFactors;
         Actions.OnGameOver -= ClearObstacles;
+        Actions.OnGameWin -= ClearObstacles;
     }
 
 
@@ -165,6 +165,7 @@ public class Spawner : MonoBehaviour
     /// </summary>
     private void ResetFactors()
     {
+        ClearObstacles();
         level = 0;
         UpdateLevelText();
         finishSpawned = false;
