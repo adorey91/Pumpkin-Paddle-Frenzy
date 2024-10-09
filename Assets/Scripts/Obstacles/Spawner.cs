@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class ObstacleSpawner : MonoBehaviour
+public class Spawner : MonoBehaviour
 {
     GameManager gm;
 
@@ -17,9 +17,9 @@ public class ObstacleSpawner : MonoBehaviour
 
     // base values
     [Header("Obstacle Spawning Values")]
-    public float obstacleSpawnTime = 2f;
+    private float obstacleSpawnTime = 5f;
     [Range(0, 1)] public float obstacleSpawnTimeFactor = 0.1f;
-    public float obstacleSpeed = 1f;
+    private float obstacleSpeed = 1f;
     [Range(0, 1)] public float obstacleSpeedFactor = 0.2f;
 
     // runtime values, these will change.
@@ -36,18 +36,19 @@ public class ObstacleSpawner : MonoBehaviour
     private int level = 0;
     private bool finishSpawned = false;
 
+    private bool startLoop;
+
     private void Start()
     {
         level = 0;
         gm = GameManager.instance;
-
-        gm.onGameOver.AddListener(ClearObstacles);
-        gm.onPlay.AddListener(ResetFactors);
     }
+
+
 
     private void Update()
     {
-        if (GameManager.instance.isPlaying)
+        if (startLoop)
         {
             recalculateTime += Time.deltaTime;
             timeAlive += Time.deltaTime;
@@ -60,10 +61,26 @@ public class ObstacleSpawner : MonoBehaviour
                 UpdateLevelText();
             }
             if (!finishSpawned)
-                    SpawnLoop();
+                SpawnLoop();
         }
-
     }
+
+    private void OnEnable()
+    {
+        Actions.OnGameplay += ResetFactors;
+        Actions.OnGameOver += ClearObstacles;
+        Actions.OnGameWin += ClearObstacles;
+    }
+
+    private void OnDisable()
+    {
+        Actions.OnGameplay -= ResetFactors;
+        Actions.OnGameOver -= ClearObstacles;
+        Actions.OnGameWin -= ClearObstacles;
+    }
+
+
+
 
     /// <summary>
     /// Spawn look that spawns obstacle at a certain time
@@ -100,18 +117,15 @@ public class ObstacleSpawner : MonoBehaviour
         Obstacle obstacle = spawnedObstacle.GetComponent<Obstacle>();
         obstacle.speed = _obstacleSpeed;
 
-        //Rigidbody2D obstacleRB = spawnedObstacle.GetComponent<Rigidbody2D>();
-        //obstacleRB.MovePosition(obstacleRB.position + (Vector2.down * GameManager.instance.moveSpeed * Time.deltaTime));
-        //obstacleRB.MovePosition(obstacleRB.position + (Vector2.down) * _obstacleSpeed * Time.deltaTime);
-        // obstacleRB.velocity = Vector2.down * _obstacleSpeed;
-
     }
-    
+
     /// <summary>
     /// Clears all obstacles from level
     /// </summary>
     private void ClearObstacles()
     {
+        startLoop = false;
+        //Debug.Log(startLoop);
         foreach (Transform child in obstacleParent)
         {
             Destroy(child.gameObject);
@@ -124,9 +138,9 @@ public class ObstacleSpawner : MonoBehaviour
     private void CalculateFactors()
     {
         _obstacleSpawnTime = obstacleSpawnTime / Mathf.Pow(timeAlive, obstacleSpawnTimeFactor);
-        _obstacleSpeed = obstacleSpeed * MathF.Pow(timeAlive, obstacleSpeedFactor);
+        _obstacleSpeed = obstacleSpeed + MathF.Pow(timeAlive, obstacleSpeedFactor);
 
-        foreach(Transform child in obstacleParent)
+        foreach (Transform child in obstacleParent)
         {
             child.GetComponent<Obstacle>().speed = _obstacleSpeed;
         }
@@ -146,11 +160,14 @@ public class ObstacleSpawner : MonoBehaviour
     /// </summary>
     private void ResetFactors()
     {
+        ClearObstacles();
         level = 0;
         UpdateLevelText();
         finishSpawned = false;
         timeAlive = 1f;
         _obstacleSpawnTime = obstacleSpawnTime;
         _obstacleSpeed = obstacleSpeed;
+
+        startLoop = true;
     }
 }

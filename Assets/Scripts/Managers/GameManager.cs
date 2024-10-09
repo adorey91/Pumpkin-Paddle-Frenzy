@@ -12,13 +12,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UiManager uiManager;
     [SerializeField] private HealthSystem healthSystem;
     [SerializeField] private ScoreManager scoreManager;
-    [SerializeField] private ObstacleSpawner obstacleSpawner;
+    [SerializeField] private Spawner spawner;
     [SerializeField] private UpgradeManager upgradeManager;
     [SerializeField] private SoundManager soundManager;
 
     [Header("Gamestate")]
     public GameState state;
-    public enum GameState { MainMenu, Gameplay, Upgrades, Pause, Options, GameEnd };
+    public enum GameState { MainMenu, Gameplay, Pause, Options, GameEnd };
     private GameState currentState;
     private GameState beforeOptions;
 
@@ -26,16 +26,6 @@ public class GameManager : MonoBehaviour
     public float moveSpeed; // used to move the scrolling level
     public int winningLevel;
     internal bool isPlaying;
-
-
-    //[SerializeField] private PlayerController player;
-    internal UnityEvent gamePaused = new UnityEvent();
-    internal UnityEvent onPlay = new UnityEvent();
-    internal UnityEvent onGameOver = new UnityEvent();
-    internal UnityEvent onPlayerWin = new UnityEvent();
-
-    // player
-
 
     private void Awake()
     {
@@ -50,6 +40,18 @@ public class GameManager : MonoBehaviour
         SetState(GameState.MainMenu);
     }
 
+
+    private void OnEnable()
+    {
+        Actions.OnGameOver += PlayerDied;
+        Actions.OnGameWin += GameWin;
+    }
+
+    private void OnDisable()
+    {
+        Actions.OnGameOver -= PlayerDied;
+        Actions.OnGameWin -= GameWin;
+    }
 
     public void LoadState(string stateName)
     {
@@ -79,7 +81,6 @@ public class GameManager : MonoBehaviour
         {
             case GameState.MainMenu: MainMenu(); break;
             case GameState.Gameplay: Gameplay(); break;
-            case GameState.Upgrades: PlayerDied(); break;
             case GameState.Options: Options(); break;
             case GameState.Pause: Pause(); break;
             case GameState.GameEnd: GameWin(); break;
@@ -97,16 +98,15 @@ public class GameManager : MonoBehaviour
 
     private void MainMenu()
     {
-        gamePaused.Invoke();
         moveSpeed = 0;
-        //healthSystem.UpdateHealthStats();
-        //soundManager.PlayAudio("MainMenu");
+        healthSystem.UpdateHealthStats();
+        soundManager.PlayAudio("MainMenu");
         uiManager.MainMenu_UI();
     }
 
     private void Gameplay()
     {
-        onPlay.Invoke();
+        Actions.OnGameplay();
         moveSpeed = 1;
         isPlaying = true;
         soundManager.PlayAudio("Gameplay");
@@ -115,17 +115,15 @@ public class GameManager : MonoBehaviour
 
     private void PlayerDied()
     {
-        onGameOver.Invoke();
         moveSpeed = 0;
         isPlaying = false;
         scoreManager.UpdateText();
         upgradeManager.UpdateAllButtons();
-        uiManager.Upgrades_UI();
+        uiManager.Results_UI();
     }
 
     private void Pause()
     {
-        gamePaused.Invoke();
         moveSpeed = 0;
         isPlaying = false;
         uiManager.Pause_UI();
@@ -138,8 +136,6 @@ public class GameManager : MonoBehaviour
 
     private void GameWin()
     {
-        onPlayerWin.Invoke();
-        isPlaying = false;
         uiManager.GameOver_UI();
     }
 
