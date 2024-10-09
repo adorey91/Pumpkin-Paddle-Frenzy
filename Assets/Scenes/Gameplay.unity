@@ -6500,7 +6500,6 @@ MonoBehaviour:
   staminaSprite: {fileID: 1096195557}
   playerAnimation: {fileID: 0}
   overrideController: {fileID: 0}
-  purchasedUpgrades: []
 --- !u!1 &614661690
 GameObject:
   m_ObjectHideFlags: 0
@@ -11587,7 +11586,7 @@ Animator:
   m_GameObject: {fileID: 1096195556}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ef930a2798d555c48a82c99518487ae4, type: 2}
+  m_Controller: {fileID: 9100000, guid: 7baee2f027b6ff7479da44b595bc9ef7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -11693,7 +11692,7 @@ Animator:
   m_GameObject: {fileID: 1103520503}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 0ac095490187b0e43b50ba3922e20973, type: 2}
+  m_Controller: {fileID: 9100000, guid: a4a4ba7fa013c1a4bbb15a08057badb7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -20469,6 +20468,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1836446654}
   - component: {fileID: 1836446655}
+  - component: {fileID: 1836446656}
   m_Layer: 0
   m_Name: PlayerBoat
   m_TagString: Untagged
@@ -20543,6 +20543,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &1836446656
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1836446653}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5d26d22cc225d7b49a00083b94c60b74, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1845038968
 GameObject:
   m_ObjectHideFlags: 0
