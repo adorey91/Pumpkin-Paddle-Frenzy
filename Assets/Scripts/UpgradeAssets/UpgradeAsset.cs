@@ -13,6 +13,7 @@ public class UpgradeAsset : ScriptableObject
     public int number;
     public UpgradeAsset preRequisites;
     public Sprite newSprite;
+    public AnimationClip newAnimation;
     public float newStats;
     public int cost;
     public bool isPurchased;
