@@ -7,6 +7,7 @@ public static class Actions
 {
     // Player Actions
     public static Action OnCollectApple;
+    public static Action OnCollectGoldenApple;
     public static Action OnPlayerHurt;
     //public static Action TurnOnPlayerSprite;
     //public static Action TurnOffPlayerSprite;

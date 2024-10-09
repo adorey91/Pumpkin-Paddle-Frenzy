@@ -72,8 +72,11 @@ public class PlayerController : MonoBehaviour
 
             switch (obs.obstacleType)
             {
-                case Obstacle.ObstacleType.Currency:
+                case Obstacle.ObstacleType.Apple:
                     Actions.OnCollectApple();
+                    break;
+                case Obstacle.ObstacleType.GoldenApple:
+                    Actions.OnCollectGoldenApple();
                     break;
                 case Obstacle.ObstacleType.AvoidThis:
                     Actions.OnPlayerHurt();

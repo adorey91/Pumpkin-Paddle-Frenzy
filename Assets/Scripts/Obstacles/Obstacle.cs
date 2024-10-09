@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
-    public enum ObstacleType { Currency, AvoidThis, Finish }
+    public enum ObstacleType { Apple, GoldenApple, AvoidThis, Finish }
     public ObstacleType obstacleType;
     public float speed;
 
@@ -18,7 +18,7 @@ public class Obstacle : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.position -= new Vector3(0, Time.deltaTime * GameManager.instance.moveSpeed * speed, 0);
-        //rb.MovePosition(rb.position + (Vector2.down * GameManager.instance.moveSpeed * speed * Time.deltaTime));
+        //transform.position -= new Vector3(0, Time.deltaTime * GameManager.instance.moveSpeed * speed, 0);
+        rb.MovePosition(rb.position + (Vector2.down * GameManager.instance.moveSpeed * speed * Time.deltaTime));
     }
 }

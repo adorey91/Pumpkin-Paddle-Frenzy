@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Gamestate")]
     public GameState state;
-    public enum GameState { MainMenu, Gameplay, Upgrades, Pause, Options, GameEnd };
+    public enum GameState { MainMenu, Gameplay, Pause, Options, GameEnd };
     private GameState currentState;
     private GameState beforeOptions;
 
@@ -81,7 +81,6 @@ public class GameManager : MonoBehaviour
         {
             case GameState.MainMenu: MainMenu(); break;
             case GameState.Gameplay: Gameplay(); break;
-            case GameState.Upgrades: PlayerDied(); break;
             case GameState.Options: Options(); break;
             case GameState.Pause: Pause(); break;
             case GameState.GameEnd: GameWin(); break;

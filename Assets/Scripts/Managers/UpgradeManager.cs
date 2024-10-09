@@ -25,10 +25,11 @@ public class UpgradeManager : MonoBehaviour
     [Header("Player Sprite")]
     [SerializeField] private SpriteRenderer healthSprite;
     [SerializeField] private SpriteRenderer staminaSprite;
+    [SerializeField] private Animator playerAnimation;
+    [SerializeField] private AnimatorOverrideController overrideController;
+    
 
-   
-
-    public List<UpgradeAsset> purchasedUpgrades = new List<UpgradeAsset>(); // All purchased upgrades should go to this list
+    internal List<UpgradeAsset> purchasedUpgrades = new List<UpgradeAsset>(); // All purchased upgrades should go to this list
 
     /// <summary>
     /// Function used to purchase upgrades from upgrade "store"
@@ -74,6 +75,8 @@ public class UpgradeManager : MonoBehaviour
                     healthSystem.curHealthUpgrade = upgradeAsset;
                     healthSystem.maxHealth = (int)upgradeAsset.newStats;
                     healthSprite.sprite = upgradeAsset.newSprite;
+                    // MAYBE USE A BLENDTREE FOR EACH UPGRADE ANIMATIONS? NEED SOLUTION
+                    //playerAnimation = playerAnimation.Play(upgradeAsset.newAnimation);
                     upgradeAsset.isPurchased = true;
                     Debug.Log("Health: " + healthSystem.maxHealth);
                     break;

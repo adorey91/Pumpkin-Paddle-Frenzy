@@ -17,7 +17,7 @@ public class Spawner : MonoBehaviour
 
     // base values
     [Header("Obstacle Spawning Values")]
-    private float obstacleSpawnTime = 2f;
+    private float obstacleSpawnTime = 5f;
     [Range(0, 1)] public float obstacleSpawnTimeFactor = 0.1f;
     private float obstacleSpeed = 1f;
     [Range(0, 1)] public float obstacleSpeedFactor = 0.2f;
@@ -116,11 +116,6 @@ public class Spawner : MonoBehaviour
         GameObject spawnedObstacle = Instantiate(obstacleToSpawn, new Vector2(randomX, transform.position.y), Quaternion.identity, obstacleParent);
         Obstacle obstacle = spawnedObstacle.GetComponent<Obstacle>();
         obstacle.speed = _obstacleSpeed;
-
-        //Rigidbody2D obstacleRB = spawnedObstacle.GetComponent<Rigidbody2D>();
-        //obstacleRB.MovePosition(obstacleRB.position + (Vector2.down * GameManager.instance.moveSpeed * Time.deltaTime));
-        //obstacleRB.MovePosition(obstacleRB.position + (Vector2.down) * _obstacleSpeed * Time.deltaTime);
-        // obstacleRB.velocity = Vector2.down * _obstacleSpeed;
 
     }
 

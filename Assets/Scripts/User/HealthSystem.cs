@@ -20,10 +20,11 @@ public class HealthSystem : MonoBehaviour
     public float staminaDrain = 0.5f;
 
     [Header("PlayerSprite")]
-    [SerializeField] private PlayerController player;
+    [SerializeField] private GameObject player;
     [SerializeField] private SpriteRenderer playerSprite;
     [SerializeField] private SpriteRenderer boatSprite;
     [SerializeField] private SpriteRenderer paddleSprite;
+    private CircleCollider2D playerCollider;
 
     public int flickerAmount = 3;
     public float flickerDuration = 0.1f;
@@ -56,7 +57,7 @@ public class HealthSystem : MonoBehaviour
 
             if (staminaImage.fillAmount <= 0)  // Changed from `==` to `<=` for precision
             {
-                Actions.OnGameOver();
+                Actions.OnPlayerHurt();
                 if (curHealth > 0)
                     staminaImage.fillAmount = 1;
             }
@@ -80,6 +81,9 @@ public class HealthSystem : MonoBehaviour
 
     private IEnumerator DamageFlicker()
     {
+        playerCollider = player.GetComponent<CircleCollider2D>();
+        playerCollider.enabled = false;
+
         for (int i = 0; i < flickerAmount; i++)
         {
             playerSprite.color = new Color(1f, 1f, 1f, 0.5f);
@@ -88,6 +92,8 @@ public class HealthSystem : MonoBehaviour
             yield return new WaitForSeconds(flickerDuration/2);
         }
         if (curHealth <= 0)
-            GameManager.instance.LoadState("Upgrades");
+            Actions.OnGameOver();
+
+        playerCollider.enabled = true;
     }
 }
