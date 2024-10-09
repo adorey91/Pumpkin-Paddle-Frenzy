@@ -25,9 +25,10 @@ public class UpgradeManager : MonoBehaviour
     [Header("Player Sprite")]
     [SerializeField] private SpriteRenderer healthSprite;
     [SerializeField] private SpriteRenderer staminaSprite;
-    [SerializeField] private Animator playerAnimation;
-    [SerializeField] private AnimatorOverrideController overrideController;
-    
+    [SerializeField] private Animator paddleAnimator;
+    [SerializeField] private Animator boatAnimator;
+
+
 
     internal List<UpgradeAsset> purchasedUpgrades = new List<UpgradeAsset>(); // All purchased upgrades should go to this list
 
@@ -55,7 +56,7 @@ public class UpgradeManager : MonoBehaviour
     /// </summary>
     public void ResetUpgrades()
     {
-        foreach(var upgradeAsset in allUpgrades)
+        foreach (var upgradeAsset in allUpgrades)
         {
             upgradeAsset.isPurchased = false;
         }
@@ -75,8 +76,10 @@ public class UpgradeManager : MonoBehaviour
                     healthSystem.curHealthUpgrade = upgradeAsset;
                     healthSystem.maxHealth = (int)upgradeAsset.newStats;
                     healthSprite.sprite = upgradeAsset.newSprite;
-                    // MAYBE USE A BLENDTREE FOR EACH UPGRADE ANIMATIONS? NEED SOLUTION
-                    //playerAnimation = playerAnimation.Play(upgradeAsset.newAnimation);
+                    Debug.Log("Setting boat animator Upgrade to: " + upgradeAsset.number);
+                    boatAnimator.SetInteger("Upgrade", upgradeAsset.number);
+                    Debug.Log("Boat Animator Upgrade is now: " + boatAnimator.GetInteger("Upgrade"));
+
                     upgradeAsset.isPurchased = true;
                     Debug.Log("Health: " + healthSystem.maxHealth);
                     break;
@@ -84,6 +87,9 @@ public class UpgradeManager : MonoBehaviour
                     healthSystem.curStaminaUpgrade = upgradeAsset;
                     healthSystem.staminaDrain = upgradeAsset.newStats;
                     staminaSprite.sprite = upgradeAsset.newSprite;
+                    Debug.Log("Setting paddle animator Upgrade to: " + upgradeAsset.number);
+                    paddleAnimator.SetInteger("Upgrade", upgradeAsset.number);
+                    Debug.Log("Paddle Animator Upgrade is now: " + paddleAnimator.GetInteger("Upgrade"));
                     upgradeAsset.isPurchased = true;
                     Debug.Log("Stamina: " + healthSystem.staminaDrain);
                     break;
@@ -100,9 +106,9 @@ public class UpgradeManager : MonoBehaviour
     /// <returns></returns>
     public UpgradeAsset FindUpgradeByName(string upgradeName)
     {
-        foreach(UpgradeAsset upgradeAsset in allUpgrades)
+        foreach (UpgradeAsset upgradeAsset in allUpgrades)
         {
-            if(upgradeAsset.name == upgradeName)
+            if (upgradeAsset.name == upgradeName)
                 return upgradeAsset;
         }
         Debug.LogWarning($"Upgrade not found: {upgradeName}");

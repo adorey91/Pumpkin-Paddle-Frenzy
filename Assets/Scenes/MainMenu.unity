@@ -5385,8 +5385,8 @@ MonoBehaviour:
   - {fileID: 1894114907}
   healthSprite: {fileID: 271451558}
   staminaSprite: {fileID: 1999987392}
-  playerAnimation: {fileID: 0}
-  overrideController: {fileID: 0}
+  paddleAnimator: {fileID: 1999987393}
+  boatAnimator: {fileID: 271451557}
 --- !u!1 &415238356
 GameObject:
   m_ObjectHideFlags: 0

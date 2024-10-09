@@ -12,7 +12,6 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb2D;
     private Vector2 movement;
     [Range(2, 10)] public float speed = 4f;
-    [SerializeField] private GameObject player;
 
     private void Awake()
     {
@@ -34,21 +33,6 @@ public class PlayerController : MonoBehaviour
         rb2D.MovePosition(rb2D.position + movement * speed * Time.deltaTime);
     }
 
-    public void ActivateSprite()
-    {
-        foreach (Transform spriteTransform in transform)
-        {
-            spriteTransform.gameObject.SetActive(true);
-        }
-    }
-
-    public void DisableSprite()
-    {
-        foreach (Transform spriteTransform in transform)
-        {
-            spriteTransform.gameObject.SetActive(false);
-        }
-    }
 
     public void Move(InputAction.CallbackContext context)
     {
@@ -87,19 +71,5 @@ public class PlayerController : MonoBehaviour
             }
             Destroy(collision.gameObject);
         }
-    }
-
-    private void OnEnable()
-    {
-        Actions.OnGameplay += ActivateSprite;
-        Actions.OnGameOver += DisableSprite;
-        Actions.OnGameWin += DisableSprite;
-    }
-
-    private void OnDisable()
-    {
-        Actions.OnGameplay -= ActivateSprite;
-        Actions.OnGameOver -= DisableSprite;
-        Actions.OnGameWin -= DisableSprite;
     }
 }

@@ -39,12 +39,16 @@ public class HealthSystem : MonoBehaviour
     {
         Actions.OnPlayerHurt += TakeDamage;
         Actions.OnGameplay += UpdateHealthStats;
+        Actions.OnGameWin += DisableSprite;
+        Actions.OnGameOver += DisableSprite;
     }
 
     private void OnDisable()
     {
         Actions.OnPlayerHurt -= TakeDamage;
         Actions.OnGameplay -= UpdateHealthStats;
+        Actions.OnGameWin -= DisableSprite;
+        Actions.OnGameOver -= DisableSprite;
     }
 
     private void StaminaDrain()
@@ -74,9 +78,25 @@ public class HealthSystem : MonoBehaviour
 
     public void UpdateHealthStats()
     {
+        ActivateSprite();
+
         staminaImage.fillAmount = 1;
         curHealth = maxHealth;
         healthText.text = $"x {curHealth}";
+    }
+
+    private void ActivateSprite()
+    {
+        playerSprite.enabled = true;
+        boatSprite.enabled = true;
+        paddleSprite.enabled = true;
+    }   
+    
+    private void DisableSprite()
+    {
+        playerSprite.enabled = false;
+        boatSprite.enabled = false;
+        paddleSprite.enabled = false;
     }
 
     private IEnumerator DamageFlicker()
@@ -86,8 +106,12 @@ public class HealthSystem : MonoBehaviour
 
         for (int i = 0; i < flickerAmount; i++)
         {
+            boatSprite.color = new Color(1f, 1f, 1f, 0.5f);
+            paddleSprite.color = new Color(1f, 1f, 1f, 0.5f);
             playerSprite.color = new Color(1f, 1f, 1f, 0.5f);
             yield return new WaitForSeconds(flickerDuration);
+            boatSprite.color = Color.white;
+            paddleSprite.color = Color.white;
             playerSprite.color = Color.white;
             yield return new WaitForSeconds(flickerDuration/2);
         }
