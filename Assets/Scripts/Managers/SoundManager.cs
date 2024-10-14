@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Audio;
+using System;
 
 public class SoundManager : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip gameplayClip;
     [SerializeField] private AudioClip sfxCollectClip;
     [SerializeField] private AudioClip sfxCrashClip;
-    [SerializeField] private AudioClip sfxClickButtonClip;
+    [SerializeField] private AudioClip sfxVictoryClip;
 
     public void Start()
     {
@@ -34,13 +35,18 @@ public class SoundManager : MonoBehaviour
     private void OnEnable()
     {
         Actions.OnGameOver += PlayEnemyCrash;
+        Actions.OnPlayerHurt += PlayEnemyCrash;
         Actions.OnCollectApple += PlayAppleCollection;
+        Actions.OnGameWin += PlayVictory;
     }
+
 
     private void OnDisable()
     {
         Actions.OnGameOver -= PlayEnemyCrash;
+        Actions.OnPlayerHurt -= PlayEnemyCrash;
         Actions.OnCollectApple -= PlayAppleCollection;
+        Actions.OnGameWin -= PlayVictory;
     }
 
     /// This should be used for looping audio.
@@ -56,6 +62,15 @@ public class SoundManager : MonoBehaviour
             musicSource.Play();
     }
 
+    private void PlayVictory()
+    {
+        if (sfxSource == null)
+        {
+            GameObject foundObject = GameObject.Find("SFXSource");
+            sfxSource = GetComponent<AudioSource>();
+        }
+        sfxSource.PlayOneShot(sfxVictoryClip, 1f);
+    }
 
     private void PlayEnemyCrash()
     {
@@ -77,16 +92,7 @@ public class SoundManager : MonoBehaviour
         sfxSource.PlayOneShot(sfxCollectClip, 1f);
     }
 
-    private void PlayButtonClick()
-    {
-        if (sfxSource == null)
-        {
-            GameObject foundObject = GameObject.Find("SFXSource");
-            sfxSource = GetComponent<AudioSource>();
-        }
-        sfxSource.PlayOneShot(sfxClickButtonClip, 1f);
-    }
-
+    
 
     // Sets volume
     public void SetVolume(string slider)

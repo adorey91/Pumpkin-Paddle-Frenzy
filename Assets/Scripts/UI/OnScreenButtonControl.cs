@@ -10,15 +10,9 @@ public class OnScreenButtonControl : MonoBehaviour
     public bool activeControls = true;
     public bool activePause = true;
 
-    // Start is called before the first frame update
-    void Start()
+    public void LoadButtons()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        onScreenControlsButtons.SetActive(activeControls);
+        pauseButton.SetActive(activePause);
     }
 }

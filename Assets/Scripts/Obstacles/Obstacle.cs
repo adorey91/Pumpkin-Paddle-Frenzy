@@ -4,11 +4,8 @@ using UnityEngine;
 
 public class Obstacle : MonoBehaviour
 {
-    public enum ObstacleType { Apple, GoldenApple, AvoidThis, Finish }
-    public ObstacleType obstacleType;
-    public float speed;
-
-
+    public SpawnableObjects spawnableObject;
+    public float movementSpeed;
     private Rigidbody2D rb;
 
     private void Start()
@@ -18,7 +15,16 @@ public class Obstacle : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //transform.position -= new Vector3(0, Time.deltaTime * GameManager.instance.moveSpeed * speed, 0);
-        rb.MovePosition(rb.position + (Vector2.down * GameManager.instance.moveSpeed * speed * Time.deltaTime));
+        rb.MovePosition(rb.position + (Vector2.down * movementSpeed * Time.deltaTime));
+    }
+
+    public void Initialize(SpawnableObjects spawnable)
+    {
+        spawnableObject = spawnable;
+    }
+
+    public void UpdateSpeed(float newSpeed)
+    {
+        movementSpeed = newSpeed;
     }
 }

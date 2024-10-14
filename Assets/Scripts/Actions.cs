@@ -21,7 +21,11 @@ public static class Actions
     public static Action OnGamePause;
     public static Action OnGameWin;
     public static Action OnGameOver;
+    public static Action LoadSettings;
 
     // UI Actions
     public static Action OnScreenLoad;
+    public static Action UpdateAttemptText;
+    public static Action UpdateAppleText;
+    public static Action OnLevelIncrease;
 }

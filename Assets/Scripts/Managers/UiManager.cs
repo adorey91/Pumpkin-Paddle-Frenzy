@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using TMPro;
+using UnityEditor.PackageManager;
 
 public class UiManager : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject ui_Results;
 
     [Header("Instruction UI")]
+    [SerializeField] private GameObject ui_backgroundInstruct;
     [SerializeField] private GameObject ui_Instructions;
     [SerializeField] private GameObject ui_HowToApply;
     [SerializeField] private GameObject ui_Controls;
@@ -53,28 +55,33 @@ public class UiManager : MonoBehaviour
         noButton.onClick.RemoveAllListeners();
         SetActiveUI(ui_Confirmation);
 
-        switch(name)
+        switch (name)
         {
             case "save":
-                confirmText.text = $"Do you want to load previous save? \nIf not, current save will be deleted";
-                yesButton.onClick.AddListener(saveManager.Load);
-                noButton.onClick.AddListener(Instructions_UI);
-                noButton.onClick.AddListener(saveManager.DeleteSave);
-                noButton.onClick.AddListener(upgradeManager.ResetUpgrades);
-                break;
+                SetConfirmation($"Do you want to load previous save? \nIf not, current save will be deleted",
+                    () =>
+                    {
+                        saveManager.Load();
+                        ui_backgroundInstruct.SetActive(false);
+                    },
+                    () =>
+                    {
+                        Instructions_UI();
+                        saveManager.DeleteSave();
+                        upgradeManager.ResetUpgrades();
+                    }
+                    ); break;
             case "quit":
-                confirmText.text = "Are you sure you want to quit?";
-                yesButton.onClick.AddListener(() => GameManager.instance.Quit());
-                noButton.onClick.AddListener(() => GameManager.instance.LoadState("beforeOptions"));
-                break;
+                SetConfirmation("Are you sure you want to quit?",
+                    () => GameManager.instance.Quit(),
+                    () => GameManager.instance.LoadState("beforeOptions")
+                ); break;
             case "mainmenu":
-                confirmText.text = "Are you sure you want to go to Main Menu? All progress will not be saved";
-                yesButton.onClick.AddListener(() => levelManager.LoadScene("MainMenu"));
-                noButton.onClick.AddListener(() => GameManager.instance.LoadState("beforeOptions"));
-                break;
-            default:
-                confirmText.text = "Yes button will not work.";
-                break;
+                SetConfirmation("Are you sure you want to go to Main Menu?",
+                    () => levelManager.LoadScene("MainMenu"),
+                    () => GameManager.instance.LoadState("beforeOptions")
+                ); break;
+            default: confirmText.text = "Yes button will not work."; break;
         }
     }
 
@@ -91,8 +98,16 @@ public class UiManager : MonoBehaviour
         ui_HowToApply.SetActive(false);
         ui_Controls.SetActive(false);
         ui_Results.SetActive(false);
+        ui_backgroundInstruct.SetActive(false);
 
         activeUI.SetActive(true);
+    }
+
+    private void SetConfirmation(string message, UnityEngine.Events.UnityAction yesAction, UnityEngine.Events.UnityAction noAction)
+    {
+        confirmText.text = message;
+        yesButton.onClick.AddListener(yesAction);
+        noButton.onClick.AddListener(noAction);
     }
 
     // Do I need to set the toggles to whatever the onscreen is?
@@ -101,4 +116,15 @@ public class UiManager : MonoBehaviour
         onScreenControlsButtons.SetActive(activeControls);
         pauseButton.SetActive(activePause);
     }
+
+    private void OnEnable()
+    {
+        Actions.LoadSettings += LoadButtons;
+    }
+
+    private void OnDisable()
+    {
+        Actions.LoadSettings -= LoadButtons;
+    }
+
 }

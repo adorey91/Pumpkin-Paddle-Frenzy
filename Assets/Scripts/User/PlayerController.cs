@@ -1,44 +1,57 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
+using static Obstacle;
 
 public class PlayerController : MonoBehaviour
 {
-    // movement variables
+    // playerMovement variables
     [Header("Movement Variables")]
-    private Rigidbody2D rb2D;
-    private Vector2 movement;
-    [Range(2, 10)] public float speed = 4f;
+    private float baseMoveSpeed;
+    public float moveSpeed = 4f; // Speed of player left and right playerMovement
+
+    private Rigidbody2D rb;
+    private Vector2 playerMovement;
 
     private void Awake()
     {
-        rb2D = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
+        baseMoveSpeed = moveSpeed;
     }
-
 
     private void FixedUpdate()
     {
         if (GameManager.instance.isPlaying)
             Movement();
         else
-            transform.position= new Vector2(0,-2.7f);
+            transform.position = new Vector2(0, -2.7f);
+    }
+
+    private void OnEnable()
+    {
+        Actions.OnLevelIncrease += IncreaseMovementSpeed;
+        Actions.OnGameplay += ResetMovementSpeed;
+    }
+
+    private void OnDisable()
+    {
+        Actions.OnLevelIncrease -= IncreaseMovementSpeed;
+        Actions.OnGameplay -= ResetMovementSpeed;
     }
 
     private void Movement()
     {
-        movement.y = 0;
-        rb2D.MovePosition(rb2D.position + movement * speed * Time.deltaTime);
+        rb.MovePosition(rb.position + new Vector2(playerMovement.x, 0) * moveSpeed * Time.deltaTime);
     }
-
 
     public void Move(InputAction.CallbackContext context)
     {
-        movement = context.ReadValue<Vector2>();
+        playerMovement = context.ReadValue<Vector2>();
     }
 
+    /// <summary>
+    /// Pauses when player presses the button set in the PlayerInputManager it will go to pause or back to gameplay ONLY in gameplay / pause
+    /// </summary>
+    /// <param name="context"></param>
     public void Pause(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -48,28 +61,38 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void OnTriggerEnter2D(Collider2D collision)
+    public void OnTriggerEnter2D(Collider2D other)
     {
-        if (collision.gameObject.GetComponent<Obstacle>())
-        {
-            Obstacle obs = collision.gameObject.GetComponent<Obstacle>();
+        Obstacle obstacle = other.GetComponent<Obstacle>();
 
-            switch (obs.obstacleType)
-            {
-                case Obstacle.ObstacleType.Apple:
+        switch (obstacle.spawnableObject.type)
+        {
+            case SpawnableObjects.ObjectType.Collectable:
+                if (obstacle.spawnableObject.collectableValue == 1)
                     Actions.OnCollectApple();
-                    break;
-                case Obstacle.ObstacleType.GoldenApple:
+                else if (obstacle.spawnableObject.collectableValue > 1)
                     Actions.OnCollectGoldenApple();
-                    break;
-                case Obstacle.ObstacleType.AvoidThis:
-                    Actions.OnPlayerHurt();
-                    break;
-                case Obstacle.ObstacleType.Finish:
-                    Actions.OnGameWin();
-                    break;
-            }
-            Destroy(collision.gameObject);
+                break;
+
+            case SpawnableObjects.ObjectType.Obstacle:
+                Actions.OnPlayerHurt();
+                break;
+
+            case SpawnableObjects.ObjectType.FinishLine:
+                Actions.OnGameWin();
+                break;
         }
+
+        Destroy(other.gameObject);
+    }
+
+    private void IncreaseMovementSpeed()
+    {
+        moveSpeed = baseMoveSpeed * Mathf.Pow(Spawner.timeAlive, 0.15f);
+    }
+
+    private void ResetMovementSpeed()
+    {
+        moveSpeed = baseMoveSpeed;
     }
 }

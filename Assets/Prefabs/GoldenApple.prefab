@@ -13,6 +13,10 @@ PrefabInstance:
       value: GoldenApple
       objectReference: {fileID: 0}
     - target: {fileID: 3855614927770379287, guid: ad5cd9a75476e8b4dbdce128e27f1bbe, type: 3}
+      propertyPath: type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3855614927770379287, guid: ad5cd9a75476e8b4dbdce128e27f1bbe, type: 3}
       propertyPath: obstacleType
       value: 1
       objectReference: {fileID: 0}
