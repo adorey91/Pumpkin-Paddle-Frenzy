@@ -42,8 +42,11 @@ public class Ui_TextUpdater : MonoBehaviour
     public void LevelProgressText()
     {
         float progress = ((float)Spawner.level / (float)Spawner.winningLevel) * 100;
-        levelProgressText.text = $"Level Progress: {progress}%";
+        int roundedProgress = Mathf.RoundToInt(progress);
+
+        levelProgressText.text = $"Level Progress: {roundedProgress}%";
     }
+
 
     public void AttemptText()
     {
@@ -62,6 +65,6 @@ public class Ui_TextUpdater : MonoBehaviour
 
         string appleText = ScoreManager.appleCount == 1 ? "apple" : "apples";
 
-        runResults.text = $"You survived for {time.Minutes}:{time.Seconds} \nCollected {ScoreManager.appleCount} {appleText} this run!";
+        runResults.text = $"You survived for {time.Minutes:D2}:{time.Seconds:D2} \nCollected {ScoreManager.appleCount} {appleText} this run!";
     }
 }
