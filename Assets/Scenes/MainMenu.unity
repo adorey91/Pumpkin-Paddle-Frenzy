@@ -17304,6 +17304,7 @@ MonoBehaviour:
   - {fileID: 2023058742}
   - {fileID: 355392108}
   - {fileID: 1437550028}
+  playerCollider: {fileID: 611906322}
   healthSprite: {fileID: 34643366}
   staminaSprite: {fileID: 2133984068}
   healthSpriteUpgrade: {fileID: 789694411}
