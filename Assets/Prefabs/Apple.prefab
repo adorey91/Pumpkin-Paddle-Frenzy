@@ -134,8 +134,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72b724fd96d9b6542888f5c86d1db388, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstacleType: 0
-  speed: 1.9
+  type: 0
+  movementSpeed: 0
 --- !u!50 &2347628192391415349
 Rigidbody2D:
   serializedVersion: 4
@@ -159,7 +159,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4

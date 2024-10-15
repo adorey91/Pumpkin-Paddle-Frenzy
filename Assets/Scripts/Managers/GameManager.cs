@@ -18,12 +18,11 @@ public class GameManager : MonoBehaviour
 
     [Header("Gamestate")]
     public GameState state;
-    public enum GameState { MainMenu, Gameplay, Upgrades, Pause, Options, GameEnd };
+    public enum GameState { MainMenu, Gameplay, Pause, Options, GameEnd, Upgrade };
     private GameState currentState;
     private GameState beforeOptions;
 
     [Header("Game Values")]
-    public float moveSpeed; // used to move the scrolling level
     public int winningLevel;
     internal bool isPlaying;
 
@@ -81,10 +80,10 @@ public class GameManager : MonoBehaviour
         {
             case GameState.MainMenu: MainMenu(); break;
             case GameState.Gameplay: Gameplay(); break;
-            case GameState.Upgrades: PlayerDied(); break;
             case GameState.Options: Options(); break;
             case GameState.Pause: Pause(); break;
             case GameState.GameEnd: GameWin(); break;
+            case GameState.Upgrade: Upgrades(); break;
         }
     }
 
@@ -99,8 +98,7 @@ public class GameManager : MonoBehaviour
 
     private void MainMenu()
     {
-        moveSpeed = 0;
-        healthSystem.UpdateHealthStats();
+        isPlaying = false;
         soundManager.PlayAudio("MainMenu");
         uiManager.MainMenu_UI();
     }
@@ -108,24 +106,24 @@ public class GameManager : MonoBehaviour
     private void Gameplay()
     {
         Actions.OnGameplay();
-        moveSpeed = 1;
         isPlaying = true;
+        Time.timeScale = 1;
         soundManager.PlayAudio("Gameplay");
         uiManager.Gameplay_UI();
     }
 
-    private void PlayerDied()
+    private void Upgrades()
     {
-        moveSpeed = 0;
         isPlaying = false;
-        scoreManager.UpdateText();
+        Time.timeScale = 0;
         upgradeManager.UpdateAllButtons();
         uiManager.Results_UI();
     }
 
+
     private void Pause()
     {
-        moveSpeed = 0;
+        Time.timeScale = 0;
         isPlaying = false;
         uiManager.Pause_UI();
     }
@@ -140,6 +138,10 @@ public class GameManager : MonoBehaviour
         uiManager.GameOver_UI();
     }
 
+    private void PlayerDied()
+    {
+        LoadState(GameState.Upgrade);
+    }
 
     public void Quit()
     {

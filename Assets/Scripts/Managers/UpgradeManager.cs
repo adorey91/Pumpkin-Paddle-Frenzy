@@ -10,7 +10,6 @@ public class UpgradeManager : MonoBehaviour
     [SerializeField] private HealthSystem healthSystem;
 
     [Header("Upgrades")]
-    public UpgradeAsset[] allUpgrades;
     public UpgradeAsset[] healthUpgrades;
     public UpgradeAsset[] staminaUpgrades;
 
@@ -22,13 +21,32 @@ public class UpgradeManager : MonoBehaviour
     [SerializeField] private GameObject[] healthChecks;
     [SerializeField] private GameObject[] staminaChecks;
 
-    [Header("Player Sprite")]
+    [Header("Player Collider")]
+    [SerializeField] private CircleCollider2D playerCollider;
+
+    [Header("Health Upgrade Components")]
     [SerializeField] private SpriteRenderer healthSprite;
+    [SerializeField] private Image healthSpriteUpgrade;
+    [SerializeField] private Animator boatAnimator;
+
+    [Header("Stamina Upgrade Components")]
     [SerializeField] private SpriteRenderer staminaSprite;
+    [SerializeField] private Image staminaSpriteUpgrade;
+    [SerializeField] private Animator paddleAnimator;
 
-   
 
-    public List<UpgradeAsset> purchasedUpgrades = new List<UpgradeAsset>(); // All purchased upgrades should go to this list
+
+    internal List<UpgradeAsset> purchasedUpgrades = new List<UpgradeAsset>(); // All purchased upgrades should go to this list
+
+    private void OnEnable()
+    {
+        Actions.LoadSettings += UpdateAllButtons;
+    }
+
+    private void OnDisable()
+    {
+        Actions.LoadSettings -= UpdateAllButtons;
+    }
 
     /// <summary>
     /// Function used to purchase upgrades from upgrade "store"
@@ -36,10 +54,10 @@ public class UpgradeManager : MonoBehaviour
     /// <param name="upgradeAsset"></param>
     public void PurchaseUpgrade(UpgradeAsset upgradeAsset)
     {
-        if (scoreManager.appleCount >= upgradeAsset.cost && !upgradeAsset.isPurchased)
+        if (ScoreManager.totalAppleCount >= upgradeAsset.cost && !upgradeAsset.isPurchased)
         {
-            scoreManager.appleCount -= upgradeAsset.cost;
-            scoreManager.UpdateText();
+            ScoreManager.totalAppleCount -= upgradeAsset.cost;
+            Actions.UpdateAppleText();
 
             // Add to the list of purchased upgrades if not already in it
             if (!purchasedUpgrades.Contains(upgradeAsset))
@@ -54,7 +72,12 @@ public class UpgradeManager : MonoBehaviour
     /// </summary>
     public void ResetUpgrades()
     {
-        foreach(var upgradeAsset in allUpgrades)
+        foreach (var upgradeAsset in healthUpgrades)
+        {
+            upgradeAsset.isPurchased = false;
+        }
+
+        foreach (var upgradeAsset in staminaUpgrades)
         {
             upgradeAsset.isPurchased = false;
         }
@@ -74,15 +97,19 @@ public class UpgradeManager : MonoBehaviour
                     healthSystem.curHealthUpgrade = upgradeAsset;
                     healthSystem.maxHealth = (int)upgradeAsset.newStats;
                     healthSprite.sprite = upgradeAsset.newSprite;
+                    healthSpriteUpgrade.sprite = upgradeAsset.newSprite;
+                    playerCollider.radius = upgradeAsset.colliderRadius;
+                    boatAnimator.SetInteger("Upgrade", upgradeAsset.number);
                     upgradeAsset.isPurchased = true;
-                    Debug.Log("Health: " + healthSystem.maxHealth);
                     break;
+
                 case UpgradeAsset.StateUpgrade.Stamina:
                     healthSystem.curStaminaUpgrade = upgradeAsset;
                     healthSystem.staminaDrain = upgradeAsset.newStats;
                     staminaSprite.sprite = upgradeAsset.newSprite;
+                    staminaSpriteUpgrade.sprite = upgradeAsset.newSprite;
+                    paddleAnimator.SetInteger("Upgrade", upgradeAsset.number);
                     upgradeAsset.isPurchased = true;
-                    Debug.Log("Stamina: " + healthSystem.staminaDrain);
                     break;
             }
             Debug.Log("Applied upgrade");
@@ -97,10 +124,16 @@ public class UpgradeManager : MonoBehaviour
     /// <returns></returns>
     public UpgradeAsset FindUpgradeByName(string upgradeName)
     {
-        foreach(UpgradeAsset upgradeAsset in allUpgrades)
+        foreach (UpgradeAsset upgradeAsset in healthUpgrades)
         {
-            if(upgradeAsset.name == upgradeName)
+            if (upgradeAsset.name == upgradeName)
                 return upgradeAsset;
+        }
+
+        foreach(UpgradeAsset upgradeAsset in staminaUpgrades)
+        {
+            if (upgradeAsset.name == upgradeName)
+                    return upgradeAsset;
         }
         Debug.LogWarning($"Upgrade not found: {upgradeName}");
         return null;
@@ -132,7 +165,7 @@ public class UpgradeManager : MonoBehaviour
             else
             {
                 // Check if player can afford the upgrade
-                if (scoreManager.appleCount >= upgrade.cost)
+                if (ScoreManager.totalAppleCount >= upgrade.cost)
                 {
                     // Only check prerequisites if they exist
                     if (upgrade.preRequisites == null || upgrade.preRequisites.isPurchased)

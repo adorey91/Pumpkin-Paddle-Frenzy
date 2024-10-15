@@ -48,21 +48,19 @@ public class SaveManager : MonoBehaviour
         // Save other stats
         data.healthAmount = healthSystem.maxHealth;
         data.staminaDrain = healthSystem.staminaDrain;
-        data.appleCount = scoreManager.appleCount;
-        data.attemptsMade = scoreManager.attemptNumber;
+        data.appleCount = ScoreManager.totalAppleCount;
+        data.attemptsMade = ScoreManager.attemptNumber;
         data.onScreenControls = uiManager.activeControls;
         data.onScreenPause = uiManager.activePause;
 
         bf.Serialize(file, data);
         file.Close();
-        Debug.Log("Game Saved");
-
     }
 
     /// <summary>
     /// Loads gamestats
     /// </summary>
-    public void Load()
+    internal void Load()
     {
         if (File.Exists(GetSavePath() + "/playerInfo.dat"))
         {
@@ -80,26 +78,23 @@ public class SaveManager : MonoBehaviour
                 UpgradeAsset foundUpgrade = upgradeManager.FindUpgradeByName(upgradeName);
                 if (foundUpgrade != null)
                 {
-                    foundUpgrade.isPurchased = true; // Ensure it's marked as purchased
-                    upgradeManager.purchasedUpgrades.Add(foundUpgrade); // Add to purchased list
+                    foundUpgrade.isPurchased = true;
+                    upgradeManager.purchasedUpgrades.Add(foundUpgrade);
 
-                    // Apply the upgrade (to update any relevant player stats)
                     upgradeManager.ApplyUpgradeToPlayer(foundUpgrade);
                 }
             }
 
-            // Load other stats
+            // Load Stats
             healthSystem.maxHealth = data.healthAmount;
             healthSystem.staminaDrain = data.staminaDrain;
-            scoreManager.appleCount = data.appleCount;
-            scoreManager.attemptNumber = data.attemptsMade;
+            ScoreManager.totalAppleCount = data.appleCount;
+            ScoreManager.attemptNumber = data.attemptsMade;
             uiManager.activePause = data.onScreenPause;
             uiManager.activeControls = data.onScreenControls;
 
-            // Make sure to update health system and buttons after loading all data
-            healthSystem.UpdateHealthStats();
-            upgradeManager.UpdateAllButtons(); // Update the buttons once the data is fully loaded
-            uiManager.LoadButtons();
+            // Triggers the load settings action
+            Actions.LoadSettings();
 
             // Load the gameplay scene
             levelManager.LoadScene("Gameplay");

@@ -1,177 +1,167 @@
-using System;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class Spawner : MonoBehaviour
 {
-    GameManager gm;
+    [Header("Obstacles To Be Spawned")]
+    [SerializeField] private List<SpawnableObjects> spawnableObjects;
 
-    // obstacle spawning objects
-    [Header("Obstacle Spawning")]
-    [SerializeField] private Transform obstacleParent;
-    [SerializeField] private GameObject finishLine;
-    [SerializeField] private GameObject[] obstaclePrefabs;
-    private GameObject obstacleToSpawn;
+    [Header("Spawning Base Values")]
+    [SerializeField] private float obstacleSpawnTime = 5f;
+    [Range(0f, 1f)] public float obstacleSpawnFactor = 0.075f;
+    [SerializeField] private float obstacleSpeed = 1f;
+    [Range(0f, 1f)] public float obstacleSpeedFactor = 0.15f;
+    public float backgroundSpeed;
 
-
-    // base values
-    [Header("Obstacle Spawning Values")]
-    private float obstacleSpawnTime = 2f;
-    [Range(0, 1)] public float obstacleSpawnTimeFactor = 0.1f;
-    private float obstacleSpeed = 1f;
-    [Range(0, 1)] public float obstacleSpeedFactor = 0.2f;
-
-    // runtime values, these will change.
     private float _obstacleSpawnTime;
     private float _obstacleSpeed;
 
-    private float timeUntilObstacleSpawn;
-    private float timeAlive;
-    private float recalculateTime;
-    private float calculateTime = 8f;
+    internal static float timeAlive = 1;
+    [SerializeField] private float timeUntilObstacleSpawn;
 
-    [Header("Tracker of Spawn Level Progress")]
-    [SerializeField] private TextMeshProUGUI levelProgressText;
-    private int level = 0;
+
+    private float recalculateTime;
+
+    public float calculateTime = 10f;
+
+    internal static int level = 0; // keep track of times the time increased
+    internal static int winningLevel;
+
     private bool finishSpawned = false;
 
-    private bool startLoop;
 
     private void Start()
     {
-        level = 0;
-        gm = GameManager.instance;
+        winningLevel = GameManager.instance.winningLevel;
+        Actions.OnLevelIncrease();
+        timeAlive = 1;
     }
-
-
 
     private void Update()
     {
-        if (startLoop)
-        {
-            recalculateTime += Time.deltaTime;
-            timeAlive += Time.deltaTime;
-
-            if ((recalculateTime >= calculateTime) && level < gm.winningLevel)
-            {
-                CalculateFactors();
-                recalculateTime = 0;
-                level++;
-                UpdateLevelText();
-            }
-            if (!finishSpawned)
-                SpawnLoop();
-        }
+        if (!finishSpawned && GameManager.instance.isPlaying)
+            SpawnLoop();
     }
-
-
 
     private void OnEnable()
     {
-        Actions.OnGameplay += ResetFactors;
+        Actions.OnGameplay += ResetValues;
         Actions.OnGameOver += ClearObstacles;
+        Actions.OnGameWin += ClearObstacles;
     }
 
     private void OnDisable()
     {
-        Actions.OnGameplay -= ResetFactors;
+        Actions.OnGameplay -= ResetValues;
         Actions.OnGameOver -= ClearObstacles;
+        Actions.OnGameWin -= ClearObstacles;
     }
 
+    private void CalculateFactors()
+    {
+        _obstacleSpawnTime = obstacleSpawnTime / Mathf.Pow(timeAlive, obstacleSpawnFactor);
+        _obstacleSpeed = obstacleSpeed * Mathf.Pow(timeAlive, obstacleSpeedFactor);
 
+        backgroundSpeed = _obstacleSpeed * 0.3f;
 
+        foreach (Transform child in transform)
+        {
+            child.GetComponent<Obstacle>().UpdateSpeed(_obstacleSpeed);
+        }
+    }
 
+    #region Spawn
     /// <summary>
-    /// Spawn look that spawns obstacle at a certain time
+    /// Spawn Loop
     /// </summary>
     private void SpawnLoop()
     {
         timeUntilObstacleSpawn += Time.deltaTime;
+        recalculateTime += Time.deltaTime;
+        timeAlive += Time.deltaTime;
+
+        if ((recalculateTime >= calculateTime) && level < winningLevel)
+        {
+            CalculateFactors();
+            recalculateTime = 0;
+            level++;
+            Actions.OnLevelIncrease();
+        }
+
         if (timeUntilObstacleSpawn >= _obstacleSpawnTime)
         {
             Spawn();
-            timeUntilObstacleSpawn = 0f;
+            timeUntilObstacleSpawn = 0;
         }
     }
 
-    /// <summary>
-    /// Spawns obstacles depending on what level you're on. 
-    /// </summary>
     private void Spawn()
     {
-        float randomX;
-        if (level == gm.winningLevel)
+        if (level == winningLevel)
         {
-            randomX = 0;
-            obstacleToSpawn = finishLine;
+            // Spawn the finish line if the player reaches the winning level
+            SpawnObject(spawnableObjects.Find(obj => obj.type == SpawnableObjects.ObjectType.FinishLine));
             finishSpawned = true;
         }
         else
         {
-            randomX = Random.Range(-7f, 7f);
-            obstacleToSpawn = obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)];
+            SpawnObject(GetRandomSpawnable());
         }
-
-        GameObject spawnedObstacle = Instantiate(obstacleToSpawn, new Vector2(randomX, transform.position.y), Quaternion.identity, obstacleParent);
-        Obstacle obstacle = spawnedObstacle.GetComponent<Obstacle>();
-        obstacle.speed = _obstacleSpeed;
-
-        //Rigidbody2D obstacleRB = spawnedObstacle.GetComponent<Rigidbody2D>();
-        //obstacleRB.MovePosition(obstacleRB.position + (Vector2.down * GameManager.instance.moveSpeed * Time.deltaTime));
-        //obstacleRB.MovePosition(obstacleRB.position + (Vector2.down) * _obstacleSpeed * Time.deltaTime);
-        // obstacleRB.velocity = Vector2.down * _obstacleSpeed;
-
     }
 
-    /// <summary>
-    /// Clears all obstacles from level
-    /// </summary>
+    private void SpawnObject(SpawnableObjects spawnableObject)
+    {
+        float randomX = Random.Range(-6.7f, 6.7f);
+        GameObject spawnedObject = Instantiate(spawnableObject.spawnPrefab, new Vector2(randomX, transform.position.y), Quaternion.identity, transform);
+
+        spawnedObject.GetComponent<Obstacle>().Initialize(spawnableObject);
+        spawnedObject.GetComponent<Obstacle>().UpdateSpeed(_obstacleSpeed);
+    }
+
+    private SpawnableObjects GetRandomSpawnable()
+    {
+        float totalWeight = 0f;
+        foreach(var obj in spawnableObjects)
+        {
+            totalWeight += obj.spawnWeight;
+        }
+
+        float randomValue = Random.Range(0f, totalWeight);
+        float cumulativeWeight = 0f;
+
+        foreach (var obj in spawnableObjects)
+        {
+            cumulativeWeight += obj.spawnWeight;
+            if (randomValue <= cumulativeWeight)
+            {
+                return obj;
+            }
+        }
+
+        return spawnableObjects[0]; // Fallback
+    }
+    #endregion
+
+    #region Resets
     private void ClearObstacles()
     {
-        startLoop = false;
-        //Debug.Log(startLoop);
-        foreach (Transform child in obstacleParent)
+        foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
         }
     }
 
-    /// <summary>
-    /// Calculates the obstacle spawn time and the speed
-    /// </summary>
-    private void CalculateFactors()
-    {
-        _obstacleSpawnTime = obstacleSpawnTime / Mathf.Pow(timeAlive, obstacleSpawnTimeFactor);
-        _obstacleSpeed = obstacleSpeed + MathF.Pow(timeAlive, obstacleSpeedFactor);
-
-        foreach (Transform child in obstacleParent)
-        {
-            child.GetComponent<Obstacle>().speed = _obstacleSpeed;
-        }
-    }
-
-    /// <summary>
-    /// Updates the level progress text so players know how far they are from the finish
-    /// </summary>
-    private void UpdateLevelText()
-    {
-        float progress = ((float)level / (float)GameManager.instance.winningLevel) * 100;
-        levelProgressText.text = $"Level Progress: {progress}%";
-    }
-
-    /// <summary>
-    /// Resets level values that need to be reset each run
-    /// </summary>
-    private void ResetFactors()
+    private void ResetValues()
     {
         level = 0;
-        UpdateLevelText();
+        Actions.OnLevelIncrease();
+        timeAlive = 1;
         finishSpawned = false;
-        timeAlive = 1f;
         _obstacleSpawnTime = obstacleSpawnTime;
         _obstacleSpeed = obstacleSpeed;
-
-        startLoop = true;
+        backgroundSpeed = _obstacleSpeed * 0.3f;
     }
+    #endregion
 }

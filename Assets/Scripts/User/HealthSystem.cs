@@ -20,13 +20,23 @@ public class HealthSystem : MonoBehaviour
     public float staminaDrain = 0.5f;
 
     [Header("PlayerSprite")]
-    [SerializeField] private PlayerController player;
-    [SerializeField] private SpriteRenderer playerSprite;
-    [SerializeField] private SpriteRenderer boatSprite;
-    [SerializeField] private SpriteRenderer paddleSprite;
+    private CircleCollider2D playerCollider;
 
     public int flickerAmount = 3;
     public float flickerDuration = 0.1f;
+    public Color flickerColor = Color.red;
+    private SpriteRenderer[] playerSprites;
+
+    public void Awake()
+    {
+        playerSprites = GetComponentsInChildren<SpriteRenderer>();
+        playerCollider = GetComponent<CircleCollider2D>();
+    }
+
+    private void Start()
+    {
+        DisableSprite();
+    }
 
     public void Update()
     {
@@ -36,14 +46,22 @@ public class HealthSystem : MonoBehaviour
 
     private void OnEnable()
     {
-        Actions.OnGameOver += TakeDamage;
+        Actions.OnPlayerHurt += TakeDamage;
+        Actions.OnGameplay += ActivateSprite;
         Actions.OnGameplay += UpdateHealthStats;
+        Actions.OnGameWin += DisableSprite;
+        Actions.OnGameOver += DisableSprite;
+        Actions.LoadSettings += UpdateHealthStats;
     }
 
     private void OnDisable()
     {
-        Actions.OnGameOver -= TakeDamage;
+        Actions.OnPlayerHurt -= TakeDamage;
+        Actions.OnGameplay -= ActivateSprite;
         Actions.OnGameplay -= UpdateHealthStats;
+        Actions.OnGameWin -= DisableSprite;
+        Actions.OnGameOver -= DisableSprite;
+        Actions.LoadSettings -= UpdateHealthStats;
     }
 
     private void StaminaDrain()
@@ -56,7 +74,7 @@ public class HealthSystem : MonoBehaviour
 
             if (staminaImage.fillAmount <= 0)  // Changed from `==` to `<=` for precision
             {
-                Actions.OnGameOver();
+                Actions.OnPlayerHurt();
                 if (curHealth > 0)
                     staminaImage.fillAmount = 1;
             }
@@ -71,23 +89,50 @@ public class HealthSystem : MonoBehaviour
         StartCoroutine(DamageFlicker());
     }
 
-    public void UpdateHealthStats()
+    private void UpdateHealthStats()
     {
         staminaImage.fillAmount = 1;
         curHealth = maxHealth;
         healthText.text = $"x {curHealth}";
     }
 
+    private void ActivateSprite()
+    {
+        foreach (SpriteRenderer sprite in playerSprites)
+        {
+            sprite.enabled = true;
+        }
+    }
+
+    private void DisableSprite()
+    {
+        foreach (SpriteRenderer sprite in playerSprites)
+        {
+            sprite.enabled = false;
+        }
+    }
+
     private IEnumerator DamageFlicker()
     {
+        playerCollider.enabled = false;
+
         for (int i = 0; i < flickerAmount; i++)
         {
-            playerSprite.color = new Color(1f, 1f, 1f, 0.5f);
+            foreach (SpriteRenderer sprite in playerSprites)
+            {
+                sprite.color = flickerColor;
+            }
+
             yield return new WaitForSeconds(flickerDuration);
-            playerSprite.color = Color.white;
-            yield return new WaitForSeconds(flickerDuration/2);
+            foreach (SpriteRenderer sprite in playerSprites)
+            {
+                sprite.color = Color.white;
+            }
+            yield return new WaitForSeconds(flickerDuration / 2);
         }
         if (curHealth <= 0)
-            GameManager.instance.LoadState("Upgrades");
+            Actions.OnGameOver();
+
+        playerCollider.enabled = true;
     }
 }

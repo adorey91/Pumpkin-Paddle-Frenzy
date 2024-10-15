@@ -19,3 +19,4 @@ MonoBehaviour:
   newStats: 5
   cost: 20
   isPurchased: 0
+  colliderRadius: 1.13

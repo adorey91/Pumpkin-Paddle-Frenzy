@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,67 +8,77 @@ using UnityEngine.Events;
 public class ScoreManager : MonoBehaviour
 {
     [Header("Counts needed for score")]
-    public int appleCount;
-    public int applesThisRun;
-    internal int attemptNumber;
+    internal static int totalAppleCount;
+    internal static int appleCount;
+    internal static int attemptNumber;
+    internal static float runTime;
+    private float bestTime;
 
-    [Header("Text Objects to show score values")]
-    [SerializeField] private TMP_Text appleTextThisRun;
-    [SerializeField] private TMP_Text totalApples;
-    [SerializeField] private TMP_Text attemptText;
+    private bool startTimer;
 
     private void Start()
     {
+        runTime = 0;
         attemptNumber = 0;
-        attemptText.text = $"Attempts: {attemptNumber}";
-        UpdateText();
+        appleCount = 0;
+        Actions.UpdateAttemptText();
+        Actions.UpdateAppleText();
+    }
+
+    private void Update()
+    {
+        if (startTimer && GameManager.instance.isPlaying)
+            runTime += Time.deltaTime;
     }
 
     private void OnEnable()
     {
         Actions.OnCollectApple += CollectApples;
-        Actions.OnGameOver += ResetRun;
+        Actions.OnCollectGoldenApple += CollectGoldenApples;
+        Actions.OnGameplay += ResetRun;
+        Actions.OnGameOver += TimeClockStart;
+        Actions.OnGameWin += TimeClockStart;
     }
 
     private void OnDisable()
     {
         Actions.OnCollectApple -= CollectApples;
-        Actions.OnGameOver -= ResetRun;
+        Actions.OnCollectGoldenApple -= CollectGoldenApples;
+        Actions.OnGameplay -= ResetRun;
+        Actions.OnGameOver -= TimeClockStart;
+        Actions.OnGameWin -= TimeClockStart;
+    }
+
+    private void TimeClockStart()
+    {
+        startTimer = !startTimer;
     }
 
     private void CollectApples()
     {
-        applesThisRun++;
         appleCount++;
-        UpdateText();
+        totalAppleCount++;
+        Actions.UpdateAppleText();
+    }
+
+    private void CollectGoldenApples()
+    {
+        appleCount += 3;
+        totalAppleCount += 3;
+        Actions.UpdateAppleText();
     }
 
 
     /// <summary>
-    /// Resets apples this run, text update runs another update function
+    /// Resets apples this run 
     /// </summary>
     public void ResetRun()
     {
-        applesThisRun = 0;
-        UpdateText();
-        UpdateAttempt();
-    }
-
-    /// <summary>
-    /// Updates the attempts made
-    /// </summary>
-    public void UpdateAttempt()
-    {
+        appleCount = 0;
+        runTime = 0;
         attemptNumber++;
-        attemptText.text = $"Attempts: {attemptNumber}";
-    }
-
-    /// <summary>
-    /// Updates the ui text
-    /// </summary>
-    public void UpdateText()
-    {
-        appleTextThisRun.text = $"x {applesThisRun}";
-        totalApples.text = $"x {appleCount}";
+        Actions.UpdateAttemptText();
+        Actions.UpdateAppleText();
+        TimeClockStart();
     }
 }
