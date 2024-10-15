@@ -10,6 +10,11 @@ public class OnScreenButtonControl : MonoBehaviour
     public bool activeControls = true;
     public bool activePause = true;
 
+    private void Start()
+    {
+        LoadButtons();
+    }
+
     public void LoadButtons()
     {
         onScreenControlsButtons.SetActive(activeControls);

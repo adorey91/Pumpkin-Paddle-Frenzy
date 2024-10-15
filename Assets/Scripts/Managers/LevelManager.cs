@@ -42,7 +42,7 @@ public class LevelManager : MonoBehaviour
 
     private IEnumerator WaitForScreenLoad(string sceneName)
     {
-        yield return new WaitForSeconds(LoadingScreen.fadeTime);  // Optionally, fade in loading UI
+        yield return new WaitForSecondsRealtime(LoadingScreen.fadeTime);  // Optionally, fade in loading UI
         //Debug.Log("Loading Scene Starting");
 
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
