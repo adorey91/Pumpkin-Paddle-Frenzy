@@ -156,6 +156,7 @@ public class Spawner : MonoBehaviour
     private void ResetValues()
     {
         level = 0;
+        Actions.OnLevelIncrease();
         timeAlive = 1;
         finishSpawned = false;
         _obstacleSpawnTime = obstacleSpawnTime;
