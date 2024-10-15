@@ -8,34 +8,27 @@ using UnityEngine.Events;
 public class ScoreManager : MonoBehaviour
 {
     [Header("Counts needed for score")]
-    public int appleCount;
-    public int applesThisRun;
-    internal int attemptNumber;
-    private float currentTime;
-    private float runTime;
+    internal static int totalAppleCount;
+    internal static int appleCount;
+    internal static int attemptNumber;
+    internal static float runTime;
     private float bestTime;
 
     private bool startTimer;
-    [SerializeField] private TMP_Text runResults;
-
-
-    [Header("Text Objects to show score values")]
-    [SerializeField] private TMP_Text appleTextThisRun;
-    [SerializeField] private TMP_Text totalApples;
-    [SerializeField] private TMP_Text attemptText;
 
     private void Start()
     {
-        currentTime = 0;
+        runTime = 0;
         attemptNumber = 0;
-        attemptText.text = $"Attempts: {attemptNumber}";
-        UpdateText();
+        appleCount = 0;
+        Actions.UpdateAttemptText();
+        Actions.UpdateAppleText();
     }
 
     private void Update()
     {
         if (startTimer && GameManager.instance.isPlaying)
-            currentTime += Time.deltaTime;
+            runTime += Time.deltaTime;
     }
 
     private void OnEnable()
@@ -63,49 +56,29 @@ public class ScoreManager : MonoBehaviour
 
     private void CollectApples()
     {
-        applesThisRun++;
         appleCount++;
-        UpdateText();
+        totalAppleCount++;
+        Actions.UpdateAppleText();
     }
 
     private void CollectGoldenApples()
     {
-        applesThisRun += 3;
         appleCount += 3;
-        UpdateText();
+        totalAppleCount += 3;
+        Actions.UpdateAppleText();
     }
 
 
     /// <summary>
-    /// Resets apples this run, text update runs another update function
+    /// Resets apples this run 
     /// </summary>
     public void ResetRun()
     {
-        applesThisRun = 0;
-        currentTime = 0;
-        UpdateText();
-        UpdateAttempt();
-        TimeClockStart();
-    }
-
-    /// <summary>
-    /// Updates the attempts made
-    /// </summary>
-    public void UpdateAttempt()
-    {
+        appleCount = 0;
+        runTime = 0;
         attemptNumber++;
-        attemptText.text = $"Attempts: {attemptNumber}";
-    }
-
-    /// <summary>
-    /// Updates the ui text
-    /// </summary>
-    public void UpdateText()
-    {
-        TimeSpan time = TimeSpan.FromSeconds(currentTime);
-
-        runResults.text = $"You survived for {time.Minutes}:{time.Seconds} \nCollected {applesThisRun} apples this run!";
-        appleTextThisRun.text = $"x {applesThisRun}";
-        totalApples.text = $"x {appleCount}";
+        Actions.UpdateAttemptText();
+        Actions.UpdateAppleText();
+        TimeClockStart();
     }
 }

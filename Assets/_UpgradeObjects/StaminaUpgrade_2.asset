@@ -16,7 +16,7 @@ MonoBehaviour:
   number: 2
   preRequisites: {fileID: 11400000, guid: dcbb0797d8e24bd4883a8d0476eac01e, type: 2}
   newSprite: {fileID: 1080872934, guid: 7bf05b4b93c624448959444c6862a7c4, type: 3}
-  newAnimation: {fileID: 0}
-  newStats: 0.35
+  newAnimation: {fileID: 7400000, guid: d82a629c95d7d5642a56580b68128ea9, type: 2}
+  newStats: 0.3
   cost: 15
-  isPurchased: 1
+  isPurchased: 0
