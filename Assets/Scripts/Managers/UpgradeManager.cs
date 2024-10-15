@@ -27,7 +27,6 @@ public class UpgradeManager : MonoBehaviour
     [Header("Health Upgrade Components")]
     [SerializeField] private SpriteRenderer healthSprite;
     [SerializeField] private Image healthSpriteUpgrade;
-    [SerializeField] private Animator boatAnimator;
 
     [Header("Stamina Upgrade Components")]
     [SerializeField] private SpriteRenderer staminaSprite;
@@ -99,7 +98,6 @@ public class UpgradeManager : MonoBehaviour
                     healthSprite.sprite = upgradeAsset.newSprite;
                     healthSpriteUpgrade.sprite = upgradeAsset.newSprite;
                     playerCollider.radius = upgradeAsset.colliderRadius;
-                    boatAnimator.SetInteger("Upgrade", upgradeAsset.number);
                     upgradeAsset.isPurchased = true;
                     break;
 

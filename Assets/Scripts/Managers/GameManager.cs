@@ -99,6 +99,7 @@ public class GameManager : MonoBehaviour
     private void MainMenu()
     {
         isPlaying = false;
+        Time.timeScale = 1;
         soundManager.PlayAudio("MainMenu");
         uiManager.MainMenu_UI();
     }
