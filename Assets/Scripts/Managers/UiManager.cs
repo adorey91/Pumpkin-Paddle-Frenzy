@@ -100,6 +100,9 @@ public class UiManager : MonoBehaviour
         ui_Results.SetActive(false);
         ui_backgroundInstruct.SetActive(false);
 
+        if (activeUI == ui_Instructions)
+            ui_backgroundInstruct.SetActive(true);
+
         activeUI.SetActive(true);
     }
 
