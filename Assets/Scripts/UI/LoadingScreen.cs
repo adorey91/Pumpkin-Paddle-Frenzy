@@ -33,11 +33,10 @@ public class LoadingScreen : MonoBehaviour
     private IEnumerator LoadingUIFadeOut()
     {
         float timer = 0;
-
         while (timer < fadeTime)
         {
             loadingScreenCG.alpha = Mathf.Lerp(1, 0, timer / fadeTime);
-            timer += Time.deltaTime;
+            timer += Time.unscaledDeltaTime;
             yield return null;
         }
 
@@ -54,7 +53,7 @@ public class LoadingScreen : MonoBehaviour
         while (timer < fadeTime)
         {
             loadingScreenCG.alpha = Mathf.Lerp(0, 1, timer / fadeTime);
-            timer += Time.deltaTime;
+            timer += Time.unscaledDeltaTime;
             yield return null;
         }
 
