@@ -22356,7 +22356,7 @@ MonoBehaviour:
   gameplayClip: {fileID: 8300000, guid: d825922ffe1863847b91ec14792526ed, type: 3}
   sfxCollectClip: {fileID: 8300000, guid: d519b4497f511c347898afacb9e719cc, type: 3}
   sfxCrashClip: {fileID: 8300000, guid: 511865a84bc7948449893d097311d45b, type: 3}
-  sfxVictoryClip: {fileID: 0}
+  sfxVictoryClip: {fileID: 8300000, guid: 2f464e78f91caaa43854a9c17f705e36, type: 3}
 --- !u!4 &2066396770
 Transform:
   m_ObjectHideFlags: 0
@@ -22812,7 +22812,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: v2.00
+  m_text: v2.09
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d45f673ef79224c49bd3acf0c7d66f01, type: 2}
   m_sharedMaterial: {fileID: 843880900964008103, guid: d45f673ef79224c49bd3acf0c7d66f01, type: 2}
