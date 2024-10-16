@@ -9,11 +9,20 @@ using UnityEngine.UI;
 public class SaveManager : MonoBehaviour
 {
     [Header("Managers")]
-    [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private HealthSystem healthSystem;
     [SerializeField] private UpgradeManager upgradeManager;
     [SerializeField] private UiManager uiManager;
     [SerializeField] private LevelManager levelManager;
+
+    private void OnEnable()
+    {
+        Actions.OnGameWin += Save;
+    }
+
+    private void OnDisable()
+    {
+        Actions.OnGameWin -= Save;
+    }
 
 
     /// <summary>
