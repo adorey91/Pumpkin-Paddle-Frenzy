@@ -4785,7 +4785,7 @@ MonoBehaviour:
   gameplayClip: {fileID: 8300000, guid: d825922ffe1863847b91ec14792526ed, type: 3}
   sfxCollectClip: {fileID: 8300000, guid: d519b4497f511c347898afacb9e719cc, type: 3}
   sfxCrashClip: {fileID: 8300000, guid: 511865a84bc7948449893d097311d45b, type: 3}
-  sfxVictoryClip: {fileID: 0}
+  sfxVictoryClip: {fileID: 8300000, guid: 2f464e78f91caaa43854a9c17f705e36, type: 3}
 --- !u!1 &1979073105166363656
 GameObject:
   m_ObjectHideFlags: 0
