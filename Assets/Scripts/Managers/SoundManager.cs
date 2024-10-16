@@ -16,7 +16,6 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private Image mainAudioImage;
     [SerializeField] private Image musicAudioImage;
     [SerializeField] private Image sfxAudioImage;
-    [SerializeField] private Gradient gradient;
 
     [Header("Audio Clips")]
     [SerializeField] private AudioClip mainClip;
@@ -101,15 +100,12 @@ public class SoundManager : MonoBehaviour
         {
             case "SFX":
                 audioMixer.SetFloat(slider, Mathf.Log10(sfxAudioImage.fillAmount) * 20);
-                sfxAudioImage.color = gradient.Evaluate(sfxAudioImage.fillAmount);
                 break;
             case "Music":
                 audioMixer.SetFloat(slider, Mathf.Log10(musicAudioImage.fillAmount) * 20);
-                musicAudioImage.color = gradient.Evaluate(musicAudioImage.fillAmount);
                 break;
             case "Master":
                 audioMixer.SetFloat(slider, Mathf.Log10(mainAudioImage.fillAmount) * 20);
-                mainAudioImage.color = gradient.Evaluate(mainAudioImage.fillAmount);
                 break;
             default: Debug.Log(slider + " doesnt exist"); break;
         }
