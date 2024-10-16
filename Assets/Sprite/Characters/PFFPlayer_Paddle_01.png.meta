@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -95,7 +95,91 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: PFFPlayer_Paddle_01_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 2160
+        height: 2160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 299cc97a9b6105340a9f623864cb8285
+      internalID: 1723109229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PFFPlayer_Paddle_01_1
+      rect:
+        serializedVersion: 2
+        x: 2160
+        y: 0
+        width: 2160
+        height: 2160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 418c5a711cd63f74d9660380c4fb3925
+      internalID: 261350176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PFFPlayer_Paddle_01_2
+      rect:
+        serializedVersion: 2
+        x: 4320
+        y: 0
+        width: 2160
+        height: 2160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4651f52730acc041a15c8ca4a155787
+      internalID: -1077881768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PFFPlayer_Paddle_01_3
+      rect:
+        serializedVersion: 2
+        x: 6480
+        y: 0
+        width: 2160
+        height: 2160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10304b59c5aa1924b8fab89c8e25abd2
+      internalID: -473237642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -106,7 +190,11 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      PFFPlayer_Paddle_01_0: 1723109229
+      PFFPlayer_Paddle_01_1: 261350176
+      PFFPlayer_Paddle_01_2: -1077881768
+      PFFPlayer_Paddle_01_3: -473237642
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
