@@ -8234,7 +8234,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4c32426400a46584da17318943384403, type: 2}
   - {fileID: 11400000, guid: a252255d7563c9944a726fd0cc1090a3, type: 2}
   - {fileID: 11400000, guid: 52d0b444fe117e048b09df68488e6aec, type: 2}
-  - {fileID: 11400000, guid: 15b4427b9917edb40a6fbef4e503eff6, type: 2}
   obstacleSpawnTime: 5
   obstacleSpawnFactor: 0.075
   obstacleSpeed: 1
@@ -21874,7 +21873,7 @@ MonoBehaviour:
   healthText: {fileID: 463063551}
   curHealthUpgrade: {fileID: 0}
   curStaminaUpgrade: {fileID: 0}
-  maxHealth: 1
+  maxHealth: 2
   staminaDrain: 0.5
   flickerAmount: 3
   flickerDuration: 0.2
