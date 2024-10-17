@@ -146,6 +146,9 @@ public class SoundManager : MonoBehaviour
         control.audioImage.fillAmount = Mathf.Clamp(control.audioImage.fillAmount + changeAmount, 0f, 1f);
         SetVolume(control.mixer, control.audioImage.fillAmount);
 
+        if (control.audioImage.fillAmount <= 1f)
+            Debug.Log("Its at 1");
+
         control.increaseButton.interactable = control.audioImage.fillAmount <= 1f;
         control.decreaseButton.interactable = control.audioImage.fillAmount >= 0.0001f;
     }

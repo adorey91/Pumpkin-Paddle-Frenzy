@@ -17,6 +17,8 @@ public class HealthSystem : MonoBehaviour
     [Header("Base Stats")]
     public int baseMaxHealth = 1;
     public float baseStaminaDrain = 0.5f;
+    public Sprite baseHealthSprite;
+    public Sprite baseStaminaSprite;
 
     [Header("Current Stats")]
     public int maxHealth;
@@ -29,7 +31,7 @@ public class HealthSystem : MonoBehaviour
     public int flickerAmount = 3;
     public float flickerDuration = 0.1f;
     public Color flickerColor = Color.red;
-    private SpriteRenderer[] playerSprites;
+    [SerializeField] private SpriteRenderer[] playerSprites;
 
     public void Awake()
     {
@@ -46,7 +48,7 @@ public class HealthSystem : MonoBehaviour
 
     public void Update()
     {
-        if (GameManager.instance.isPlaying)
+        if (GameManager.instance.isPlaying && !GameManager.instance)
             StaminaDrain();
     }
 
@@ -146,5 +148,7 @@ public class HealthSystem : MonoBehaviour
     {
         staminaDrain = baseStaminaDrain;
         maxHealth = baseMaxHealth;
+        playerSprites[0].sprite = baseHealthSprite;
+        playerSprites[1].sprite = baseStaminaSprite;
     }
 }

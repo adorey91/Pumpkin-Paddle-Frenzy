@@ -99,9 +99,9 @@ public class Spawner : MonoBehaviour
 
     private void Spawn()
     {
-        if (level == winningLevel)
+            // Spawn the finish line if the player reaches the winning level if the game isnt endless
+        if (level == winningLevel && !GameManager.instance.isEndless)
         {
-            // Spawn the finish line if the player reaches the winning level
             SpawnObject(spawnableObjects.Find(obj => obj.type == SpawnableObjects.ObjectType.FinishLine));
             finishSpawned = true;
         }
