@@ -14,10 +14,16 @@ public class HealthSystem : MonoBehaviour
     public UpgradeAsset curHealthUpgrade;
     public UpgradeAsset curStaminaUpgrade;
 
+    [Header("Base Stats")]
+    public int baseMaxHealth = 1;
+    public float baseStaminaDrain = 0.5f;
+    public Sprite baseHealthSprite;
+    public Sprite baseStaminaSprite;
+
     [Header("Current Stats")]
-    public int maxHealth = 1;
+    public int maxHealth;
     private int curHealth;
-    public float staminaDrain = 0.5f;
+    public float staminaDrain;
 
     [Header("PlayerSprite")]
     private CircleCollider2D playerCollider;
@@ -25,7 +31,7 @@ public class HealthSystem : MonoBehaviour
     public int flickerAmount = 3;
     public float flickerDuration = 0.1f;
     public Color flickerColor = Color.red;
-    private SpriteRenderer[] playerSprites;
+    [SerializeField] private SpriteRenderer[] playerSprites;
 
     public void Awake()
     {
@@ -36,11 +42,13 @@ public class HealthSystem : MonoBehaviour
     private void Start()
     {
         DisableSprite();
+        staminaDrain = baseStaminaDrain;
+        maxHealth = baseMaxHealth;
     }
 
     public void Update()
     {
-        if (GameManager.instance.isPlaying)
+        if (GameManager.instance.isPlaying && !GameManager.instance.isEndless)
             StaminaDrain();
     }
 
@@ -134,5 +142,13 @@ public class HealthSystem : MonoBehaviour
             Actions.OnGameOver();
 
         playerCollider.enabled = true;
+    }
+
+    public void ResetStats()
+    {
+        staminaDrain = baseStaminaDrain;
+        maxHealth = baseMaxHealth;
+        playerSprites[0].sprite = baseHealthSprite;
+        playerSprites[1].sprite = baseStaminaSprite;
     }
 }

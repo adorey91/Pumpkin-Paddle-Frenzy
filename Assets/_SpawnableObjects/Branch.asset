@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   spawnPrefab: {fileID: 6784650486199813947, guid: 2a86691e6712d4740a7dafe42d9f94e2, type: 3}
-  spawnWeight: 70
+  spawnWeight: 50
   collectableValue: 0

@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 using TMPro;
-using UnityEditor.PackageManager;
 
 public class UiManager : MonoBehaviour
 {
@@ -26,7 +22,8 @@ public class UiManager : MonoBehaviour
     [Header("Instruction UI")]
     [SerializeField] private GameObject ui_backgroundInstruct;
     [SerializeField] private GameObject ui_Instructions;
-    [SerializeField] private GameObject ui_HowToApply;
+    [SerializeField] private GameObject ui_HowToPlay;
+    [SerializeField] private GameObject ui_HowToPlay2;
     [SerializeField] private GameObject ui_Controls;
 
     [Header("On Screen Buttons")]
@@ -68,7 +65,6 @@ public class UiManager : MonoBehaviour
                     {
                         Instructions_UI();
                         saveManager.DeleteSave();
-                        upgradeManager.ResetUpgrades();
                     }
                     ); break;
             case "quit":
@@ -95,10 +91,14 @@ public class UiManager : MonoBehaviour
         ui_Options.SetActive(false);
         ui_Instructions.SetActive(false);
         ui_Confirmation.SetActive(false);
-        ui_HowToApply.SetActive(false);
+        ui_HowToPlay.SetActive(false);
+        ui_HowToPlay2.SetActive(false);
         ui_Controls.SetActive(false);
         ui_Results.SetActive(false);
         ui_backgroundInstruct.SetActive(false);
+
+        if (activeUI == ui_Instructions)
+            ui_backgroundInstruct.SetActive(true);
 
         activeUI.SetActive(true);
     }

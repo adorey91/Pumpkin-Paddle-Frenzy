@@ -27,7 +27,6 @@ public class UpgradeManager : MonoBehaviour
     [Header("Health Upgrade Components")]
     [SerializeField] private SpriteRenderer healthSprite;
     [SerializeField] private Image healthSpriteUpgrade;
-    [SerializeField] private Animator boatAnimator;
 
     [Header("Stamina Upgrade Components")]
     [SerializeField] private SpriteRenderer staminaSprite;
@@ -68,7 +67,7 @@ public class UpgradeManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Resets all upgrade assets
+    /// Resets all upgrade assets to not purchased
     /// </summary>
     public void ResetUpgrades()
     {
@@ -81,6 +80,8 @@ public class UpgradeManager : MonoBehaviour
         {
             upgradeAsset.isPurchased = false;
         }
+        paddleAnimator.SetInteger("Upgrade", 0);
+        healthSystem.ResetStats();
     }
 
     /// <summary>
@@ -99,7 +100,6 @@ public class UpgradeManager : MonoBehaviour
                     healthSprite.sprite = upgradeAsset.newSprite;
                     healthSpriteUpgrade.sprite = upgradeAsset.newSprite;
                     playerCollider.radius = upgradeAsset.colliderRadius;
-                    boatAnimator.SetInteger("Upgrade", upgradeAsset.number);
                     upgradeAsset.isPurchased = true;
                     break;
 
@@ -124,17 +124,20 @@ public class UpgradeManager : MonoBehaviour
     /// <returns></returns>
     public UpgradeAsset FindUpgradeByName(string upgradeName)
     {
+        // Check each upgrade in healthUpgrades
         foreach (UpgradeAsset upgradeAsset in healthUpgrades)
         {
             if (upgradeAsset.name == upgradeName)
                 return upgradeAsset;
         }
 
+        // Check each upgrade in stamina upgrades
         foreach(UpgradeAsset upgradeAsset in staminaUpgrades)
         {
             if (upgradeAsset.name == upgradeName)
                     return upgradeAsset;
         }
+
         Debug.LogWarning($"Upgrade not found: {upgradeName}");
         return null;
     }
@@ -159,7 +162,6 @@ public class UpgradeManager : MonoBehaviour
             if (upgrade.isPurchased)
             {
                 button.interactable = false; // Disable button if purchased
-                Debug.Log(button.name + "is disabled");
                 checkMark.SetActive(true); // Show check mark if purchased
             }
             else
@@ -174,9 +176,8 @@ public class UpgradeManager : MonoBehaviour
                         button.interactable = false; // Disable button if prerequisites are not met
                 }
                 else
-                {
                     button.interactable = false; // Disable button if not enough currency
-                }
+                
                 checkMark.SetActive(false); // Hide check mark if not purchased
             }
         }
