@@ -14,10 +14,14 @@ public class HealthSystem : MonoBehaviour
     public UpgradeAsset curHealthUpgrade;
     public UpgradeAsset curStaminaUpgrade;
 
+    [Header("Base Stats")]
+    public int baseMaxHealth = 1;
+    public float baseStaminaDrain = 0.5f;
+
     [Header("Current Stats")]
-    public int maxHealth = 1;
+    public int maxHealth;
     private int curHealth;
-    public float staminaDrain = 0.5f;
+    public float staminaDrain;
 
     [Header("PlayerSprite")]
     private CircleCollider2D playerCollider;
@@ -36,6 +40,8 @@ public class HealthSystem : MonoBehaviour
     private void Start()
     {
         DisableSprite();
+        staminaDrain = baseStaminaDrain;
+        maxHealth = baseMaxHealth;
     }
 
     public void Update()
@@ -134,5 +140,11 @@ public class HealthSystem : MonoBehaviour
             Actions.OnGameOver();
 
         playerCollider.enabled = true;
+    }
+
+    public void ResetStats()
+    {
+        staminaDrain = baseStaminaDrain;
+        maxHealth = baseMaxHealth;
     }
 }

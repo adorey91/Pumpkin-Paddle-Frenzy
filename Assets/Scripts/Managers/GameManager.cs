@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     [Header("Game Values")]
     public int winningLevel;
     internal bool isPlaying;
+    private bool isNewRun = true;
 
     private void Awake()
     {
@@ -99,20 +100,22 @@ public class GameManager : MonoBehaviour
     private void MainMenu()
     {
         isPlaying = false;
+        isNewRun = true;
         Time.timeScale = 1;
-        soundManager.PlayAudio("MainMenu");
+        soundManager.PlayMenu();
         uiManager.MainMenu_UI();
     }
 
     private void Gameplay()
     {
-        Actions.OnGameplay();
+        if(isNewRun)
+            Actions.OnGameplay();
+
+        isNewRun = false;
         isPlaying = true;
         Time.timeScale = 1;
-        soundManager.PlayAudio("Gameplay");
         uiManager.Gameplay_UI();
     }
-
     private void Upgrades()
     {
         isPlaying = false;
@@ -136,11 +139,13 @@ public class GameManager : MonoBehaviour
 
     private void GameWin()
     {
+        isNewRun = true;
         uiManager.GameOver_UI();
     }
 
     private void PlayerDied()
     {
+        isNewRun = true;
         LoadState(GameState.Upgrade);
     }
 

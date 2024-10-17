@@ -80,6 +80,8 @@ public class UpgradeManager : MonoBehaviour
         {
             upgradeAsset.isPurchased = false;
         }
+
+        healthSystem.ResetStats();
     }
 
     /// <summary>

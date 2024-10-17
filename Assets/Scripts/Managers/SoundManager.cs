@@ -12,11 +12,10 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioSource musicSource;
     [SerializeField] private AudioSource sfxSource;
 
-    [Header("Audio Slider")]
-    [SerializeField] private Image mainAudioImage;
-    [SerializeField] private Image musicAudioImage;
-    [SerializeField] private Image sfxAudioImage;
-    [SerializeField] private Gradient gradient;
+    [Header("Audio Control / Mixer Groups")]
+    [SerializeField] private AudioControl sfxControl;
+    [SerializeField] private AudioControl musicControl;
+    [SerializeField] private AudioControl masterControl;
 
     [Header("Audio Clips")]
     [SerializeField] private AudioClip mainClip;
@@ -25,15 +24,19 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip sfxCrashClip;
     [SerializeField] private AudioClip sfxVictoryClip;
 
+
     public void Start()
     {
-        SetVolume("Master");
-        SetVolume("Music");
-        SetVolume("SFX");
+        musicSource.loop = true;
+
+        SetVolume(sfxControl.mixer, sfxControl.audioImage.fillAmount);
+        SetVolume(musicControl.mixer, musicControl.audioImage.fillAmount);
+        SetVolume(masterControl.mixer, masterControl.audioImage.fillAmount);
     }
 
     private void OnEnable()
     {
+        Actions.OnGameplay += PlayGameplay;
         Actions.OnGameOver += PlayEnemyCrash;
         Actions.OnPlayerHurt += PlayEnemyCrash;
         Actions.OnCollectApple += PlayAppleCollection;
@@ -43,23 +46,30 @@ public class SoundManager : MonoBehaviour
 
     private void OnDisable()
     {
+        Actions.OnGameplay -= PlayGameplay;
         Actions.OnGameOver -= PlayEnemyCrash;
         Actions.OnPlayerHurt -= PlayEnemyCrash;
         Actions.OnCollectApple -= PlayAppleCollection;
         Actions.OnGameWin -= PlayVictory;
     }
 
-    /// This should be used for looping audio.
-    public void PlayAudio(string audio)
+    public void PlayMenu()
     {
-        switch (audio)
+        if (!musicSource.isPlaying || musicSource.clip != mainClip)
         {
-            case "MainMenu": musicSource.clip = mainClip; break;
-            case "Gameplay": musicSource.clip = gameplayClip; break;
-        }
-        musicSource.loop = true;
-        if(musicSource.clip == gameplayClip && !musicSource.isPlaying)
+            musicSource.clip = mainClip;
             musicSource.Play();
+        }
+    }
+
+
+    private void PlayGameplay()
+    {
+        if (!musicSource.isPlaying || musicSource.clip != gameplayClip)
+        {
+            musicSource.clip = gameplayClip;
+            musicSource.Play();
+        }
     }
 
     private void PlayVictory()
@@ -79,7 +89,7 @@ public class SoundManager : MonoBehaviour
             GameObject foundObject = GameObject.Find("SFXSource");
             sfxSource = GetComponent<AudioSource>();
         }
-            sfxSource.PlayOneShot(sfxCrashClip, 1f);
+        sfxSource.PlayOneShot(sfxCrashClip, 1f);
     }
 
     private void PlayAppleCollection()
@@ -92,69 +102,61 @@ public class SoundManager : MonoBehaviour
         sfxSource.PlayOneShot(sfxCollectClip, 1f);
     }
 
-    
+
 
     // Sets volume
-    public void SetVolume(string slider)
-    {
-        switch (slider)
-        {
-            case "SFX":
-                audioMixer.SetFloat(slider, Mathf.Log10(sfxAudioImage.fillAmount) * 20);
-                sfxAudioImage.color = gradient.Evaluate(sfxAudioImage.fillAmount);
-                break;
-            case "Music":
-                audioMixer.SetFloat(slider, Mathf.Log10(musicAudioImage.fillAmount) * 20);
-                musicAudioImage.color = gradient.Evaluate(musicAudioImage.fillAmount);
-                break;
-            case "Master":
-                audioMixer.SetFloat(slider, Mathf.Log10(mainAudioImage.fillAmount) * 20);
-                mainAudioImage.color = gradient.Evaluate(mainAudioImage.fillAmount);
-                break;
-            default: Debug.Log(slider + " doesnt exist"); break;
-        }
-    }
 
-    // used for increase volume button
     public void IncreaseAudio(AudioMixerGroup mixerGroup)
     {
-        Debug.Log(mixerGroup.name);
-        switch (mixerGroup.name)
+        AdjustAudio(mixerGroup, 0.1f);
+    }
+
+    public void DecreaseAudio(AudioMixerGroup mixerGroup)
+    {
+        AdjustAudio(mixerGroup, -0.1f);
+    }
+
+    private void AdjustAudio(AudioMixerGroup mixerGroup, float changeAmount)
+    {
+        AudioControl control = GetAudioControl(mixerGroup.name);
+        if (control.audioImage != null)
         {
-            case "SFX":
-                sfxAudioImage.fillAmount += 0.1f;
-                SetVolume("SFX"); // Apply volume change
-                break;
-            case "Music":
-                musicAudioImage.fillAmount += 0.1f;
-                SetVolume("Music"); // Apply volume change
-                break;
-            case "Master":
-                mainAudioImage.fillAmount += 0.1f;
-                SetVolume("Master"); // Apply volume change
-                break;
+            SetAudio(control, changeAmount);
         }
     }
 
-    // used for decrease volume button
-    public void DecreaseAudio(AudioMixerGroup mixerGroup)
+    private AudioControl GetAudioControl(string mixerName)
     {
-        Debug.Log(mixerGroup.name);
-        switch (mixerGroup.name)
+        switch (mixerName)
         {
             case "SFX":
-                sfxAudioImage.fillAmount -= 0.1f;
-                SetVolume("SFX"); // Apply volume change
-                break;
+                return sfxControl;
             case "Music":
-                musicAudioImage.fillAmount -= 0.1f;
-                SetVolume("Music"); // Apply volume change
-                break;
+                return musicControl;
             case "Master":
-                mainAudioImage.fillAmount -= 0.1f;
-                SetVolume("Master"); // Apply volume change
-                break;
+                return masterControl;
+            default:
+                Debug.LogError($"AudioControl for '{mixerName}' not recognized.");
+                return new AudioControl();
         }
+    }
+
+    private void SetAudio(AudioControl control, float changeAmount)
+    {
+        control.audioImage.fillAmount = Mathf.Clamp(control.audioImage.fillAmount + changeAmount, 0f, 1f);
+        SetVolume(control.mixer, control.audioImage.fillAmount);
+
+        control.increaseButton.interactable = control.audioImage.fillAmount <= 1f;
+        control.decreaseButton.interactable = control.audioImage.fillAmount >= 0.0001f;
+    }
+
+    public void SetVolume(AudioMixerGroup mixer, float fillAmount)
+    {
+        string mixerName = mixer.name;
+
+        float minFillAmount = 0.0001f;
+        float volumeValue = Mathf.Clamp(Mathf.Log10(Mathf.Max(fillAmount, minFillAmount)) * 20, -80f, 0f);
+        audioMixer.SetFloat(mixerName, volumeValue);
     }
 
 
