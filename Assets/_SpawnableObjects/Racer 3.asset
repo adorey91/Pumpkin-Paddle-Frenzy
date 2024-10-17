@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Racer 3
   m_EditorClassIdentifier: 
   type: 0
-  spawnPrefab: {fileID: 3918339268445241835, guid: bbdc1813adfe78545977929a8a2215ac, type: 3}
-  spawnWeight: 70
+  spawnPrefab: {fileID: 8942721719948907454, guid: c6bb2ea6e3e2b2c478f08db26f543cef, type: 3}
+  spawnWeight: 50
   collectableValue: 0
