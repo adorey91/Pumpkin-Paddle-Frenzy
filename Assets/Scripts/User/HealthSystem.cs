@@ -48,7 +48,7 @@ public class HealthSystem : MonoBehaviour
 
     public void Update()
     {
-        if (GameManager.instance.isPlaying && !GameManager.instance)
+        if (GameManager.instance.isPlaying && !GameManager.instance.isEndless)
             StaminaDrain();
     }
 

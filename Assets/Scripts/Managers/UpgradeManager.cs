@@ -80,7 +80,7 @@ public class UpgradeManager : MonoBehaviour
         {
             upgradeAsset.isPurchased = false;
         }
-
+        paddleAnimator.SetInteger("Upgrade", 0);
         healthSystem.ResetStats();
     }
 
@@ -162,7 +162,6 @@ public class UpgradeManager : MonoBehaviour
             if (upgrade.isPurchased)
             {
                 button.interactable = false; // Disable button if purchased
-                Debug.Log(button.name + "is disabled");
                 checkMark.SetActive(true); // Show check mark if purchased
             }
             else

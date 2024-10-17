@@ -65,7 +65,6 @@ public class UiManager : MonoBehaviour
                     {
                         Instructions_UI();
                         saveManager.DeleteSave();
-                        upgradeManager.ResetUpgrades();
                     }
                     ); break;
             case "quit":
