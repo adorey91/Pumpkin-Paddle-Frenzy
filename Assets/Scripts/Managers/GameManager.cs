@@ -107,12 +107,8 @@ public class GameManager : MonoBehaviour
 
     private void Gameplay()
     {
-        Debug.Log(isNewRun);
         if(isNewRun)
-        {
             Actions.OnGameplay();
-
-        }
 
         PlayingState(true, false);
         uiManager.Gameplay_UI();
@@ -142,11 +138,7 @@ public class GameManager : MonoBehaviour
         uiManager.GameOver_UI();
     }
 
-    public void Quit()
-    {
-        Application.Quit();
-        Debug.Log("Quitting Game");
-    }
+    public void Quit() =>  Application.Quit();
 
     private void PlayingState(bool currentlyPlaying, bool newRun)
     {

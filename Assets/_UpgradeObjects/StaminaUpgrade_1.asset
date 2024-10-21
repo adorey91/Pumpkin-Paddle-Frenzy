@@ -18,5 +18,6 @@ MonoBehaviour:
   newSprite: {fileID: -1436317791, guid: 401459d310274f14e91f926480617bc7, type: 3}
   newStats: 0.4
   cost: 3
+  baseCost: 3
   isPurchased: 0
   colliderRadius: 0

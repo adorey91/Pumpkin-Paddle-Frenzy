@@ -11,6 +11,11 @@ public class TextUpdater : MonoBehaviour
     private void Start()
     {
         TMP_Text costText = GetComponent<TextMeshProUGUI>();
+        if (GameManager.instance.isEndless)
+            upgradeAsset.cost *= 2;
+        else
+            upgradeAsset.cost = upgradeAsset.baseCost;
+            
         costText.text = upgradeAsset.cost.ToString();
     }
 }
