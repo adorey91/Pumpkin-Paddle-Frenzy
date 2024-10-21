@@ -223,7 +223,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 0.8353227, b: 0, a: 1}
+      maxColor: {r: 1, g: 0.8298458, b: 0.6933962, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -287,7 +287,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 0.5
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -4777,7 +4777,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: fd4269539ad32634b95864257fdede67, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4851,12 +4851,20 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4303819893499255672, guid: ad5cd9a75476e8b4dbdce128e27f1bbe, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9a345744c0d4d694db828cf6f3d09ceb, type: 3}
+    - target: {fileID: 4303819893499255672, guid: ad5cd9a75476e8b4dbdce128e27f1bbe, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4303819893499255672, guid: ad5cd9a75476e8b4dbdce128e27f1bbe, type: 3}
       propertyPath: m_Color.b
-      value: 0
+      value: 0.7877358
       objectReference: {fileID: 0}
     - target: {fileID: 4303819893499255672, guid: ad5cd9a75476e8b4dbdce128e27f1bbe, type: 3}
       propertyPath: m_Color.g
-      value: 0.9102912
+      value: 0.89672107
       objectReference: {fileID: 0}
     - target: {fileID: 4303819893499255672, guid: ad5cd9a75476e8b4dbdce128e27f1bbe, type: 3}
       propertyPath: m_Color.r
