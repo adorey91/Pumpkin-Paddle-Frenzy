@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class HealthSystem : MonoBehaviour
 {
     [Header("UI Stats")]
+    [SerializeField] private GameObject[] stamina;
     [SerializeField] private Image staminaImage;
     [SerializeField] private TMP_Text healthText;
 
@@ -48,7 +49,7 @@ public class HealthSystem : MonoBehaviour
 
     public void Update()
     {
-        if (GameManager.instance.isPlaying && !GameManager.instance.isEndless)
+        if (GameManager.instance.isPlaying && !GameManager.instance.gameIsEndless)
             StaminaDrain();
     }
 
@@ -60,6 +61,8 @@ public class HealthSystem : MonoBehaviour
         Actions.OnGameWin += DisableSprite;
         Actions.OnGameOver += DisableSprite;
         Actions.LoadSettings += UpdateHealthStats;
+        Actions.OnIsEndless += Endless;
+        Actions.OnNotEndless += NotEndless;
     }
 
     private void OnDisable()
@@ -70,6 +73,8 @@ public class HealthSystem : MonoBehaviour
         Actions.OnGameWin -= DisableSprite;
         Actions.OnGameOver -= DisableSprite;
         Actions.LoadSettings -= UpdateHealthStats;
+        Actions.OnIsEndless -= Endless;
+        Actions.OnNotEndless -= NotEndless;
     }
 
     private void StaminaDrain()
@@ -102,6 +107,23 @@ public class HealthSystem : MonoBehaviour
         staminaImage.fillAmount = 1;
         curHealth = maxHealth;
         healthText.text = $"x {curHealth}";
+    }
+
+
+    private void Endless()
+    {
+        foreach (GameObject staminaObj in stamina)
+        {
+            staminaObj.SetActive(false);
+        }
+    }
+
+    private void NotEndless()
+    {
+        foreach (GameObject staminaObj in stamina)
+        {
+            staminaObj.SetActive(true);
+        }
     }
 
     private void ActivateSprite()

@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Values")]
     public int winningLevel;
-    public bool isEndless = false;
+    public bool gameIsEndless = false;
     internal bool isPlaying;
     private bool isNewRun = true;
 
@@ -107,7 +107,7 @@ public class GameManager : MonoBehaviour
 
     private void Gameplay()
     {
-        if(isNewRun)
+        if (isNewRun)
             Actions.OnGameplay();
 
         PlayingState(true, false);
@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
         uiManager.GameOver_UI();
     }
 
-    public void Quit() =>  Application.Quit();
+    public void Quit() => Application.Quit();
 
     private void PlayingState(bool currentlyPlaying, bool newRun)
     {
@@ -153,6 +153,11 @@ public class GameManager : MonoBehaviour
 
     public void IsEndless(bool endless)
     {
-        isEndless = endless;
+        gameIsEndless = endless;
+
+        if (gameIsEndless)
+            Actions.OnIsEndless();
+        else
+            Actions.OnNotEndless();
     }
 }

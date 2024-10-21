@@ -26,7 +26,7 @@ public class Spawner : MonoBehaviour
 
     public float calculateTime = 10f;
 
-    internal static int level = 0; // keep track of times the time increased
+    public static int level = 0; // keep track of times the time increased
     internal static int winningLevel;
 
     private bool finishSpawned = false;
@@ -87,6 +87,7 @@ public class Spawner : MonoBehaviour
             CalculateFactors();
             recalculateTime = 0;
             level++;
+            Debug.Log(level);
             Actions.OnLevelIncrease();
         }
 
@@ -100,7 +101,7 @@ public class Spawner : MonoBehaviour
     private void Spawn()
     {
             // Spawn the finish line if the player reaches the winning level if the game isnt endless
-        if (level == winningLevel && !GameManager.instance.isEndless)
+        if (level == winningLevel && !GameManager.instance.gameIsEndless)
         {
             SpawnObject(spawnableObjects.Find(obj => obj.type == SpawnableObjects.ObjectType.FinishLine));
             finishSpawned = true;

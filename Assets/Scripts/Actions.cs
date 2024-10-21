@@ -22,6 +22,9 @@ public static class Actions
     public static Action OnGameWin;
     public static Action OnGameOver;
     public static Action LoadSettings;
+    public static Action OnIsEndless;
+    public static Action OnNotEndless;
+
 
     // UI Actions
     public static Action OnScreenLoad;

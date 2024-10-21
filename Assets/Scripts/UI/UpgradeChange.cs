@@ -20,7 +20,7 @@ public class UpgradeChange : MonoBehaviour
 
     private void ChangeObjects()
     {
-        if (GameManager.instance.isEndless)
+        if (GameManager.instance.gameIsEndless)
             staminaObjects.SetActive(false);
         else
             staminaObjects.SetActive(true);
