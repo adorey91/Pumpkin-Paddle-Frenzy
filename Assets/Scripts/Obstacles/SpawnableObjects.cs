@@ -11,7 +11,22 @@ public class SpawnableObjects : ScriptableObject
         FinishLine,
     }
     public ObjectType type;
-    public GameObject spawnPrefab;
-    public float spawnWeight;
+    public GameObject[] spawnPrefab;
+    [Range(0f, 1f)]
+    public float minWeight;
+    [Range(0f, 1f)]
+    public float maxWeight;
+
     public int collectableValue;
+
+    public GameObject GetSpawn()
+    {
+        int random = Random.Range(0, spawnPrefab.Length);
+        return spawnPrefab[random];
+    }
+
+    public float GetWeight()
+    {
+        return Random.Range(minWeight, maxWeight);
+    }
 }
