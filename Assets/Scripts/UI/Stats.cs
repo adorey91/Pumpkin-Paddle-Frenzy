@@ -13,7 +13,7 @@ public class Stats : ScriptableObject
 
     public void SetBestTime(float time)
     {
-        if(time > timeInFloat)
+        if(time >= timeInFloat)
         {
             setBestTime = true;
             timeInFloat = time;

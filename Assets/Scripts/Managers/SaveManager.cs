@@ -13,6 +13,7 @@ public class SaveManager : MonoBehaviour
     [SerializeField] private UpgradeManager upgradeManager;
     [SerializeField] private UiManager uiManager;
     [SerializeField] private LevelManager levelManager;
+    [SerializeField] private Stats bestRunResults;
 
     private void OnEnable()
     {
@@ -61,6 +62,7 @@ public class SaveManager : MonoBehaviour
         data.attemptsMade = ScoreManager.attemptNumber;
         data.onScreenControls = uiManager.activeControls;
         data.onScreenPause = uiManager.activePause;
+        data.bestResults = bestRunResults.timeInFloat;
 
         bf.Serialize(file, data);
         file.Close();
@@ -101,7 +103,8 @@ public class SaveManager : MonoBehaviour
             ScoreManager.attemptNumber = data.attemptsMade;
             uiManager.activePause = data.onScreenPause;
             uiManager.activeControls = data.onScreenControls;
-
+            bestRunResults.timeInFloat = data.bestResults;
+            
             // Triggers the load settings action
             Actions.LoadSettings();
 

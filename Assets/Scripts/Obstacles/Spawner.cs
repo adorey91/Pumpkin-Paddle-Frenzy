@@ -82,7 +82,7 @@ public class Spawner : MonoBehaviour
         recalculateTime += Time.deltaTime;
         timeAlive += Time.deltaTime;
 
-        if ((recalculateTime >= calculateTime) && level < winningLevel)
+        if (recalculateTime >= calculateTime)
         {
             CalculateFactors();
             recalculateTime = 0;

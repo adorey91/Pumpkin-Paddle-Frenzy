@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f119a4586da0024e817d689db935c4c, type: 3}
   m_Name: BestRun
   m_EditorClassIdentifier: 
-  timeInFloat: 0
+  timeInFloat: 250.42229
   setBestTime: 0

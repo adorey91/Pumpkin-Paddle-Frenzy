@@ -635,6 +635,7 @@ MonoBehaviour:
   upgradeManager: {fileID: 4032180891573348145}
   uiManager: {fileID: 5945038690370584862}
   levelManager: {fileID: 1080117390671776273}
+  bestRunResults: {fileID: 11400000, guid: f9a3f587c023f9a46bb7b0c722170b71, type: 2}
 --- !u!1 &565459520941321162
 GameObject:
   m_ObjectHideFlags: 0
@@ -12536,10 +12537,10 @@ RectTransform:
   - {fileID: 7320377456014335671}
   m_Father: {fileID: 911529936510056574}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 300, y: 175}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &4303090362034792067
 CanvasRenderer:
@@ -13421,10 +13422,10 @@ RectTransform:
   - {fileID: 9109648574329358559}
   m_Father: {fileID: 911529936510056574}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -20}
-  m_SizeDelta: {x: 300, y: 175}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 2}
 --- !u!222 &5620187937720853329
 CanvasRenderer:
@@ -20753,10 +20754,10 @@ RectTransform:
   - {fileID: 1741626529102446822}
   m_Father: {fileID: 911529936510056574}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -40}
-  m_SizeDelta: {x: 300, y: 175}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 3}
 --- !u!222 &6278125359611382857
 CanvasRenderer:
@@ -23325,7 +23326,7 @@ MonoBehaviour:
   levelProg: {fileID: 3751610691470042233}
   levelProgressText: {fileID: 7212479314919692803}
   runResults: {fileID: 1419471645422140121}
-  bestResults: {fileID: 3578895930821923695}
+  bestRunResults: {fileID: 3578895930821923695}
   bestResultsMainMenu: {fileID: 158413430583741504}
   applesThisRun: {fileID: 2472144316375523224}
   totalApples: {fileID: 2076078908853273596}
@@ -23396,7 +23397,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Best Time in Endless Mode : '
+  m_text: Best score here
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d45f673ef79224c49bd3acf0c7d66f01, type: 2}
   m_sharedMaterial: {fileID: 843880900964008103, guid: d45f673ef79224c49bd3acf0c7d66f01, type: 2}
