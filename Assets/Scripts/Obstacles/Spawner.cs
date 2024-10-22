@@ -17,6 +17,7 @@ public class Spawner : MonoBehaviour
 
     private float _obstacleSpawnTime;
     private float _obstacleSpeed;
+    private float[] weights;
 
     internal static float timeAlive = 1;
     [SerializeField] private float timeUntilObstacleSpawn;
@@ -37,6 +38,8 @@ public class Spawner : MonoBehaviour
         winningLevel = GameManager.instance.winningLevel;
         Actions.OnLevelIncrease();
         timeAlive = 1;
+        weights = new float[spawnableObjects.Count];
+
     }
 
     private void Update()
@@ -108,41 +111,20 @@ public class Spawner : MonoBehaviour
         }
         else
         {
-            SpawnObject(GetRandomSpawnable());
+            //SpawnObject(GetRandomSpawnable());
         }
     }
 
     private void SpawnObject(SpawnableObjects spawnableObject)
     {
         float randomX = Random.Range(-6.7f, 6.7f);
-        GameObject spawnedObject = Instantiate(spawnableObject.spawnPrefab, new Vector2(randomX, transform.position.y), Quaternion.identity, transform);
+        GameObject spawnedObject = Instantiate(spawnableObject.GetSpawn(), new Vector2(randomX, transform.position.y), Quaternion.identity, transform);
 
         spawnedObject.GetComponent<Obstacle>().Initialize(spawnableObject);
         spawnedObject.GetComponent<Obstacle>().UpdateSpeed(_obstacleSpeed);
     }
 
-    private SpawnableObjects GetRandomSpawnable()
-    {
-        float totalWeight = 0f;
-        foreach(var obj in spawnableObjects)
-        {
-            totalWeight += obj.spawnWeight;
-        }
-
-        float randomValue = Random.Range(0f, totalWeight);
-        float cumulativeWeight = 0f;
-
-        foreach (var obj in spawnableObjects)
-        {
-            cumulativeWeight += obj.spawnWeight;
-            if (randomValue <= cumulativeWeight)
-            {
-                return obj;
-            }
-        }
-
-        return spawnableObjects[0]; // Fallback
-    }
+    
     #endregion
 
     #region Resets
