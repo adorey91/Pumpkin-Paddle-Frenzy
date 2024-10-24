@@ -121,6 +121,7 @@ public class SaveManager : MonoBehaviour
                 {
                     foundUpgrade.isPurchased = true;
                     upgradeManager.AddPurchasedUpgrades(foundUpgrade);
+                    upgradeManager.ApplyUpgradeToPlayer(foundUpgrade);
                 }
             }
 

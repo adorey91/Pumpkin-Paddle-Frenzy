@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private Vector2 playerMovement;
+    private bool isMovingLeft = false;
+    private bool isMovingRight = false;
 
     private void Awake()
     {
@@ -48,6 +50,31 @@ public class PlayerController : MonoBehaviour
         playerMovement = context.ReadValue<Vector2>();
     }
 
+    #region TouchScreenMovement
+    // Called when left button is pressed
+    public void MoveLeftButtonPress()
+    {
+        isMovingLeft = true;
+        isMovingRight = false; // Disable right movement if left is pressed
+        playerMovement = new Vector2(-1, 0); // Simulate left movement
+    }
+
+    // Called when right button is pressed
+    public void MoveRightButtonPress()
+    {
+        isMovingRight = true;
+        isMovingLeft = false; // Disable left movement if right is pressed
+        playerMovement = new Vector2(1, 0); // Simulate right movement
+    }
+
+    // Optional: if you want to stop movement when the button is released
+    public void StopMovement()
+    {
+        isMovingLeft = false;
+        isMovingRight = false;
+        playerMovement = Vector2.zero; // Stop movement
+    }
+    #endregion
     /// <summary>
     /// Pauses when player presses the button set in the PlayerInputManager it will go to pause or back to gameplay ONLY in gameplay / pause
     /// </summary>

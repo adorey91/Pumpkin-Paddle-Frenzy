@@ -68,7 +68,9 @@ public class Ui_TextUpdater : MonoBehaviour
 
     public void RunResultsText(TimeSpan time, TimeSpan bestTime, bool newBestRun, int appleCount)
     {
-        SetRunTime(bestTime, newBestRun);
+        if(GameManager.instance.gameIsEndless)
+            SetRunTime(bestTime, newBestRun);
+
         string appleText = appleCount == 1 ? "apple" : "apples";
 
         runResultsText.text = $"You survived for {time.Minutes:D2}:{time.Seconds:D2} \nCollected {appleCount} {appleText} this run!";
@@ -76,16 +78,22 @@ public class Ui_TextUpdater : MonoBehaviour
 
     private void SetRunTime(TimeSpan bestTime, bool newBestRun)
     {
-        if (newBestRun)
+        if(GameManager.instance.gameIsEndless)
         {
-            bestRunText.text = $"<color=green>New</color> Best Time: {bestTime.Minutes:D2}:{bestTime.Seconds:D2}";
-            SetMenuRunTime(bestTime);
+            bestRunText.enabled = true;
+            if (newBestRun)
+            {
+                bestRunText.text = $"<color=green>New</color> Best Time: {bestTime.Minutes:D2}:{bestTime.Seconds:D2}";
+                SetMenuRunTime(bestTime);
+            }
+            else
+                bestRunText.text = $"Best Time: {bestTime.Minutes:D2}:{bestTime.Seconds:D2}";
+
+            //Debug.Log("Set best time");
+            newBestRun = false;
         }
         else
-            bestRunText.text = $"Best Time: {bestTime.Minutes:D2}:{bestTime.Seconds:D2}";
-
-        //Debug.Log("Set best time");
-        newBestRun = false;
+            bestRunText.enabled = false;
 
     }
 

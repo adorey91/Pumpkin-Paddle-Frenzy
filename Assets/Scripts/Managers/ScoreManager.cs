@@ -35,12 +35,14 @@ public class ScoreManager : MonoBehaviour
     {
         Actions.AppleCollection += CollectApples;
         Actions.OnGameOver += Results;
+        Actions.OnGameplay += ResetRun;
     }
 
     private void OnDisable()
     {
         Actions.AppleCollection -= CollectApples;
         Actions.OnGameOver -= Results;
+        Actions.OnGameplay -= ResetRun;
     }
     #endregion
 
@@ -66,6 +68,7 @@ public class ScoreManager : MonoBehaviour
     public void ResetRun()
     {
         appleCount = 0;
+        runTime = 0;
         attemptNumber++;
         Actions.UpdateAttemptText(attemptNumber);
         Actions.UpdateAppleText(appleCount, totalAppleCount);
@@ -106,7 +109,7 @@ public class ScoreManager : MonoBehaviour
 
     public int GetTotalAppleCount()
     {
-        return appleCount;
+        return totalAppleCount;
     }
 
     public void SetTotalAppleCount(int value)

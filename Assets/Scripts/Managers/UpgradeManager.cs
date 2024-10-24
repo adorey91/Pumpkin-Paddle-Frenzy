@@ -28,26 +28,28 @@ public class UpgradeManager : MonoBehaviour
     private void OnEnable()
     {
         Actions.ApplySettings += UpdateAllButtons;
+        Actions.OnGameOver += UpdateAllButtons;
+        Actions.OnGameWin += UpdateAllButtons;
     }
 
     private void OnDisable()
     {
         Actions.ApplySettings -= UpdateAllButtons;
+        Actions.OnGameOver -= UpdateAllButtons;
+        Actions.OnGameWin -= UpdateAllButtons;
     }
 
     public void ClearPurchasedUpgrades() => purchasedUpgrades.Clear();
     public void AddPurchasedUpgrades(UpgradeAsset asset) => purchasedUpgrades.Add(asset);
 
-    public bool CanPurchaseUpgrade(UpgradeAsset upgradeAsset) => scoreManager.GetTotalAppleCount() >= upgradeAsset.cost && !upgradeAsset.isPurchased;
+    public bool CanPurchaseUpgrade(UpgradeAsset upgradeAsset) => !upgradeAsset.isPurchased && scoreManager.GetTotalAppleCount() >= upgradeAsset.cost && (upgradeAsset.preRequisites == null || upgradeAsset.preRequisites.isPurchased);
 
 
-    /// <summary>
-    /// Function used to purchase upgrades from upgrade "store"
-    /// </summary>
-    /// <param name="upgradeAsset"></param>
+    
+    // Function used to purchase upgrades from upgrade "store"
     public void PurchaseUpgrade(UpgradeAsset upgradeAsset)
     {
-        if (scoreManager.GetTotalAppleCount() >= upgradeAsset.cost && !upgradeAsset.isPurchased)
+        if (CanPurchaseUpgrade(upgradeAsset))
         {
             scoreManager.BuyUpgrade(upgradeAsset.cost);
 
@@ -57,6 +59,7 @@ public class UpgradeManager : MonoBehaviour
 
             ApplyUpgradeToPlayer(upgradeAsset);
         }
+        UpdateAllButtons();
     }
 
     /// <summary>
@@ -95,7 +98,6 @@ public class UpgradeManager : MonoBehaviour
         }
         //Debug.Log("Applied upgrade");
         upgradeAsset.isPurchased = true;
-        UpdateAllButtons();
     }
 
     private void UpdateSprite(SpriteChanger spriteToChange, Sprite newSprite)
@@ -136,7 +138,7 @@ public class UpgradeManager : MonoBehaviour
     {
         UpgradeAsset upgradeAsset = upgrade.upgradeAsset;
 
-        upgrade.button.interactable = !upgradeAsset.isPurchased && scoreManager.GetTotalAppleCount() >= upgradeAsset.cost && (upgradeAsset.preRequisites == null || upgradeAsset.preRequisites.isPurchased);
+        upgrade.button.interactable = CanPurchaseUpgrade(upgradeAsset);
         upgrade.checkMark.SetActive(upgradeAsset.isPurchased);
 
         if(GameManager.instance.gameIsEndless)
