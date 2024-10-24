@@ -20,4 +20,14 @@ public class OnScreenButtonControl : MonoBehaviour
         onScreenControlsButtons.SetActive(activeControls);
         pauseButton.SetActive(activePause);
     }
+
+    private void OnEnable()
+    {
+        Actions.ApplySettings += LoadButtons;
+    }
+
+    private void OnDisable()
+    {
+        Actions.ApplySettings -= LoadButtons;
+    }
 }

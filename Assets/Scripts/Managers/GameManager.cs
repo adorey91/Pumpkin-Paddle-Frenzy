@@ -10,11 +10,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Managers")]
     [SerializeField] private UiManager uiManager;
-    [SerializeField] private HealthSystem healthSystem;
-    [SerializeField] private ScoreManager scoreManager;
-    [SerializeField] private UpgradeManager upgradeManager;
-    [SerializeField] private SoundManager soundManager;
-    [SerializeField] private SaveManager saveManager;
 
     [Header("Gamestate")]
     public GameState state;
@@ -44,7 +39,6 @@ public class GameManager : MonoBehaviour
         Actions.LoadBestRun();
         SetState(GameState.MainMenu);
     }
-
 
     private void OnEnable()
     {
@@ -104,7 +98,7 @@ public class GameManager : MonoBehaviour
 
     private void MainMenu()
     {
-        PlayingState(false, true);
+        PlayingState(false, true, true);
         Actions.OnPlayMusic("MainMenu");
         uiManager.MainMenu_UI();
     }
@@ -115,20 +109,19 @@ public class GameManager : MonoBehaviour
             Actions.OnGameplay();
 
         Actions.OnPlayMusic("Gameplay");
-        PlayingState(true, false);
+        PlayingState(true, false, false);
         uiManager.Gameplay_UI();
     }
     private void Upgrades()
     {
-        PlayingState(false, true);
-        upgradeManager.UpdateAllButtons();
+        PlayingState(false, true, true);
         uiManager.Results_UI();
     }
 
 
     private void Pause()
     {
-        PlayingState(false, false);
+        PlayingState(false, false, false);
         uiManager.Pause_UI();
     }
 
@@ -139,14 +132,13 @@ public class GameManager : MonoBehaviour
 
     private void GameWin()
     {
-
-        PlayingState(false, true);
+        PlayingState(false, true, true);
         uiManager.GameOver_UI();
     }
 
     public void Quit() => Application.Quit();
 
-    private void PlayingState(bool currentlyPlaying, bool newRun)
+    private void PlayingState(bool currentlyPlaying, bool newRun, bool returnToPool)
     {
         isPlaying = currentlyPlaying;
         isNewRun = newRun;
@@ -161,6 +153,8 @@ public class GameManager : MonoBehaviour
             Actions.ChangeSpriteVisibility("Disable");
             Time.timeScale = 0;
         }
+        if(returnToPool)
+            Actions.ReturnAllToPool();
     }
 
     public void IsEndless(bool endless)

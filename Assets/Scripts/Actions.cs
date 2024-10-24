@@ -6,26 +6,22 @@ using UnityEngine.Events;
 
 public static class Actions
 {
-    // Player Actions
+    // Player Actions - Apple Collection, change player sprite visibility, player hurt, reset upgrade and player health stats
     public static Action<string> AppleCollection;
     public static Action<string> ChangeSpriteVisibility;
     public static Action OnPlayerHurt;
-    public static Action ResetHealth;
-
-    // Toggle Actions
-    public static Action OnScreenControlsToggle;
-    public static Action OnScreenPauseToggle;
+    public static Action ResetStats;
 
     // Menu Actions
     public static Action OnGameplay;
-    public static Action OnGamePause;
     public static Action OnGameWin;
     public static Action OnGameOver;
     public static Action ApplySettings;
     public static Action LoadBestRun;
+    public static Action LoadSave;
+    public static Action DeleteSave;
+    public static Action<string> LoadScene;
     public static Action<string> ChangeEndlessVisibility;
-
-
 
     // UI Actions
     public static Action OnScreenLoad;
@@ -39,9 +35,9 @@ public static class Actions
     // Spawnable Actions
     public static Action<PoolType> OnSpawn;
     public static Action<PoolType, GameObject> OnReturn;
+    public static Action ReturnAllToPool;
 
     // Music Actions
     public static Action<string> OnPlaySFX;
     public static Action<string> OnPlayMusic;
-
 }

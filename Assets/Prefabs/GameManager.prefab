@@ -253,7 +253,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eee56368c2c21e54d8d41fae50147728, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManager: {fileID: 5945038690370584862}
 --- !u!1 &348672941085597102
 GameObject:
   m_ObjectHideFlags: 0
@@ -635,7 +634,7 @@ MonoBehaviour:
   scoreManager: {fileID: 1076928694110636358}
   upgradeManager: {fileID: 4032180891573348145}
   uiManager: {fileID: 5945038690370584862}
-  levelManager: {fileID: 1080117390671776273}
+  onScreenButtonControl: {fileID: 4561402829958917637}
 --- !u!1 &565459520941321162
 GameObject:
   m_ObjectHideFlags: 0
@@ -1768,9 +1767,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ebbe6f2e9c3cf54a993aa3637ff8669, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveManager: {fileID: 8084603263966174377}
-  levelManager: {fileID: 1080117390671776273}
-  upgradeManager: {fileID: 4032180891573348145}
   ui_MainMenu: {fileID: 4634419290536492328}
   ui_Pause: {fileID: 5523922408034568677}
   ui_Options: {fileID: 4885115114485277605}
@@ -1784,10 +1780,6 @@ MonoBehaviour:
   ui_HowToPlay: {fileID: 2474699362415607889}
   ui_HowToPlay2: {fileID: 6486524437565172799}
   ui_Controls: {fileID: 2841479949294801075}
-  onScreenControlsButtons: {fileID: 6364175084990088613}
-  pauseButton: {fileID: 8317930739364129843}
-  activeControls: 0
-  activePause: 0
   confirmText: {fileID: 371945406703217905}
   yesButton: {fileID: 7625608479423783278}
   noButton: {fileID: 8450519126203180562}
@@ -16038,11 +16030,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiManager: {fileID: 5945038690370584862}
-  healthSystem: {fileID: 2728462748901026852}
-  scoreManager: {fileID: 1076928694110636358}
-  upgradeManager: {fileID: 4032180891573348145}
-  soundManager: {fileID: 7651334265441449866}
-  saveManager: {fileID: 8084603263966174377}
   state: 0
   winningLevel: 10
   gameIsEndless: 0

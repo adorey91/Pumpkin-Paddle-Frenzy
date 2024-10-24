@@ -18,34 +18,32 @@ public class UpgradeManager : MonoBehaviour
     [SerializeField] SpriteChanger healthSprite;
     [SerializeField] SpriteChanger staminaSprite;
 
-    
-
-
     private List<UpgradeAsset> purchasedUpgrades = new List<UpgradeAsset>(); // All purchased upgrades should go to this list
     public IReadOnlyList<UpgradeAsset> PurchasedUpgrades => purchasedUpgrades.AsReadOnly();
 
-
+    #region EnableDisable
     private void OnEnable()
     {
         Actions.ApplySettings += UpdateAllButtons;
         Actions.OnGameOver += UpdateAllButtons;
         Actions.OnGameWin += UpdateAllButtons;
+        Actions.ResetStats += ResetUpgrades;
     }
 
     private void OnDisable()
     {
+        Actions.ResetStats -= ResetUpgrades;
         Actions.ApplySettings -= UpdateAllButtons;
         Actions.OnGameOver -= UpdateAllButtons;
         Actions.OnGameWin -= UpdateAllButtons;
     }
+    #endregion
 
     public void ClearPurchasedUpgrades() => purchasedUpgrades.Clear();
     public void AddPurchasedUpgrades(UpgradeAsset asset) => purchasedUpgrades.Add(asset);
 
     public bool CanPurchaseUpgrade(UpgradeAsset upgradeAsset) => !upgradeAsset.isPurchased && scoreManager.GetTotalAppleCount() >= upgradeAsset.cost && (upgradeAsset.preRequisites == null || upgradeAsset.preRequisites.isPurchased);
 
-
-    
     // Function used to purchase upgrades from upgrade "store"
     public void PurchaseUpgrade(UpgradeAsset upgradeAsset)
     {
@@ -62,24 +60,18 @@ public class UpgradeManager : MonoBehaviour
         UpdateAllButtons();
     }
 
-    /// <summary>
-    /// Resets all upgrade assets to not purchased
-    /// </summary>
+    // Resets all upgrade assets to not purchased
     public void ResetUpgrades()
     {
         foreach(UpgradeUI upgrade in upgradeAssets)
         {
             upgrade.upgradeAsset.isPurchased = false;
         }
-
+        
         paddleAnimator.SetInteger("Upgrade", 0);
-        Actions.ResetHealth();
     }
 
-    /// <summary>
-    /// Applies upgrade upgradeAsset back to player when upgradeAsset isnt purchased
-    /// </summary>
-    /// <param name="upgradeAsset"></param>
+    // Applies upgrade upgradeAsset back to player when upgradeAsset isnt purchased
     public void ApplyUpgradeToPlayer(UpgradeAsset upgradeAsset)
     {
         if (upgradeAsset == null) return;
@@ -96,7 +88,7 @@ public class UpgradeManager : MonoBehaviour
                 paddleAnimator.SetInteger("Upgrade", upgradeAsset.number);
                 break;
         }
-        //Debug.Log("Applied upgrade");
+
         upgradeAsset.isPurchased = true;
     }
 
@@ -106,11 +98,7 @@ public class UpgradeManager : MonoBehaviour
         spriteToChange.upgradePageImage.sprite = newSprite;
     }
 
-    /// <summary>
-    /// Used to find an upgrade in the all upgrade list by name
-    /// </summary>
-    /// <param name="upgradeName"></param>
-    /// <returns></returns>
+    // Used to find an upgrade in the all upgrade list by name
     public UpgradeAsset FindUpgradeByName(string upgradeName)
     {
         foreach(UpgradeUI upgrade in upgradeAssets)
@@ -122,10 +110,7 @@ public class UpgradeManager : MonoBehaviour
         return null;
     }
 
-
-    /// <summary>
-    /// Updates all upgrade buttons based on a private function, that takes the upgrades array, their buttons and the checkmarks
-    /// </summary>
+    // Updates all upgrade buttons based on a private function, that takes the upgrades array, their buttons and the checkmarks
     public void UpdateAllButtons()
     {
         foreach(UpgradeUI upgrade in upgradeAssets)
@@ -134,6 +119,7 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
+    // Updates a single Upgrade UI element. includes, checkmark, cost & if the button is interactable
     private void UpdateUpgradeButtons(UpgradeUI upgrade)
     {
         UpgradeAsset upgradeAsset = upgrade.upgradeAsset;
@@ -147,13 +133,5 @@ public class UpgradeManager : MonoBehaviour
             upgradeAsset.cost = upgradeAsset.baseCost;
 
         upgrade.costText.text = upgradeAsset.cost.ToString();  
-    }
-
-    private void UpdateUpgradeCost()
-    {
-        foreach(UpgradeUI upgrade in upgradeAssets)
-        {
-            upgrade.costText.text = upgrade.upgradeAsset.cost.ToString();
-        }
     }
 }

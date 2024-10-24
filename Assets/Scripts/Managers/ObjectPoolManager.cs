@@ -54,8 +54,7 @@ public class ObjectPoolManager : MonoBehaviour
         Actions.OnSpawn += HandleSpawnEvent;
         Actions.OnReturn += ReturnToPool;
         Actions.SpeedChange += UpdatePoolSpeed;
-        Actions.OnGameOver += ReturnAllToPool;
-        Actions.OnGameWin += ReturnAllToPool;
+        Actions.ReturnAllToPool += ReturnAllToPool;
     }
 
     private void OnDisable()
@@ -63,8 +62,7 @@ public class ObjectPoolManager : MonoBehaviour
         Actions.OnSpawn -= HandleSpawnEvent;
         Actions.OnReturn -= ReturnToPool;
         Actions.SpeedChange -= UpdatePoolSpeed;
-        Actions.OnGameOver -= ReturnAllToPool;
-        Actions.OnGameWin -= ReturnAllToPool;
+        Actions.ReturnAllToPool -= ReturnAllToPool;
     }
     #endregion
 

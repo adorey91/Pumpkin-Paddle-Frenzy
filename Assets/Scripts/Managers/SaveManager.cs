@@ -9,16 +9,20 @@ public class SaveManager : MonoBehaviour
     [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private UpgradeManager upgradeManager;
     [SerializeField] private UiManager uiManager;
-    [SerializeField] private LevelManager levelManager;
+    [SerializeField] private OnScreenButtonControl onScreenButtonControl;
 
     private void OnEnable()
     {
         Actions.LoadBestRun += LoadRunData;
+        Actions.LoadSave += Load;
+        Actions.DeleteSave += DeleteSave;
     }
 
     private void OnDisable()
     {
         Actions.LoadBestRun -= LoadRunData;
+        Actions.LoadSave -= Load;
+        Actions.DeleteSave -= DeleteSave;
     }
 
 
@@ -27,7 +31,7 @@ public class SaveManager : MonoBehaviour
     /// </summary>
     public void CheckForSave()
     {
-        upgradeManager.ResetUpgrades();
+        Actions.ResetStats();
 
         if (File.Exists(GetSavePath() + "/playerInfo.dat"))
             uiManager.Confirmation_UI("save");
@@ -62,8 +66,8 @@ public class SaveManager : MonoBehaviour
             // SavePlayerData other stats
             data.appleCount = scoreManager.GetTotalAppleCount();
             data.attemptsMade = scoreManager.GetAttemptCount();
-            data.onScreenControls = uiManager.activeControls;
-            data.onScreenPause = uiManager.activePause;
+            data.onScreenControls = onScreenButtonControl.activeControls;
+            data.onScreenPause = onScreenButtonControl.activePause;
 
             bf.Serialize(file, data);
             file.Close();
@@ -128,14 +132,14 @@ public class SaveManager : MonoBehaviour
             // Load Stats
             scoreManager.SetTotalAppleCount(data.appleCount);
             scoreManager.SetAttempt(data.attemptsMade);
-            uiManager.activePause = data.onScreenPause;
-            uiManager.activeControls = data.onScreenControls;
+            onScreenButtonControl.activePause = data.onScreenPause;
+            onScreenButtonControl.activeControls = data.onScreenControls;
 
             // Triggers the load settings action
             Actions.ApplySettings();
 
             // Load the gameplay scene after applying player data
-            levelManager.LoadScene("Gameplay");
+            Actions.LoadScene("Gameplay");
         }
     }
     #endregion

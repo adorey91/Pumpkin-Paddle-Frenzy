@@ -32,11 +32,13 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         Actions.SpeedChange += IncreaseMovementSpeed;
+        Actions.OnGameplay += ResetPlayer;
     }
 
     private void OnDisable()
     {
         Actions.SpeedChange -= IncreaseMovementSpeed;
+        Actions.OnGameplay -= ResetPlayer;
     }
     #endregion
 
@@ -48,6 +50,16 @@ public class PlayerController : MonoBehaviour
     public void Move(InputAction.CallbackContext context)
     {
         playerMovement = context.ReadValue<Vector2>();
+    }
+       
+    // Pauses when player presses the button set in the PlayerInputManager it will go to pause or back to gameplay ONLY in gameplay / pause
+    public void Pause(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (GameManager.instance.state == GameManager.GameState.Gameplay || GameManager.instance.state == GameManager.GameState.Pause)
+                GameManager.instance.EscapeState();
+        }
     }
 
     #region TouchScreenMovement
@@ -75,19 +87,7 @@ public class PlayerController : MonoBehaviour
         playerMovement = Vector2.zero; // Stop movement
     }
     #endregion
-    /// <summary>
-    /// Pauses when player presses the button set in the PlayerInputManager it will go to pause or back to gameplay ONLY in gameplay / pause
-    /// </summary>
-    /// <param name="context"></param>
-    public void Pause(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            if (GameManager.instance.state == GameManager.GameState.Gameplay || GameManager.instance.state == GameManager.GameState.Pause)
-                GameManager.instance.EscapeState();
-        }
-    }
-
+    
     public void OnTriggerEnter2D(Collider2D other)
     {
         SpawnableBehaviour obstacle = other.GetComponent<SpawnableBehaviour>();

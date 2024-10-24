@@ -47,8 +47,6 @@ public class HealthSystem : MonoBehaviour
     private void Start()
     {
         UpdateSpriteVisibility("Disable");
-        staminaDrain = baseStaminaDrain;
-        maxHealth = baseMaxHealth;
     }
 
     public void Update()
@@ -65,7 +63,7 @@ public class HealthSystem : MonoBehaviour
         Actions.ChangeSpriteVisibility += UpdateSpriteVisibility;
         Actions.ChangeEndlessVisibility += UpdateStaminaVisibility;
         Actions.ApplySettings += UpdateHealthStats;
-        Actions.ResetHealth += ResetStats;
+        Actions.ResetStats += ResetStats;
     }
 
     private void OnDisable()
@@ -75,7 +73,7 @@ public class HealthSystem : MonoBehaviour
         Actions.ChangeSpriteVisibility -= UpdateSpriteVisibility;
         Actions.ChangeEndlessVisibility -= UpdateStaminaVisibility;
         Actions.ApplySettings -= UpdateHealthStats;
-        Actions.ResetHealth -= ResetStats;
+        Actions.ResetStats -= ResetStats;
     }
     #endregion
 
@@ -135,7 +133,6 @@ public class HealthSystem : MonoBehaviour
     // Updates Sprite visibilty based on if the game is playing or not
     private void UpdateSpriteVisibility(string change)
     {
-
         foreach (SpriteRenderer sprite in playerSprites)
         {
             if (change == "Enable")

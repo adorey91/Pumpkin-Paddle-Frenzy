@@ -48,41 +48,20 @@ public class SoundManager : MonoBehaviour
     }
     #endregion
 
-
-    //private void OnEnable()
-    //{
-    //    Actions.OnGameplay += PlayGameplay;
-    //    Actions.OnGameOver += PlayEnemyCrash;
-    //    Actions.OnPlayerHurt += PlayEnemyCrash;
-    //    Actions.AppleCollection += PlayAppleCollection;
-    //    Actions.OnGameWin += PlayVictory;
-    //}
-
-
-    //private void OnDisable()
-    //{
-    //    Actions.OnGameplay -= PlayGameplay;
-    //    Actions.OnGameOver -= PlayEnemyCrash;
-    //    Actions.OnPlayerHurt -= PlayEnemyCrash;
-    //    Actions.AppleCollection -= PlayAppleCollection;
-    //    Actions.OnGameWin -= PlayVictory;
-    //}
-
     private void PlayBackgroundMusic(string type)
     {
+        AudioClip newClip = null;
+
         switch (type)
         {
-            case "MainMenu":
-                if (musicSource.clip != mainClip)
-                    musicSource.clip = mainClip;
-                break;
-            case "Gameplay":
-                if (musicSource.clip != gameplayClip)
-                    musicSource.clip = gameplayClip;
-                break;
+            case "MainMenu": newClip = mainClip; break;
+            case "Gameplay": newClip = gameplayClip; break;
         }
-
-        musicSource.Play();
+        if (musicSource.clip != newClip)
+        {
+            musicSource.clip = newClip;
+            musicSource.Play();
+        }
     }
 
     private void PlaySFX(string type)
