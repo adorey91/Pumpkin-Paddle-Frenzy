@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Managers")]
     [SerializeField] private UiManager uiManager;
+    [SerializeField] private ScoreManager scoreManager;
 
     [Header("Gamestate")]
     public GameState state;
@@ -99,7 +100,9 @@ public class GameManager : MonoBehaviour
     private void MainMenu()
     {
         PlayingState(false, true, true);
+        scoreManager.SetTotalAppleCount(0);
         Actions.OnPlayMusic("MainMenu");
+        Actions.ResetStats();
         uiManager.MainMenu_UI();
     }
 

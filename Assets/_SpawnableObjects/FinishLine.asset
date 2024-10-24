@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: FinishLine
   m_EditorClassIdentifier: 
   type: 2
-  speed: 1
-  size: 0
-  collectableValue: 3
+  speed: 1.5791695
+  size: 1
+  collectableValue: 0

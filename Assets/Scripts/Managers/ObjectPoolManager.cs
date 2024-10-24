@@ -91,7 +91,12 @@ public class ObjectPoolManager : MonoBehaviour
 
         GameObject objectToSpawn = poolDictionary[type].Dequeue();
         objectToSpawn.SetActive(true);
-        objectToSpawn.transform.position = new Vector2(randomX, 7f);
+
+        if (poolDictionary[type] == poolDictionary[PoolType.FinishLine])
+            objectToSpawn.transform.position = new Vector2(0, 7f);
+        else
+            objectToSpawn.transform.position = new Vector2(randomX, 7f);
+        
         objectToSpawn.transform.rotation = Quaternion.identity;
 
         return objectToSpawn;
