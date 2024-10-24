@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4136589389360678084}
   - component: {fileID: 4452678026759103129}
-  - component: {fileID: 5021881974161858785}
   - component: {fileID: 1903473869919868044}
   - component: {fileID: 1833481776639547198}
   - component: {fileID: 5501636419371198886}
+  - component: {fileID: 7884109452330927821}
   m_Layer: 0
   m_Name: Racer1
   m_TagString: Untagged
@@ -88,20 +88,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &5021881974161858785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3918339268445241835}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72b724fd96d9b6542888f5c86d1db388, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawnableObject: {fileID: 0}
-  movementSpeed: 0
 --- !u!50 &1903473869919868044
 Rigidbody2D:
   serializedVersion: 4
@@ -185,3 +171,16 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7884109452330927821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3918339268445241835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d671a5d50d881a04494cac373a83dfac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnableObject: {fileID: 11400000, guid: a252255d7563c9944a726fd0cc1090a3, type: 2}

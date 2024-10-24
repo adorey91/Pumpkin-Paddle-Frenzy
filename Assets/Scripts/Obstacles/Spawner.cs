@@ -5,41 +5,30 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [Header("Obstacles To Be Spawned")]
-    [SerializeField] private List<SpawnableObjects> spawnableObjects;
+    private CustomTimer obstacleSpawnTimer; // used to count how long until next spawn
+    private CustomTimer recalculateTimer; // used to recalculate spawning speeds/spawn values 
 
     [Header("Spawning Base Values")]
     [SerializeField] private float obstacleSpawnTime = 5f;
     [Range(0f, 1f)] public float obstacleSpawnFactor = 0.075f;
-    [SerializeField] private float obstacleSpeed = 1f;
-    [Range(0f, 1f)] public float obstacleSpeedFactor = 0.15f;
-    public float backgroundSpeed;
-
+    [Range(0f, 1f)] public float collectableProbability = 0.4f;
+    [SerializeField]private float calculateTime = 10f;
     private float _obstacleSpawnTime;
-    private float _obstacleSpeed;
-    private float[] weights;
-
-    internal static float timeAlive = 1;
-    [SerializeField] private float timeUntilObstacleSpawn;
+    private float timeAlive = 1; // spawner uses this to increase the spawntime & speed
 
 
-    private float recalculateTime;
-
-    public float calculateTime = 10f;
-
-    public static int level = 0; // keep track of times the time increased
-    internal static int winningLevel;
-
+    private int level = 0; // keep track of times the time increased
+    private int winningLevel;
     private bool finishSpawned = false;
 
 
     private void Start()
     {
+        obstacleSpawnTimer = new CustomTimer(obstacleSpawnTime);
+        recalculateTimer = new CustomTimer(calculateTime);
         winningLevel = GameManager.instance.winningLevel;
-        Actions.OnLevelIncrease();
-        timeAlive = 1;
-        weights = new float[spawnableObjects.Count];
 
+        ResetValues();
     }
 
     private void Update()
@@ -48,31 +37,23 @@ public class Spawner : MonoBehaviour
             SpawnLoop();
     }
 
+    #region ActionsEnableDisable
     private void OnEnable()
     {
         Actions.OnGameplay += ResetValues;
-        Actions.OnGameOver += ClearObstacles;
-        Actions.OnGameWin += ClearObstacles;
     }
 
     private void OnDisable()
     {
         Actions.OnGameplay -= ResetValues;
-        Actions.OnGameOver -= ClearObstacles;
-        Actions.OnGameWin -= ClearObstacles;
     }
+    #endregion
 
     private void CalculateFactors()
     {
         _obstacleSpawnTime = obstacleSpawnTime / Mathf.Pow(timeAlive, obstacleSpawnFactor);
-        _obstacleSpeed = obstacleSpeed * Mathf.Pow(timeAlive, obstacleSpeedFactor);
 
-        backgroundSpeed = _obstacleSpeed * 0.3f;
-
-        foreach (Transform child in transform)
-        {
-            child.GetComponent<Obstacle>().UpdateSpeed(_obstacleSpeed);
-        }
+        Actions.SpeedChange(timeAlive);
     }
 
     #region Spawn
@@ -81,70 +62,59 @@ public class Spawner : MonoBehaviour
     /// </summary>
     private void SpawnLoop()
     {
-        timeUntilObstacleSpawn += Time.deltaTime;
-        recalculateTime += Time.deltaTime;
         timeAlive += Time.deltaTime;
 
-        if (recalculateTime >= calculateTime)
+        if (recalculateTimer.UpdateTimer(Time.deltaTime))
         {
-            CalculateFactors();
-            recalculateTime = 0;
             level++;
-            Debug.Log(level);
-            Actions.OnLevelIncrease();
+            Actions.LevelChange(level);
+            CalculateFactors();
+            Actions.SpeedChange(timeAlive);
+            recalculateTimer.StartTimer(calculateTime);
         }
 
-        if (timeUntilObstacleSpawn >= _obstacleSpawnTime)
+        if (obstacleSpawnTimer.UpdateTimer(Time.deltaTime))
         {
             Spawn();
-            timeUntilObstacleSpawn = 0;
+            obstacleSpawnTimer.StartTimer(_obstacleSpawnTime);
         }
     }
 
     private void Spawn()
     {
-            // Spawn the finish line if the player reaches the winning level if the game isnt endless
+        // Spawn the finish line if the player reaches the winning level if the game isnt endless
         if (level == winningLevel && !GameManager.instance.gameIsEndless)
         {
-            SpawnObject(spawnableObjects.Find(obj => obj.type == SpawnableObjects.ObjectType.FinishLine));
+            Actions.OnSpawn(PoolType.FinishLine);
             finishSpawned = true;
         }
         else
-        {
-            //SpawnObject(GetRandomSpawnable());
-        }
+            SpawnObstacle();
     }
 
-    private void SpawnObject(SpawnableObjects spawnableObject)
+    private void SpawnObstacle()
     {
-        float randomX = Random.Range(-6.7f, 6.7f);
-        GameObject spawnedObject = Instantiate(spawnableObject.GetSpawn(), new Vector2(randomX, transform.position.y), Quaternion.identity, transform);
+        float randomValue = Random.Range(0f, 1f);
 
-        spawnedObject.GetComponent<Obstacle>().Initialize(spawnableObject);
-        spawnedObject.GetComponent<Obstacle>().UpdateSpeed(_obstacleSpeed);
+        // Spawn collectable
+        if(randomValue <collectableProbability)
+            Actions.OnSpawn(PoolType.Collectable);
+        else
+            Actions.OnSpawn(PoolType.Obstacle);
     }
-
-    
     #endregion
 
     #region Resets
-    private void ClearObstacles()
-    {
-        foreach (Transform child in transform)
-        {
-            Destroy(child.gameObject);
-        }
-    }
-
     private void ResetValues()
     {
         level = 0;
-        Actions.OnLevelIncrease();
+        Actions.LevelChange(level);
         timeAlive = 1;
+        Actions.SpeedChange(timeAlive);
         finishSpawned = false;
         _obstacleSpawnTime = obstacleSpawnTime;
-        _obstacleSpeed = obstacleSpeed;
-        backgroundSpeed = _obstacleSpeed * 0.3f;
+        obstacleSpawnTimer.StartTimer(_obstacleSpawnTime);
+        recalculateTimer.StartTimer(calculateTime);
     }
     #endregion
 }

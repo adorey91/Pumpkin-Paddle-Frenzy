@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 7614398988152510619}
   - component: {fileID: 4303819893499255672}
   - component: {fileID: 8408557710116550136}
-  - component: {fileID: 3855614927770379287}
   - component: {fileID: 2347628192391415349}
+  - component: {fileID: 8057403404995672546}
   m_Layer: 0
   m_Name: Apple
   m_TagString: Apple
@@ -122,20 +122,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.975
---- !u!114 &3855614927770379287
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1475980636802886061}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72b724fd96d9b6542888f5c86d1db388, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 0
-  movementSpeed: 0
 --- !u!50 &2347628192391415349
 Rigidbody2D:
   serializedVersion: 4
@@ -163,3 +149,16 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &8057403404995672546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1475980636802886061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d671a5d50d881a04494cac373a83dfac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnableObject: {fileID: 11400000, guid: 84945592c2d57d04088d29bde45cc2be, type: 2}

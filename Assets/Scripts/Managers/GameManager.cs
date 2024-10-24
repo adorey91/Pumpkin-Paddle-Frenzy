@@ -12,9 +12,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UiManager uiManager;
     [SerializeField] private HealthSystem healthSystem;
     [SerializeField] private ScoreManager scoreManager;
-    [SerializeField] private Spawner spawner;
     [SerializeField] private UpgradeManager upgradeManager;
     [SerializeField] private SoundManager soundManager;
+    [SerializeField] private SaveManager saveManager;
 
     [Header("Gamestate")]
     public GameState state;
@@ -37,7 +37,11 @@ public class GameManager : MonoBehaviour
         }
         else if (instance != this)
             Destroy(gameObject);
+    }
 
+    private void Start()
+    {
+        Actions.LoadBestRun();
         SetState(GameState.MainMenu);
     }
 
@@ -101,7 +105,7 @@ public class GameManager : MonoBehaviour
     private void MainMenu()
     {
         PlayingState(false, true);
-        soundManager.PlayMenu();
+        Actions.OnPlayMusic("MainMenu");
         uiManager.MainMenu_UI();
     }
 
@@ -110,6 +114,7 @@ public class GameManager : MonoBehaviour
         if (isNewRun)
             Actions.OnGameplay();
 
+        Actions.OnPlayMusic("Gameplay");
         PlayingState(true, false);
         uiManager.Gameplay_UI();
     }
@@ -134,6 +139,7 @@ public class GameManager : MonoBehaviour
 
     private void GameWin()
     {
+
         PlayingState(false, true);
         uiManager.GameOver_UI();
     }
@@ -146,9 +152,15 @@ public class GameManager : MonoBehaviour
         isNewRun = newRun;
 
         if (isPlaying)
+        {
+            Actions.ChangeSpriteVisibility("Enable");
             Time.timeScale = 1;
+        }
         else
+        {
+            Actions.ChangeSpriteVisibility("Disable");
             Time.timeScale = 0;
+        }
     }
 
     public void IsEndless(bool endless)
@@ -156,8 +168,8 @@ public class GameManager : MonoBehaviour
         gameIsEndless = endless;
 
         if (gameIsEndless)
-            Actions.OnIsEndless();
+            Actions.ChangeEndlessVisibility("Disable");
         else
-            Actions.OnNotEndless();
+            Actions.ChangeEndlessVisibility("Enable");
     }
 }

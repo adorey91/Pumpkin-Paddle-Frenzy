@@ -4850,6 +4850,10 @@ PrefabInstance:
       propertyPath: obstacleType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3855614927770379287, guid: ad5cd9a75476e8b4dbdce128e27f1bbe, type: 3}
+      propertyPath: spawnableObject
+      value: 
+      objectReference: {fileID: 11400000, guid: 4c32426400a46584da17318943384403, type: 2}
     - target: {fileID: 4303819893499255672, guid: ad5cd9a75476e8b4dbdce128e27f1bbe, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -4910,6 +4914,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8057403404995672546, guid: ad5cd9a75476e8b4dbdce128e27f1bbe, type: 3}
+      propertyPath: spawnableObject
+      value: 
+      objectReference: {fileID: 11400000, guid: 4c32426400a46584da17318943384403, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

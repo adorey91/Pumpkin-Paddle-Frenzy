@@ -56,6 +56,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 2014391721, guid: eb77d32d5fa69e94f9d12df01c0771b7, type: 3}
+    - target: {fileID: 5021881974161858785, guid: bbdc1813adfe78545977929a8a2215ac, type: 3}
+      propertyPath: spawnableObject
+      value: 
+      objectReference: {fileID: 11400000, guid: a252255d7563c9944a726fd0cc1090a3, type: 2}
     - target: {fileID: 5501636419371198886, guid: bbdc1813adfe78545977929a8a2215ac, type: 3}
       propertyPath: m_Controller
       value: 

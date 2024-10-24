@@ -11,97 +11,95 @@ using UnityEngine;
 public class Ui_TextUpdater : MonoBehaviour
 {
     [Header("Tracker of Spawn Level Progress")]
-    [SerializeField] private GameObject levelProg;
     [SerializeField] private TMP_Text levelProgressText;
 
     [Header("Score Text")]
-    [SerializeField] private TMP_Text runResults;
-    [SerializeField] private TMP_Text bestRunResults;
-    [SerializeField] private TMP_Text bestResultsMainMenu;
+    [SerializeField] private TMP_Text runResultsText;
+    [SerializeField] private TMP_Text bestRunText;
+    [SerializeField] private TMP_Text bestRunMenuText;
 
     [SerializeField] private TMP_Text applesThisRun;
     [SerializeField] private TMP_Text totalApples;
     [SerializeField] private TMP_Text attemptNumber;
 
-    [SerializeField] private Stats bestRunStat;
 
-    private void Start()
-    {
-        SetRunTime();
-    }
-
+    #region EnableDisable
     private void OnEnable()
     {
-        Actions.UpdateAppleText += AppleCountText;
-        Actions.OnGameOver += AppleCountText;
-        Actions.OnGameOver += RunResultsText;
-        Actions.OnGameWin += AppleCountText;
-        Actions.OnLevelIncrease += LevelProgressText;
-        Actions.UpdateAttemptText += AttemptText;
-        Actions.OnIsEndless += Endless;
-        Actions.OnNotEndless += NotEndless;
+        Actions.UpdateAttemptText += UpdateAttempt;
+        Actions.UpdateAppleText += UpdateAppleCount;
+        Actions.UpdateResultsText += RunResultsText;
+        Actions.LevelChange += LevelProgressText;
+        Actions.ChangeEndlessVisibility += ProgressVisibilty;
+        Actions.UpdateMenuBestRun += SetMenuRunTime;
     }
 
     private void OnDisable()
     {
-        Actions.UpdateAppleText -= AppleCountText;
-        Actions.OnGameOver -= AppleCountText;
-        Actions.OnGameOver -= RunResultsText;
-        Actions.OnGameWin -= AppleCountText;
-        Actions.OnLevelIncrease -= LevelProgressText;
-        Actions.UpdateAttemptText -= AttemptText;
-        Actions.OnIsEndless -= Endless;
-        Actions.OnNotEndless -= NotEndless;
+        Actions.UpdateAttemptText -= UpdateAttempt;
+        Actions.UpdateAppleText -= UpdateAppleCount;
+        Actions.UpdateResultsText -= RunResultsText;
+        Actions.LevelChange -= LevelProgressText;
+        Actions.ChangeEndlessVisibility -= ProgressVisibilty;
+        Actions.UpdateMenuBestRun -= SetMenuRunTime;
     }
+    #endregion
 
-    public void LevelProgressText()
+
+    public void LevelProgressText(int level)
     {
-        float progress = ((float)Spawner.level / (float)Spawner.winningLevel) * 100;
+        float progress = ((float)level / (float)GameManager.instance.winningLevel) * 100;
         int roundedProgress = Mathf.RoundToInt(progress);
 
         levelProgressText.text = $"Level Progress: {roundedProgress}%";
     }
 
 
-    public void AttemptText()
+    public void UpdateAttempt(int attempt)
     {
-        attemptNumber.text = $"Attempt #: {ScoreManager.attemptNumber}";
+        attemptNumber.text = $"Attempt #: {attempt}";
     }
 
-    public void AppleCountText()
+    public void UpdateAppleCount(int appleCount, int totalApple)
     {
-        applesThisRun.text = $"x {ScoreManager.appleCount}";
-        totalApples.text = $"x {ScoreManager.totalAppleCount}";
+        applesThisRun.text = $"x {appleCount}";
+        totalApples.text = $"x {totalApple}";
     }
 
-    public void RunResultsText()
+    public void RunResultsText(TimeSpan time, TimeSpan bestTime, bool newBestRun, int appleCount)
     {
-        TimeSpan time = TimeSpan.FromSeconds(ScoreManager.runTime);
+        SetRunTime(bestTime, newBestRun);
+        string appleText = appleCount == 1 ? "apple" : "apples";
 
-        SetRunTime();
-        string appleText = ScoreManager.appleCount == 1 ? "apple" : "apples";
-
-        runResults.text = $"You survived for {time.Minutes:D2}:{time.Seconds:D2} \nCollected {ScoreManager.appleCount} {appleText} this run!";
+        runResultsText.text = $"You survived for {time.Minutes:D2}:{time.Seconds:D2} \nCollected {appleCount} {appleText} this run!";
     }
 
-    private void SetRunTime()
+    private void SetRunTime(TimeSpan bestTime, bool newBestRun)
     {
-        if (ScoreManager.runTime != 0)
-            bestRunStat.SetBestTime(ScoreManager.runTime);
-        else
-            bestRunStat.SetBestTime(bestRunStat.timeInFloat);
-
-        if (bestRunStat.setBestTime == true)
+        if (newBestRun)
         {
-            bestRunResults.text = $"<color=green>New</color> Best Time: {bestRunStat.bestTime.Minutes:D2}:{bestRunStat.bestTime.Seconds:D2}";
-            bestResultsMainMenu.text = $"Best Time in Endless Mode: {bestRunStat.bestTime.Minutes:D2}:{bestRunStat.bestTime.Seconds:D2}";
+            bestRunText.text = $"<color=green>New</color> Best Time: {bestTime.Minutes:D2}:{bestTime.Seconds:D2}";
+            SetMenuRunTime(bestTime);
         }
         else
-            bestRunResults.text = $"Best Time: {bestRunStat.bestTime.Minutes:D2}:{bestRunStat.bestTime.Seconds:D2}";
+            bestRunText.text = $"Best Time: {bestTime.Minutes:D2}:{bestTime.Seconds:D2}";
 
-        bestRunStat.setBestTime = false;
+        //Debug.Log("Set best time");
+        newBestRun = false;
+
     }
 
-    private void Endless() => levelProg.SetActive(false);
-    private void NotEndless() => levelProg.SetActive(true);
+    private void SetMenuRunTime(TimeSpan bestTime)
+    {
+        bestRunMenuText.text = $"Best Time in Endless Mode: {bestTime.Minutes:D2}:{bestTime.Seconds:D2}";
+    }
+
+    private void ProgressVisibilty(string endless)
+    {
+        switch (endless)
+        {
+            case "Enable": levelProgressText.enabled = true; break;
+            case "Disable": levelProgressText.enabled = false; break;
+        }
+    }
 }

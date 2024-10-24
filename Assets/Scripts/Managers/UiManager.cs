@@ -119,12 +119,12 @@ public class UiManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Actions.LoadSettings += LoadButtons;
+        Actions.ApplySettings += LoadButtons;
     }
 
     private void OnDisable()
     {
-        Actions.LoadSettings -= LoadButtons;
+        Actions.ApplySettings -= LoadButtons;
     }
 
 }

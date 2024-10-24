@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: FinishLine
   m_EditorClassIdentifier: 
   type: 2
-  spawnPrefab: {fileID: 8378838994371166745, guid: 672d80b1c330f4d46a9763a010c8e905, type: 3}
-  spawnWeight: 0
+  speed: 1
+  size: 0
   collectableValue: 3

@@ -24,6 +24,7 @@ public class LevelManager : MonoBehaviour
 
     private void LoadGameOver()
     {
+        Actions.OnPlaySFX("Victory");
         _sceneName = "GameEnd";
         LoadAsync(_sceneName);
     }

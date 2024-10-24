@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: GoldenApple
   m_EditorClassIdentifier: 
   type: 1
-  spawnPrefab: {fileID: 5189304197737070225, guid: 312da5c8656e03c469926dda13684437, type: 3}
-  spawnWeight: 5
+  speed: 1
+  size: 4
   collectableValue: 3

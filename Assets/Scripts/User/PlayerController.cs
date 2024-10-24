@@ -1,6 +1,7 @@
+using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static Obstacle;
+using static SpawnableBehaviour;
 
 public class PlayerController : MonoBehaviour
 {
@@ -22,21 +23,20 @@ public class PlayerController : MonoBehaviour
     {
         if (GameManager.instance.isPlaying)
             Movement();
-        else
-            transform.position = new Vector2(0, -2.7f);
     }
 
+
+    #region ActionsEnableDisable
     private void OnEnable()
     {
-        Actions.OnLevelIncrease += IncreaseMovementSpeed;
-        Actions.OnGameplay += ResetMovementSpeed;
+        Actions.SpeedChange += IncreaseMovementSpeed;
     }
 
     private void OnDisable()
     {
-        Actions.OnLevelIncrease -= IncreaseMovementSpeed;
-        Actions.OnGameplay -= ResetMovementSpeed;
+        Actions.SpeedChange -= IncreaseMovementSpeed;
     }
+    #endregion
 
     private void Movement()
     {
@@ -63,36 +63,33 @@ public class PlayerController : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        Obstacle obstacle = other.GetComponent<Obstacle>();
+        SpawnableBehaviour obstacle = other.GetComponent<SpawnableBehaviour>();
+        SpawnableObject spawnable = obstacle.GetSpawnableObject();
 
-        switch (obstacle.spawnableObject.type)
+        switch (spawnable.type)
         {
-            case SpawnableObjects.ObjectType.Collectable:
-                if (obstacle.spawnableObject.collectableValue == 1)
-                    Actions.OnCollectApple();
-                else if (obstacle.spawnableObject.collectableValue > 1)
-                    Actions.OnCollectGoldenApple();
+            case PoolType.Obstacle: 
+                Actions.OnPlayerHurt(); 
                 break;
-
-            case SpawnableObjects.ObjectType.Obstacle:
-                Actions.OnPlayerHurt();
+            case PoolType.Collectable: 
+                string collectable = spawnable.collectableValue == 1 ? "apple" : "golden"; 
+                Actions.AppleCollection(collectable);
                 break;
-
-            case SpawnableObjects.ObjectType.FinishLine:
-                Actions.OnGameWin();
+            case PoolType.FinishLine: 
+                Actions.OnGameWin(); 
                 break;
         }
-
-        Destroy(other.gameObject);
+        Actions.OnReturn(spawnable.type, other.gameObject);
     }
 
-    private void IncreaseMovementSpeed()
+    private void IncreaseMovementSpeed(float timeAlive)
     {
-        moveSpeed = baseMoveSpeed * Mathf.Pow(Spawner.timeAlive, 0.15f);
+        moveSpeed = baseMoveSpeed * Mathf.Pow(timeAlive, 0.15f);
     }
 
-    private void ResetMovementSpeed()
+    private void ResetPlayer()
     {
         moveSpeed = baseMoveSpeed;
+        transform.position = new Vector2(0, -2.7f);
     }
 }

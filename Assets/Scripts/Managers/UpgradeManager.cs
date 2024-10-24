@@ -9,43 +9,37 @@ public class UpgradeManager : MonoBehaviour
     [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private HealthSystem healthSystem;
 
-    [Header("Upgrades")]
-    public UpgradeAsset[] healthUpgrades;
-    public UpgradeAsset[] staminaUpgrades;
+    [Header("Health & Stamina Upgrades")]
+    public UpgradeUI[] upgradeAssets;
 
-    [Header("Upgrade Buttons")]
-    [SerializeField] private Button[] healthButtons;
-    [SerializeField] private Button[] staminaButtons;
-
-    [Header("Checkmark Images")]
-    [SerializeField] private GameObject[] healthChecks;
-    [SerializeField] private GameObject[] staminaChecks;
-
-    [Header("Player Collider")]
+    [Header("Player Components")]
     [SerializeField] private CircleCollider2D playerCollider;
-
-    [Header("Health Upgrade Components")]
-    [SerializeField] private SpriteRenderer healthSprite;
-    [SerializeField] private Image healthSpriteUpgrade;
-
-    [Header("Stamina Upgrade Components")]
-    [SerializeField] private SpriteRenderer staminaSprite;
-    [SerializeField] private Image staminaSpriteUpgrade;
     [SerializeField] private Animator paddleAnimator;
+    [SerializeField] SpriteChanger healthSprite;
+    [SerializeField] SpriteChanger staminaSprite;
+
+    
 
 
+    private List<UpgradeAsset> purchasedUpgrades = new List<UpgradeAsset>(); // All purchased upgrades should go to this list
+    public IReadOnlyList<UpgradeAsset> PurchasedUpgrades => purchasedUpgrades.AsReadOnly();
 
-    internal List<UpgradeAsset> purchasedUpgrades = new List<UpgradeAsset>(); // All purchased upgrades should go to this list
 
     private void OnEnable()
     {
-        Actions.LoadSettings += UpdateAllButtons;
+        Actions.ApplySettings += UpdateAllButtons;
     }
 
     private void OnDisable()
     {
-        Actions.LoadSettings -= UpdateAllButtons;
+        Actions.ApplySettings -= UpdateAllButtons;
     }
+
+    public void ClearPurchasedUpgrades() => purchasedUpgrades.Clear();
+    public void AddPurchasedUpgrades(UpgradeAsset asset) => purchasedUpgrades.Add(asset);
+
+    public bool CanPurchaseUpgrade(UpgradeAsset upgradeAsset) => scoreManager.GetTotalAppleCount() >= upgradeAsset.cost && !upgradeAsset.isPurchased;
+
 
     /// <summary>
     /// Function used to purchase upgrades from upgrade "store"
@@ -53,12 +47,11 @@ public class UpgradeManager : MonoBehaviour
     /// <param name="upgradeAsset"></param>
     public void PurchaseUpgrade(UpgradeAsset upgradeAsset)
     {
-        if (ScoreManager.totalAppleCount >= upgradeAsset.cost && !upgradeAsset.isPurchased)
+        if (scoreManager.GetTotalAppleCount() >= upgradeAsset.cost && !upgradeAsset.isPurchased)
         {
-            ScoreManager.totalAppleCount -= upgradeAsset.cost;
-            Actions.UpdateAppleText();
+            scoreManager.BuyUpgrade(upgradeAsset.cost);
 
-            // Add to the list of purchased upgrades if not already in it
+            // Add to the list of purchased upgrades
             if (!purchasedUpgrades.Contains(upgradeAsset))
                 purchasedUpgrades.Add(upgradeAsset);
 
@@ -71,50 +64,44 @@ public class UpgradeManager : MonoBehaviour
     /// </summary>
     public void ResetUpgrades()
     {
-        foreach (var upgradeAsset in healthUpgrades)
+        foreach(UpgradeUI upgrade in upgradeAssets)
         {
-            upgradeAsset.isPurchased = false;
+            upgrade.upgradeAsset.isPurchased = false;
         }
 
-        foreach (var upgradeAsset in staminaUpgrades)
-        {
-            upgradeAsset.isPurchased = false;
-        }
         paddleAnimator.SetInteger("Upgrade", 0);
-        healthSystem.ResetStats();
+        Actions.ResetHealth();
     }
 
     /// <summary>
-    /// Applies upgrade asset back to player
+    /// Applies upgrade upgradeAsset back to player when upgradeAsset isnt purchased
     /// </summary>
     /// <param name="upgradeAsset"></param>
     public void ApplyUpgradeToPlayer(UpgradeAsset upgradeAsset)
     {
-        if (upgradeAsset != null)
-        {
-            switch (upgradeAsset.type)
-            {
-                case UpgradeAsset.StateUpgrade.Health:
-                    healthSystem.curHealthUpgrade = upgradeAsset;
-                    healthSystem.maxHealth = (int)upgradeAsset.newStats;
-                    healthSprite.sprite = upgradeAsset.newSprite;
-                    healthSpriteUpgrade.sprite = upgradeAsset.newSprite;
-                    playerCollider.radius = upgradeAsset.colliderRadius;
-                    upgradeAsset.isPurchased = true;
-                    break;
+        if (upgradeAsset == null) return;
 
-                case UpgradeAsset.StateUpgrade.Stamina:
-                    healthSystem.curStaminaUpgrade = upgradeAsset;
-                    healthSystem.staminaDrain = upgradeAsset.newStats;
-                    staminaSprite.sprite = upgradeAsset.newSprite;
-                    staminaSpriteUpgrade.sprite = upgradeAsset.newSprite;
-                    paddleAnimator.SetInteger("Upgrade", upgradeAsset.number);
-                    upgradeAsset.isPurchased = true;
-                    break;
-            }
-            Debug.Log("Applied upgrade");
+        switch (upgradeAsset.type)
+        {
+            case UpgradeAsset.StateUpgrade.Health:
+                healthSystem.SetUpgrade(upgradeAsset, isHealth: true);
+                UpdateSprite(healthSprite, upgradeAsset.newSprite);
+                playerCollider.radius = upgradeAsset.colliderRadius; break;
+            case UpgradeAsset.StateUpgrade.Stamina:
+                healthSystem.SetUpgrade(upgradeAsset, isHealth: false);
+                UpdateSprite(staminaSprite, upgradeAsset.newSprite);
+                paddleAnimator.SetInteger("Upgrade", upgradeAsset.number);
+                break;
         }
+        //Debug.Log("Applied upgrade");
+        upgradeAsset.isPurchased = true;
         UpdateAllButtons();
+    }
+
+    private void UpdateSprite(SpriteChanger spriteToChange, Sprite newSprite)
+    {
+        spriteToChange.playerSprite.sprite = newSprite;
+        spriteToChange.upgradePageImage.sprite = newSprite;
     }
 
     /// <summary>
@@ -124,62 +111,47 @@ public class UpgradeManager : MonoBehaviour
     /// <returns></returns>
     public UpgradeAsset FindUpgradeByName(string upgradeName)
     {
-        // Check each upgrade in healthUpgrades
-        foreach (UpgradeAsset upgradeAsset in healthUpgrades)
+        foreach(UpgradeUI upgrade in upgradeAssets)
         {
-            if (upgradeAsset.name == upgradeName)
-                return upgradeAsset;
-        }
-
-        // Check each upgrade in stamina upgrades
-        foreach(UpgradeAsset upgradeAsset in staminaUpgrades)
-        {
-            if (upgradeAsset.name == upgradeName)
-                    return upgradeAsset;
+            if(upgrade.upgradeAsset.name ==  upgradeName) return upgrade.upgradeAsset;
         }
 
         Debug.LogWarning($"Upgrade not found: {upgradeName}");
         return null;
     }
 
+
     /// <summary>
     /// Updates all upgrade buttons based on a private function, that takes the upgrades array, their buttons and the checkmarks
     /// </summary>
     public void UpdateAllButtons()
     {
-        UpdateUpgradeButtons(healthUpgrades, healthButtons, healthChecks);
-        UpdateUpgradeButtons(staminaUpgrades, staminaButtons, staminaChecks);
+        foreach(UpgradeUI upgrade in upgradeAssets)
+        {
+            UpdateUpgradeButtons(upgrade);
+        }
     }
 
-    private void UpdateUpgradeButtons(UpgradeAsset[] upgrades, Button[] buttons, GameObject[] checkMarks)
+    private void UpdateUpgradeButtons(UpgradeUI upgrade)
     {
-        for (int i = 0; i < upgrades.Length; i++)
-        {
-            UpgradeAsset upgrade = upgrades[i];
-            Button button = buttons[i];
-            GameObject checkMark = checkMarks[i];
+        UpgradeAsset upgradeAsset = upgrade.upgradeAsset;
 
-            if (upgrade.isPurchased)
-            {
-                button.interactable = false; // Disable button if purchased
-                checkMark.SetActive(true); // Show check mark if purchased
-            }
-            else
-            {
-                // Check if player can afford the upgrade
-                if (ScoreManager.totalAppleCount >= upgrade.cost)
-                {
-                    // Only check prerequisites if they exist
-                    if (upgrade.preRequisites == null || upgrade.preRequisites.isPurchased)
-                        button.interactable = true; // Enable button if prerequisites are met or none
-                    else
-                        button.interactable = false; // Disable button if prerequisites are not met
-                }
-                else
-                    button.interactable = false; // Disable button if not enough currency
-                
-                checkMark.SetActive(false); // Hide check mark if not purchased
-            }
+        upgrade.button.interactable = !upgradeAsset.isPurchased && scoreManager.GetTotalAppleCount() >= upgradeAsset.cost && (upgradeAsset.preRequisites == null || upgradeAsset.preRequisites.isPurchased);
+        upgrade.checkMark.SetActive(upgradeAsset.isPurchased);
+
+        if(GameManager.instance.gameIsEndless)
+            upgradeAsset.cost = upgradeAsset.baseCost * 2;
+        else
+            upgradeAsset.cost = upgradeAsset.baseCost;
+
+        upgrade.costText.text = upgradeAsset.cost.ToString();  
+    }
+
+    private void UpdateUpgradeCost()
+    {
+        foreach(UpgradeUI upgrade in upgradeAssets)
+        {
+            upgrade.costText.text = upgrade.upgradeAsset.cost.ToString();
         }
     }
 }
