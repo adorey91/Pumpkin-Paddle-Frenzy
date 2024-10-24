@@ -1,7 +1,5 @@
-using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static SpawnableBehaviour;
 
 public class PlayerController : MonoBehaviour
 {
