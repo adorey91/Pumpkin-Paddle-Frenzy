@@ -70,6 +70,8 @@ public class Ui_TextUpdater : MonoBehaviour
     {
         if(GameManager.instance.gameIsEndless)
             SetRunTime(bestTime, newBestRun);
+        else
+        bestRunText.enabled = false;
 
         string appleText = appleCount == 1 ? "apple" : "apples";
 
@@ -92,9 +94,6 @@ public class Ui_TextUpdater : MonoBehaviour
             //Debug.Log("Set best time");
             newBestRun = false;
         }
-        else
-            bestRunText.enabled = false;
-
     }
 
     private void SetMenuRunTime(TimeSpan bestTime)

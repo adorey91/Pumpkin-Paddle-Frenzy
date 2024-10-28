@@ -23419,7 +23419,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Best score here
+  m_text: 'Best Time in Endless Mode: '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d45f673ef79224c49bd3acf0c7d66f01, type: 2}
   m_sharedMaterial: {fileID: 843880900964008103, guid: d45f673ef79224c49bd3acf0c7d66f01, type: 2}
