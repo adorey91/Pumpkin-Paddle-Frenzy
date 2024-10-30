@@ -28,8 +28,7 @@ public class ObjectPoolManager : MonoBehaviour
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
             PoolType poolType = group.Key;
-
-            foreach (GameObject prefab in group)
+            Debug.Log(poolType);foreach (GameObject prefab in group)
             {
                 SpawnableBehaviour obstacle = prefab.GetComponent<SpawnableBehaviour>();
                 for (int i = 0; i < obstacle.GetSpawnableObject().size; i++)
@@ -89,16 +88,37 @@ public class ObjectPoolManager : MonoBehaviour
         // The range on the x axis for where the obstacles can spawn
         float randomX = Random.Range(-6.7f, 6.7f);
 
+
+        //THIS IS THE PROBLEM. IT'S DEQUEUING THE PREVIOUS VALUE SOMETIMES.
         GameObject objectToSpawn = poolDictionary[type].Dequeue();
         objectToSpawn.SetActive(true);
 
         if (poolDictionary[type] == poolDictionary[PoolType.FinishLine])
+        {
             objectToSpawn.transform.position = new Vector2(0, 7f);
-        else
-            objectToSpawn.transform.position = new Vector2(randomX, 7f);
-        
-        objectToSpawn.transform.rotation = Quaternion.identity;
+            objectToSpawn.transform.rotation = Quaternion.identity;
 
+        }
+        else if (poolDictionary[type] == poolDictionary[PoolType.Kayak])
+        {
+            if (randomX <= 0)
+            {
+                randomX = -6f;
+                objectToSpawn.transform.rotation *= Quaternion.Euler(0, 180f, 0);
+            }
+            else
+                randomX = 6f;
+        }
+        else
+        {
+            objectToSpawn.transform.position = new Vector2(randomX, 7f);
+
+        }
+
+        if (poolDictionary[type] != poolDictionary[PoolType.Kayak] || randomX == 6f)
+            objectToSpawn.transform.rotation = Quaternion.identity;
+
+        Debug.Log(objectToSpawn);
         return objectToSpawn;
     }
 
@@ -136,7 +156,7 @@ public class ObjectPoolManager : MonoBehaviour
     {
         objectSpawned.SetActive(false);
         poolDictionary[type].Enqueue(objectSpawned);
-        //Debug.Log("Returned to pool");
+        Debug.Log(objectSpawned + "returned to pool");
     }
 
     // Loop through each queue and shuffle them
