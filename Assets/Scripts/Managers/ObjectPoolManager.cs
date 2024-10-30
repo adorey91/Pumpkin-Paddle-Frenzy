@@ -26,7 +26,8 @@ public class ObjectPoolManager : MonoBehaviour
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
             PoolType poolType = group.Key;
-            Debug.Log(poolType);foreach (GameObject prefab in group)
+            
+            foreach (GameObject prefab in group)
             {
                 SpawnableBehaviour obstacle = prefab.GetComponent<SpawnableBehaviour>();
                 for (int i = 0; i < obstacle.GetSpawnableObject().size; i++)
@@ -37,7 +38,7 @@ public class ObjectPoolManager : MonoBehaviour
                 }
             }
 
-            // Shuffle the pool
+            //Shuffle the pool
             ShuffleQueue(objectPool);
 
             // Add the pool to the dictionary with PoolType as key
@@ -52,7 +53,6 @@ public class ObjectPoolManager : MonoBehaviour
         Actions.OnReturn += ReturnToPool;
         Actions.SpeedChange += UpdatePoolSpeed;
         Actions.ReturnAllToPool += ReturnAllToPool;
-        Actions.LevelChange += ShufflePools;
     }
 
     private void OnDisable()
@@ -61,15 +61,16 @@ public class ObjectPoolManager : MonoBehaviour
         Actions.OnReturn -= ReturnToPool;
         Actions.SpeedChange -= UpdatePoolSpeed;
         Actions.ReturnAllToPool -= ReturnAllToPool;
-        Actions.LevelChange -= ShufflePools;
     }
     #endregion
 
+    // handles the event
     private void HandleSpawnEvent(PoolType type)
     {
         SpawnFromPool(type);
     }
 
+    // Spawns an object from a designated pool, sets the rotation and position
     private GameObject SpawnFromPool(PoolType type)
     {
         if (!poolDictionary.ContainsKey(type))
@@ -110,7 +111,7 @@ public class ObjectPoolManager : MonoBehaviour
         if (poolDictionary[type] != poolDictionary[PoolType.Kayak] || randomX == 6f)
             objectToSpawn.transform.rotation = Quaternion.identity;
 
-        Debug.Log(objectToSpawn);
+        //Debug.Log(objectToSpawn);
         return objectToSpawn;
     }
 
@@ -136,23 +137,24 @@ public class ObjectPoolManager : MonoBehaviour
                     PoolType poolObject = spawnObj.type; // Access the PoolType from the SpawnableObject
                     ReturnToPool(poolObject, child.gameObject); // Return the child to the appropriate pool
                 }
-                else
-                    Debug.LogWarning($"SpawnableObject is null for {child.name}. Ensure it is assigned correctly.");
+                //else
+                //    Debug.LogWarning($"SpawnableObject is null for {child.name}. Ensure it is assigned correctly.");
             }
-            else
-                Debug.LogWarning($"SpawnableBehaviour component not found on {child.name}.");
+            //else
+            //    Debug.LogWarning($"SpawnableBehaviour component not found on {child.name}.");
         }
     }
 
+    // Returns the gameObject back to the pool and sets it inactive
     private void ReturnToPool(PoolType type, GameObject objectSpawned)
     {
         objectSpawned.SetActive(false);
         poolDictionary[type].Enqueue(objectSpawned);
-        Debug.Log(objectSpawned + "returned to pool");
+        //Debug.Log(objectSpawned + "returned to pool");
     }
 
     // Shuffles each pool of queues
-    private void ShufflePools(int level)
+    private void ShufflePools()
     {
         foreach (var pool in poolDictionary)
         {
