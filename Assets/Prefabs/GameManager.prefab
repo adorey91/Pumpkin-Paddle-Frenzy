@@ -4704,6 +4704,7 @@ MonoBehaviour:
   obstacleSpawnTime: 4
   obstacleSpawnFactor: 0.075
   collectableProbability: 0.4
+  kayakProbability: 0.2
   calculateTime: 10
 --- !u!1 &2336562907526949568
 GameObject:

@@ -13,6 +13,7 @@ public class ObjectPoolManager : MonoBehaviour
     [SerializeField] private List<GameObject> prefabObjects; // List of all prefab objects
     private Dictionary<PoolType, Queue<GameObject>> poolDictionary;
     [SerializeField] private SpawnableObject[] spawnableObject;
+    private int shuffleCount;
 
 
     private void Start()
@@ -68,6 +69,11 @@ public class ObjectPoolManager : MonoBehaviour
     private void HandleSpawnEvent(PoolType type)
     {
         SpawnFromPool(type);
+
+        if(shuffleCount == 10)
+            ShufflePools();
+        else
+            shuffleCount++;
     }
 
     // Spawns an object from a designated pool, sets the rotation and position
@@ -101,6 +107,8 @@ public class ObjectPoolManager : MonoBehaviour
             }
             else
                 randomX = 6f;
+
+            objectToSpawn.transform.position = new Vector2(randomX, 7f);
         }
         else
         {
@@ -137,11 +145,7 @@ public class ObjectPoolManager : MonoBehaviour
                     PoolType poolObject = spawnObj.type; // Access the PoolType from the SpawnableObject
                     ReturnToPool(poolObject, child.gameObject); // Return the child to the appropriate pool
                 }
-                //else
-                //    Debug.LogWarning($"SpawnableObject is null for {child.name}. Ensure it is assigned correctly.");
             }
-            //else
-            //    Debug.LogWarning($"SpawnableBehaviour component not found on {child.name}.");
         }
     }
 
@@ -156,6 +160,8 @@ public class ObjectPoolManager : MonoBehaviour
     // Shuffles each pool of queues
     private void ShufflePools()
     {
+        shuffleCount = 0;
+
         foreach (var pool in poolDictionary)
         {
             Queue<GameObject> queue = pool.Value;

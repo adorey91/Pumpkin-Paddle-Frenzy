@@ -12,6 +12,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float obstacleSpawnTime = 5f;
     [Range(0f, 1f)] public float obstacleSpawnFactor = 0.075f;
     [Range(0f, 1f)] public float collectableProbability = 0.4f;
+    [Range(0f, 1f)] public float kayakProbability = 0.3f;
     [SerializeField]private float calculateTime = 10f;
     private float _obstacleSpawnTime;
     private float timeAlive = 1; // spawner uses this to increase the spawntime & speed
@@ -89,18 +90,29 @@ public class Spawner : MonoBehaviour
             finishSpawned = true;
         }
         else
+            PickSpawn();
+    }
+
+    private void PickSpawn()
+    {
+        float randomValue = Random.Range(0f, 1f);
+
+        // Spawn collectable
+        if(randomValue < collectableProbability)
+            Actions.OnSpawn(PoolType.Collectable);
+        else
             SpawnObstacle();
     }
 
     private void SpawnObstacle()
     {
-        float randomValue = Random.Range(0f, 1f);
+        float value = Random.Range(0f, 1f);
 
-        // Spawn collectable
-        if(randomValue <collectableProbability)
-            Actions.OnSpawn(PoolType.Collectable);
+        if (value < kayakProbability)
+            Actions.OnSpawn(PoolType.Kayak);
         else
             Actions.OnSpawn(PoolType.Obstacle);
+
     }
     #endregion
 
