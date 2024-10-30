@@ -14,11 +14,9 @@ public class ObjectPoolManager : MonoBehaviour
     private Dictionary<PoolType, Queue<GameObject>> poolDictionary;
     [SerializeField] private SpawnableObject[] spawnableObject;
 
-    int shuffleCount = 0; 
 
     private void Start()
     {
-        shuffleCount = 0;
         poolDictionary = new Dictionary<PoolType, Queue<GameObject>>();
 
         // Group prefabs by their PoolType
@@ -54,6 +52,7 @@ public class ObjectPoolManager : MonoBehaviour
         Actions.OnReturn += ReturnToPool;
         Actions.SpeedChange += UpdatePoolSpeed;
         Actions.ReturnAllToPool += ReturnAllToPool;
+        Actions.LevelChange += ShufflePools;
     }
 
     private void OnDisable()
@@ -62,20 +61,13 @@ public class ObjectPoolManager : MonoBehaviour
         Actions.OnReturn -= ReturnToPool;
         Actions.SpeedChange -= UpdatePoolSpeed;
         Actions.ReturnAllToPool -= ReturnAllToPool;
+        Actions.LevelChange -= ShufflePools;
     }
     #endregion
 
     private void HandleSpawnEvent(PoolType type)
     {
         SpawnFromPool(type);
-
-        if (shuffleCount == 10)
-        {
-            ShufflePools();
-            shuffleCount = 0;
-        }
-        else
-            shuffleCount++;
     }
 
     private GameObject SpawnFromPool(PoolType type)
@@ -159,38 +151,53 @@ public class ObjectPoolManager : MonoBehaviour
         Debug.Log(objectSpawned + "returned to pool");
     }
 
-    // Loop through each queue and shuffle them
-    private void ShufflePools()
+    // Shuffles each pool of queues
+    private void ShufflePools(int level)
     {
-        foreach( var pool in poolDictionary)
+        foreach (var pool in poolDictionary)
         {
             Queue<GameObject> queue = pool.Value;
             ShuffleQueue(queue);
         }
     }
 
-    // Method to shuffle Queue
+    // Method to shuffle Queue with active objects at the end
     private void ShuffleQueue(Queue<GameObject> queue)
     {
-        // Convert queue
-        List<GameObject> list = queue.ToList();
+        // Separate active and inactive objects
+        List<GameObject> inactiveList = new List<GameObject>();
+        List<GameObject> activeList = new List<GameObject>();
 
-        // Shuffle list
-        for (int i = 0; i < list.Count; i++)
+        // Sorts objects into active and inactive lists
+        foreach (GameObject obj in queue)
         {
-            int randomIndex = Random.Range(i, list.Count);
-            GameObject temp = list[i];
-            list[i] = list[randomIndex];
-            list[randomIndex] = temp;
+            if (obj.activeSelf)  
+                activeList.Add(obj);
+            else
+                inactiveList.Add(obj);// Collect inactive objects
         }
 
-        // Clear queue and requeue shuffled list
+        // Shuffle only the inactive list
+        for (int i = 0; i < inactiveList.Count; i++)
+        {
+            int randomIndex = Random.Range(i, inactiveList.Count);
+            GameObject temp = inactiveList[i];
+            inactiveList[i] = inactiveList[randomIndex];
+            inactiveList[randomIndex] = temp;
+        }
+
+        // Clear the original queue and re-enqueue shuffled inactive objects, then active objects
         queue.Clear();
-        foreach (GameObject obj in list)
+        foreach (GameObject obj in inactiveList)
+        {
+            queue.Enqueue(obj);
+        }
+        foreach (GameObject obj in activeList)
         {
             queue.Enqueue(obj);
         }
     }
+
 
     // Updates pool speed based on timeAlive value
     private void UpdatePoolSpeed(float timeAlive)
