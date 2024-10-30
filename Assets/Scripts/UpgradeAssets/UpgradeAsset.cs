@@ -15,6 +15,7 @@ public class UpgradeAsset : ScriptableObject
     public Sprite newSprite;
     public float newStats;
     public int cost;
+    public int baseCost;
     public bool isPurchased;
 
     public float colliderRadius;

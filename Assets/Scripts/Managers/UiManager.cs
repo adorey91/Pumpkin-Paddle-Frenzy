@@ -4,11 +4,6 @@ using TMPro;
 
 public class UiManager : MonoBehaviour
 {
-    [Header("Managers")]
-    [SerializeField] private SaveManager saveManager;
-    [SerializeField] private LevelManager levelManager;
-    [SerializeField] protected UpgradeManager upgradeManager;
-
     [Header("Ui Panels")]
     [SerializeField] private GameObject ui_MainMenu;
     [SerializeField] private GameObject ui_Pause;
@@ -25,12 +20,6 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject ui_HowToPlay;
     [SerializeField] private GameObject ui_HowToPlay2;
     [SerializeField] private GameObject ui_Controls;
-
-    [Header("On Screen Buttons")]
-    [SerializeField] private GameObject onScreenControlsButtons;
-    [SerializeField] private GameObject pauseButton;
-    public bool activeControls = true;
-    public bool activePause = true;
 
     [Header("Confirmation Panel")]
     [SerializeField] private TextMeshProUGUI confirmText;
@@ -58,13 +47,13 @@ public class UiManager : MonoBehaviour
                 SetConfirmation($"Do you want to load previous save? \nIf not, current save will be deleted",
                     () =>
                     {
-                        saveManager.Load();
+                        Actions.LoadSave();
                         ui_backgroundInstruct.SetActive(false);
                     },
                     () =>
                     {
                         Instructions_UI();
-                        saveManager.DeleteSave();
+                        Actions.DeleteSave();
                     }
                     ); break;
             case "quit":
@@ -74,7 +63,7 @@ public class UiManager : MonoBehaviour
                 ); break;
             case "mainmenu":
                 SetConfirmation("Are you sure you want to go to Main Menu?",
-                    () => levelManager.LoadScene("MainMenu"),
+                    () => Actions.LoadScene("MainMenu"),
                     () => GameManager.instance.LoadState("beforeOptions")
                 ); break;
             default: confirmText.text = "Yes button will not work."; break;
@@ -109,22 +98,4 @@ public class UiManager : MonoBehaviour
         yesButton.onClick.AddListener(yesAction);
         noButton.onClick.AddListener(noAction);
     }
-
-    // Do I need to set the toggles to whatever the onscreen is?
-    public void LoadButtons()
-    {
-        onScreenControlsButtons.SetActive(activeControls);
-        pauseButton.SetActive(activePause);
-    }
-
-    private void OnEnable()
-    {
-        Actions.LoadSettings += LoadButtons;
-    }
-
-    private void OnDisable()
-    {
-        Actions.LoadSettings -= LoadButtons;
-    }
-
 }

@@ -34,78 +34,47 @@ public class SoundManager : MonoBehaviour
         SetVolume(masterControl.mixer, masterControl.audioImage.fillAmount);
     }
 
+    #region EnableDisable
     private void OnEnable()
     {
-        Actions.OnGameplay += PlayGameplay;
-        Actions.OnGameOver += PlayEnemyCrash;
-        Actions.OnPlayerHurt += PlayEnemyCrash;
-        Actions.OnCollectApple += PlayAppleCollection;
-        Actions.OnGameWin += PlayVictory;
+        Actions.OnPlaySFX += PlaySFX;
+        Actions.OnPlayMusic += PlayBackgroundMusic;
     }
-
 
     private void OnDisable()
     {
-        Actions.OnGameplay -= PlayGameplay;
-        Actions.OnGameOver -= PlayEnemyCrash;
-        Actions.OnPlayerHurt -= PlayEnemyCrash;
-        Actions.OnCollectApple -= PlayAppleCollection;
-        Actions.OnGameWin -= PlayVictory;
+        Actions.OnPlaySFX -= PlaySFX;
+        Actions.OnPlayMusic -= PlayBackgroundMusic;
     }
+    #endregion
 
-    public void PlayMenu()
+    private void PlayBackgroundMusic(string type)
     {
-        if (!musicSource.isPlaying || musicSource.clip != mainClip)
+        AudioClip newClip = null;
+
+        switch (type)
         {
-            musicSource.clip = mainClip;
+            case "MainMenu": newClip = mainClip; break;
+            case "Gameplay": newClip = gameplayClip; break;
+        }
+        if (musicSource.clip != newClip)
+        {
+            musicSource.clip = newClip;
             musicSource.Play();
         }
     }
 
-
-    private void PlayGameplay()
+    private void PlaySFX(string type)
     {
-        if (!musicSource.isPlaying || musicSource.clip != gameplayClip)
+        switch (type)
         {
-            musicSource.clip = gameplayClip;
-            musicSource.Play();
+            case "Victory": sfxSource.PlayOneShot(sfxVictoryClip, 1f); break;
+            case "Collection": sfxSource.PlayOneShot(sfxCollectClip, 1f); break;
+            case "Obstacle": sfxSource.PlayOneShot(sfxCrashClip, 1f); break;
         }
     }
 
-    private void PlayVictory()
-    {
-        if (sfxSource == null)
-        {
-            GameObject foundObject = GameObject.Find("SFXSource");
-            sfxSource = GetComponent<AudioSource>();
-        }
-        sfxSource.PlayOneShot(sfxVictoryClip, 1f);
-    }
-
-    private void PlayEnemyCrash()
-    {
-        if (sfxSource == null)
-        {
-            GameObject foundObject = GameObject.Find("SFXSource");
-            sfxSource = GetComponent<AudioSource>();
-        }
-        sfxSource.PlayOneShot(sfxCrashClip, 1f);
-    }
-
-    private void PlayAppleCollection()
-    {
-        if (sfxSource == null)
-        {
-            GameObject foundObject = GameObject.Find("SFXSource");
-            sfxSource = GetComponent<AudioSource>();
-        }
-        sfxSource.PlayOneShot(sfxCollectClip, 1f);
-    }
-
-
-
-    // Sets volume
-
+    #region VolumeControls
     public void IncreaseAudio(AudioMixerGroup mixerGroup)
     {
         AdjustAudio(mixerGroup, 0.1f);
@@ -120,25 +89,7 @@ public class SoundManager : MonoBehaviour
     {
         AudioControl control = GetAudioControl(mixerGroup.name);
         if (control.audioImage != null)
-        {
             SetAudio(control, changeAmount);
-        }
-    }
-
-    private AudioControl GetAudioControl(string mixerName)
-    {
-        switch (mixerName)
-        {
-            case "SFX":
-                return sfxControl;
-            case "Music":
-                return musicControl;
-            case "Master":
-                return masterControl;
-            default:
-                Debug.LogError($"AudioControl for '{mixerName}' not recognized.");
-                return new AudioControl();
-        }
     }
 
     private void SetAudio(AudioControl control, float changeAmount)
@@ -162,9 +113,22 @@ public class SoundManager : MonoBehaviour
         audioMixer.SetFloat(mixerName, volumeValue);
     }
 
+    private AudioControl GetAudioControl(string mixerName)
+    {
+        switch (mixerName)
+        {
+            case "SFX": return sfxControl;
+            case "Music": return musicControl;
+            case "Master": return masterControl;
+            default:
+                Debug.LogError($"AudioControl for '{mixerName}' not recognized.");
+                return new AudioControl();
+        }
+    }
 
     public void StopMusic()
     {
         musicSource.Stop();
     }
+    #endregion
 }

@@ -14,57 +14,99 @@ public class Ui_TextUpdater : MonoBehaviour
     [SerializeField] private TMP_Text levelProgressText;
 
     [Header("Score Text")]
-    [SerializeField] private TMP_Text runResults;
+    [SerializeField] private TMP_Text runResultsText;
+    [SerializeField] private TMP_Text bestRunText;
+    [SerializeField] private TMP_Text bestRunMenuText;
+
     [SerializeField] private TMP_Text applesThisRun;
     [SerializeField] private TMP_Text totalApples;
     [SerializeField] private TMP_Text attemptNumber;
 
+
+    #region EnableDisable
     private void OnEnable()
     {
-        Actions.UpdateAppleText += AppleCountText;
-        Actions.OnGameOver += AppleCountText;
-        Actions.OnGameOver += RunResultsText;
-        Actions.OnGameWin += AppleCountText;
-        Actions.OnLevelIncrease += LevelProgressText;
-        Actions.UpdateAttemptText += AttemptText;
+        Actions.UpdateAttemptText += UpdateAttempt;
+        Actions.UpdateAppleText += UpdateAppleCount;
+        Actions.UpdateResultsText += RunResultsText;
+        Actions.LevelChange += LevelProgressText;
+        Actions.ChangeEndlessVisibility += ProgressVisibilty;
+        Actions.UpdateMenuBestRun += SetMenuRunTime;
     }
 
     private void OnDisable()
     {
-        Actions.UpdateAppleText -= AppleCountText;
-        Actions.OnGameOver -= AppleCountText;
-        Actions.OnGameOver -= RunResultsText;
-        Actions.OnGameWin -= AppleCountText;
-        Actions.OnLevelIncrease -= LevelProgressText;
-        Actions.UpdateAttemptText -= AttemptText;
+        Actions.UpdateAttemptText -= UpdateAttempt;
+        Actions.UpdateAppleText -= UpdateAppleCount;
+        Actions.UpdateResultsText -= RunResultsText;
+        Actions.LevelChange -= LevelProgressText;
+        Actions.ChangeEndlessVisibility -= ProgressVisibilty;
+        Actions.UpdateMenuBestRun -= SetMenuRunTime;
     }
+    #endregion
 
-    public void LevelProgressText()
+
+    public void LevelProgressText(int level)
     {
-        float progress = ((float)Spawner.level / (float)Spawner.winningLevel) * 100;
+        float progress = ((float)level / (float)GameManager.instance.winningLevel) * 100;
         int roundedProgress = Mathf.RoundToInt(progress);
 
         levelProgressText.text = $"Level Progress: {roundedProgress}%";
     }
 
 
-    public void AttemptText()
+    public void UpdateAttempt(int attempt)
     {
-        attemptNumber.text = $"Attempt #: {ScoreManager.attemptNumber}";
+        attemptNumber.text = $"Attempt #: {attempt}";
     }
 
-    public void AppleCountText()
+    public void UpdateAppleCount(int appleCount, int totalApple)
     {
-        applesThisRun.text = $"x {ScoreManager.appleCount}";
-        totalApples.text = $"x {ScoreManager.totalAppleCount}";
+        applesThisRun.text = $"x {appleCount}";
+        totalApples.text = $"x {totalApple}";
     }
 
-    public void RunResultsText()
+    public void RunResultsText(TimeSpan time, TimeSpan bestTime, bool newBestRun, int appleCount)
     {
-        TimeSpan time = TimeSpan.FromSeconds(ScoreManager.runTime);
+        if(GameManager.instance.gameIsEndless)
+            SetRunTime(bestTime, newBestRun);
+        else
+        bestRunText.enabled = false;
 
-        string appleText = ScoreManager.appleCount == 1 ? "apple" : "apples";
+        string appleText = appleCount == 1 ? "apple" : "apples";
 
-        runResults.text = $"You survived for {time.Minutes:D2}:{time.Seconds:D2} \nCollected {ScoreManager.appleCount} {appleText} this run!";
+        runResultsText.text = $"You survived for {time.Minutes:D2}:{time.Seconds:D2} \nCollected {appleCount} {appleText} this run!";
+    }
+
+    private void SetRunTime(TimeSpan bestTime, bool newBestRun)
+    {
+        if(GameManager.instance.gameIsEndless)
+        {
+            bestRunText.enabled = true;
+            if (newBestRun)
+            {
+                bestRunText.text = $"<color=green>New</color> Best Time: {bestTime.Minutes:D2}:{bestTime.Seconds:D2}";
+                SetMenuRunTime(bestTime);
+            }
+            else
+                bestRunText.text = $"Best Time: {bestTime.Minutes:D2}:{bestTime.Seconds:D2}";
+
+            //Debug.Log("Set best time");
+            newBestRun = false;
+        }
+    }
+
+    private void SetMenuRunTime(TimeSpan bestTime)
+    {
+        bestRunMenuText.text = $"Best Time in Endless Mode: {bestTime.Minutes:D2}:{bestTime.Seconds:D2}";
+    }
+
+    private void ProgressVisibilty(string endless)
+    {
+        switch (endless)
+        {
+            case "Enable": levelProgressText.enabled = true; break;
+            case "Disable": levelProgressText.enabled = false; break;
+        }
     }
 }

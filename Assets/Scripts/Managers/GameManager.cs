@@ -10,11 +10,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Managers")]
     [SerializeField] private UiManager uiManager;
-    [SerializeField] private HealthSystem healthSystem;
     [SerializeField] private ScoreManager scoreManager;
-    [SerializeField] private Spawner spawner;
-    [SerializeField] private UpgradeManager upgradeManager;
-    [SerializeField] private SoundManager soundManager;
 
     [Header("Gamestate")]
     public GameState state;
@@ -24,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Game Values")]
     public int winningLevel;
-    public bool isEndless = false;
+    public bool gameIsEndless = false;
     internal bool isPlaying;
     private bool isNewRun = true;
 
@@ -37,10 +33,13 @@ public class GameManager : MonoBehaviour
         }
         else if (instance != this)
             Destroy(gameObject);
-
-        SetState(GameState.MainMenu);
     }
 
+    private void Start()
+    {
+        Actions.LoadBestRun();
+        SetState(GameState.MainMenu);
+    }
 
     private void OnEnable()
     {
@@ -100,34 +99,32 @@ public class GameManager : MonoBehaviour
 
     private void MainMenu()
     {
-        PlayingState(false, true);
-        soundManager.PlayMenu();
+        PlayingState(false, true, true);
+        scoreManager.SetTotalAppleCount(0);
+        Actions.OnPlayMusic("MainMenu");
+        Actions.ResetStats();
         uiManager.MainMenu_UI();
     }
 
     private void Gameplay()
     {
-        Debug.Log(isNewRun);
-        if(isNewRun)
-        {
+        if (isNewRun)
             Actions.OnGameplay();
 
-        }
-
-        PlayingState(true, false);
+        Actions.OnPlayMusic("Gameplay");
+        PlayingState(true, false, false);
         uiManager.Gameplay_UI();
     }
     private void Upgrades()
     {
-        PlayingState(false, true);
-        upgradeManager.UpdateAllButtons();
+        PlayingState(false, true, true);
         uiManager.Results_UI();
     }
 
 
     private void Pause()
     {
-        PlayingState(false, false);
+        PlayingState(false, false, false);
         uiManager.Pause_UI();
     }
 
@@ -138,29 +135,38 @@ public class GameManager : MonoBehaviour
 
     private void GameWin()
     {
-        PlayingState(false, true);
+        PlayingState(false, true, true);
         uiManager.GameOver_UI();
     }
 
-    public void Quit()
-    {
-        Application.Quit();
-        Debug.Log("Quitting Game");
-    }
+    public void Quit() => Application.Quit();
 
-    private void PlayingState(bool currentlyPlaying, bool newRun)
+    private void PlayingState(bool currentlyPlaying, bool newRun, bool returnToPool)
     {
         isPlaying = currentlyPlaying;
         isNewRun = newRun;
 
         if (isPlaying)
+        {
+            Actions.ChangeSpriteVisibility("Enable");
             Time.timeScale = 1;
+        }
         else
+        {
+            Actions.ChangeSpriteVisibility("Disable");
             Time.timeScale = 0;
+        }
+        if(returnToPool)
+            Actions.ReturnAllToPool();
     }
 
     public void IsEndless(bool endless)
     {
-        isEndless = endless;
+        gameIsEndless = endless;
+
+        if (gameIsEndless)
+            Actions.ChangeEndlessVisibility("Disable");
+        else
+            Actions.ChangeEndlessVisibility("Enable");
     }
 }

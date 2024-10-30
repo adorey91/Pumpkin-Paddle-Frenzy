@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static Obstacle;
+using static SpawnableBehaviour;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D rb;
     private Vector2 playerMovement;
+    private bool isMovingLeft = false;
+    private bool isMovingRight = false;
 
     private void Awake()
     {
@@ -22,21 +24,22 @@ public class PlayerController : MonoBehaviour
     {
         if (GameManager.instance.isPlaying)
             Movement();
-        else
-            transform.position = new Vector2(0, -2.7f);
     }
 
+
+    #region ActionsEnableDisable
     private void OnEnable()
     {
-        Actions.OnLevelIncrease += IncreaseMovementSpeed;
-        Actions.OnGameplay += ResetMovementSpeed;
+        Actions.SpeedChange += IncreaseMovementSpeed;
+        Actions.OnGameplay += ResetPlayer;
     }
 
     private void OnDisable()
     {
-        Actions.OnLevelIncrease -= IncreaseMovementSpeed;
-        Actions.OnGameplay -= ResetMovementSpeed;
+        Actions.SpeedChange -= IncreaseMovementSpeed;
+        Actions.OnGameplay -= ResetPlayer;
     }
+    #endregion
 
     private void Movement()
     {
@@ -47,11 +50,8 @@ public class PlayerController : MonoBehaviour
     {
         playerMovement = context.ReadValue<Vector2>();
     }
-
-    /// <summary>
-    /// Pauses when player presses the button set in the PlayerInputManager it will go to pause or back to gameplay ONLY in gameplay / pause
-    /// </summary>
-    /// <param name="context"></param>
+       
+    // Pauses when player presses the button set in the PlayerInputManager it will go to pause or back to gameplay ONLY in gameplay / pause
     public void Pause(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -61,38 +61,61 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    #region TouchScreenMovement
+    // Called when left button is pressed
+    public void MoveLeftButtonPress()
+    {
+        isMovingLeft = true;
+        isMovingRight = false; // Disable right movement if left is pressed
+        playerMovement = new Vector2(-1, 0); // Simulate left movement
+    }
+
+    // Called when right button is pressed
+    public void MoveRightButtonPress()
+    {
+        isMovingRight = true;
+        isMovingLeft = false; // Disable left movement if right is pressed
+        playerMovement = new Vector2(1, 0); // Simulate right movement
+    }
+
+    // Optional: if you want to stop movement when the button is released
+    public void StopMovement()
+    {
+        isMovingLeft = false;
+        isMovingRight = false;
+        playerMovement = Vector2.zero; // Stop movement
+    }
+    #endregion
+    
     public void OnTriggerEnter2D(Collider2D other)
     {
-        Obstacle obstacle = other.GetComponent<Obstacle>();
+        SpawnableBehaviour obstacle = other.GetComponent<SpawnableBehaviour>();
+        SpawnableObject spawnable = obstacle.GetSpawnableObject();
 
-        switch (obstacle.spawnableObject.type)
+        switch (spawnable.type)
         {
-            case SpawnableObjects.ObjectType.Collectable:
-                if (obstacle.spawnableObject.collectableValue == 1)
-                    Actions.OnCollectApple();
-                else if (obstacle.spawnableObject.collectableValue > 1)
-                    Actions.OnCollectGoldenApple();
+            case PoolType.Obstacle: 
+                Actions.OnPlayerHurt(); 
                 break;
-
-            case SpawnableObjects.ObjectType.Obstacle:
-                Actions.OnPlayerHurt();
+            case PoolType.Collectable: 
+                string collectable = spawnable.collectableValue == 1 ? "apple" : "golden"; 
+                Actions.AppleCollection(collectable);
                 break;
-
-            case SpawnableObjects.ObjectType.FinishLine:
-                Actions.OnGameWin();
+            case PoolType.FinishLine: 
+                Actions.OnGameWin(); 
                 break;
         }
-
-        Destroy(other.gameObject);
+        Actions.OnReturn(spawnable.type, other.gameObject);
     }
 
-    private void IncreaseMovementSpeed()
+    private void IncreaseMovementSpeed(float timeAlive)
     {
-        moveSpeed = baseMoveSpeed * Mathf.Pow(Spawner.timeAlive, 0.15f);
+        moveSpeed = baseMoveSpeed * Mathf.Pow(timeAlive, 0.15f);
     }
 
-    private void ResetMovementSpeed()
+    private void ResetPlayer()
     {
         moveSpeed = baseMoveSpeed;
+        transform.position = new Vector2(0, -2.7f);
     }
 }

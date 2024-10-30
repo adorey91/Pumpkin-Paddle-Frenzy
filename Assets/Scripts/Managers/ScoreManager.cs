@@ -8,66 +8,59 @@ using UnityEngine.Events;
 public class ScoreManager : MonoBehaviour
 {
     [Header("Counts needed for score")]
-    internal static int totalAppleCount;
-    internal static int appleCount;
-    internal static int attemptNumber;
-    internal static float runTime;
-    private float bestTime;
-
-    private bool startTimer;
+    private int totalAppleCount;
+    private int appleCount;
+    private int attemptNumber;
+    private float runTime;
+    private float bestRunFloat; // best run in float
+    private TimeSpan bestTime; // best time in timespan
+    private bool newBestRun = false;
 
     private void Start()
     {
-        runTime = 0;
         attemptNumber = 0;
         appleCount = 0;
-        Actions.UpdateAttemptText();
-        Actions.UpdateAppleText();
+        Actions.UpdateAttemptText(attemptNumber);
+        Actions.UpdateAppleText(appleCount, totalAppleCount);
     }
 
     private void Update()
     {
-        if (startTimer && GameManager.instance.isPlaying)
+        if (GameManager.instance.isPlaying)
             runTime += Time.deltaTime;
     }
 
+    #region EnableDisable
     private void OnEnable()
     {
-        Actions.OnCollectApple += CollectApples;
-        Actions.OnCollectGoldenApple += CollectGoldenApples;
+        Actions.AppleCollection += CollectApples;
+        Actions.OnGameOver += Results;
         Actions.OnGameplay += ResetRun;
-        Actions.OnGameOver += TimeClockStart;
-        Actions.OnGameWin += TimeClockStart;
     }
 
     private void OnDisable()
     {
-        Actions.OnCollectApple -= CollectApples;
-        Actions.OnCollectGoldenApple -= CollectGoldenApples;
+        Actions.AppleCollection -= CollectApples;
+        Actions.OnGameOver -= Results;
         Actions.OnGameplay -= ResetRun;
-        Actions.OnGameOver -= TimeClockStart;
-        Actions.OnGameWin -= TimeClockStart;
     }
+    #endregion
 
-    private void TimeClockStart()
+    public void CollectApples(string apple)
     {
-        startTimer = !startTimer;
-    }
+        int value = 0;
+        switch (apple)
+        {
+            case "apple": value = 1; break;
+            case "golden": value = 3; break;
+            default: value = 0; break;
 
-    private void CollectApples()
-    {
-        appleCount++;
-        totalAppleCount++;
-        Actions.UpdateAppleText();
+        }
+        appleCount += value;
+        totalAppleCount += value;
+        Actions.OnPlaySFX("Collection");
+        Actions.UpdateAppleText(appleCount, totalAppleCount);
     }
-
-    private void CollectGoldenApples()
-    {
-        appleCount += 3;
-        totalAppleCount += 3;
-        Actions.UpdateAppleText();
-    }
-
 
     /// <summary>
     /// Resets apples this run 
@@ -77,8 +70,63 @@ public class ScoreManager : MonoBehaviour
         appleCount = 0;
         runTime = 0;
         attemptNumber++;
-        Actions.UpdateAttemptText();
-        Actions.UpdateAppleText();
-        TimeClockStart();
+        Actions.UpdateAttemptText(attemptNumber);
+        Actions.UpdateAppleText(appleCount, totalAppleCount);
     }
+
+    public void BuyUpgrade(int cost)
+    {
+        totalAppleCount -= cost;
+        Actions.UpdateAppleText(appleCount, totalAppleCount);
+    }
+
+    public void Results()
+    {
+        if(runTime >= bestRunFloat && runTime != 0)
+        {
+            bestRunFloat = runTime;
+            bestTime = TimeSpan.FromSeconds(runTime);
+            newBestRun = true;
+        }
+        TimeSpan runTimeSpan = TimeSpan.FromSeconds(runTime);
+
+        Actions.UpdateResultsText(runTimeSpan, bestTime, newBestRun, appleCount);
+
+        newBestRun = false; 
+    }
+
+    public float GetBestRun()
+    {
+        return bestRunFloat;
+    }
+
+    public void SetBestRun(float value)
+    {
+        bestRunFloat = value;
+        bestTime = TimeSpan.FromSeconds(bestRunFloat);
+        Actions.UpdateMenuBestRun(bestTime);
+    }
+
+    public int GetTotalAppleCount()
+    {
+        return totalAppleCount;
+    }
+
+    public void SetTotalAppleCount(int value)
+    {
+        if (value >= 0)
+            totalAppleCount = value;
+        else
+            totalAppleCount = 0;
+    }
+
+    public int GetAttemptCount()
+    {
+        return attemptNumber;
+    }
+
+    public void SetAttempt(int attempt)
+    {
+        attemptNumber = attempt;
+    }    
 }

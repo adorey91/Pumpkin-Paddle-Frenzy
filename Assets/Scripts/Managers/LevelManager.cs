@@ -5,27 +5,25 @@ using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
-    [Header("Managers")]
-    [SerializeField] private UiManager uiManager;
     private string _sceneName;
-
     internal List<AsyncOperation> scenesToLoad = new List<AsyncOperation>();
-
 
     private void OnEnable()
     {
         Actions.OnGameWin += LoadGameOver;
+        Actions.LoadScene += LoadScene;
     }
 
     private void OnDisable()
     {
         Actions.OnGameWin -= LoadGameOver;
+        Actions.LoadScene -= LoadScene;
     }
 
     private void LoadGameOver()
     {
-        _sceneName = "GameEnd";
-        LoadAsync(_sceneName);
+        Actions.OnPlaySFX("Victory");
+        LoadScene("GameEnd");
     }
 
     public void LoadScene(string sceneName)
@@ -68,6 +66,5 @@ public class LevelManager : MonoBehaviour
         operation.completed -= OperationCompleted;
 
         GameManager.instance.LoadState(_sceneName);
-        //Debug.Log(_sceneName);
     }
 }
