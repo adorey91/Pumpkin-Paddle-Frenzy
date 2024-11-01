@@ -103,10 +103,13 @@ public class ObjectPoolManager : MonoBehaviour
             if (randomX <= 0)
             {
                 randomX = -6f;
-                objectToSpawn.transform.rotation *= Quaternion.Euler(0, 180f, 0);
+                objectToSpawn.transform.Rotate(0,180f,0);
             }
             else
+            {
                 randomX = 6f;
+                objectToSpawn.transform.Rotate(0,0,0);
+            }
 
             objectToSpawn.transform.position = new Vector2(randomX, 7f);
         }

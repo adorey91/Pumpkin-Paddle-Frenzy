@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
     {
         playerMovement = context.ReadValue<Vector2>();
     }
-       
+
     // Pauses when player presses the button set in the PlayerInputManager it will go to pause or back to gameplay ONLY in gameplay / pause
     public void Pause(InputAction.CallbackContext context)
     {
@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
         playerMovement = Vector2.zero; // Stop movement
     }
     #endregion
-    
+
     public void OnTriggerEnter2D(Collider2D other)
     {
         SpawnableBehaviour obstacle = other.GetComponent<SpawnableBehaviour>();
@@ -94,15 +94,18 @@ public class PlayerController : MonoBehaviour
 
         switch (spawnable.type)
         {
-            case PoolType.Obstacle: 
-                Actions.OnPlayerHurt(); 
+            case PoolType.Obstacle:
+                Actions.OnPlayerHurt();
                 break;
-            case PoolType.Collectable: 
-                string collectable = spawnable.collectableValue == 1 ? "apple" : "golden"; 
+            case PoolType.Collectable:
+                string collectable = spawnable.collectableValue == 1 ? "apple" : "golden";
                 Actions.AppleCollection(collectable);
                 break;
-            case PoolType.FinishLine: 
-                Actions.OnGameWin(); 
+            case PoolType.FinishLine:
+                Actions.OnGameWin();
+                break;
+            case PoolType.Kayak:
+                Actions.OnPlayerHurt();
                 break;
         }
         Actions.OnReturn(spawnable.type, other.gameObject);

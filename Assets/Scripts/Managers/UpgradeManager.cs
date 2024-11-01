@@ -49,6 +49,7 @@ public class UpgradeManager : MonoBehaviour
     {
         if (CanPurchaseUpgrade(upgradeAsset))
         {
+            Actions.OnPlaySFX("Upgrade");
             scoreManager.BuyUpgrade(upgradeAsset.cost);
 
             // Add to the list of purchased upgrades
