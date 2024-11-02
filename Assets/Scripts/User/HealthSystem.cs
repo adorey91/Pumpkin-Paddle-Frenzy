@@ -38,6 +38,9 @@ public class HealthSystem : MonoBehaviour
     public Color flickerColor = Color.red;
     [SerializeField] private SpriteRenderer[] playerSprites;
 
+    [Header("Spawner / Drain control")]
+    [SerializeField] private Spawner spawner;
+
     public void Awake()
     {
         playerSprites = GetComponentsInChildren<SpriteRenderer>();
@@ -51,7 +54,7 @@ public class HealthSystem : MonoBehaviour
 
     public void Update()
     {
-        if (GameManager.instance.isPlaying && !GameManager.instance.gameIsEndless)
+        if (GameManager.instance.isPlaying && !GameManager.instance.gameIsEndless && spawner.spawnedFirstObstacle)
             StaminaDrain();
     }
 

@@ -3530,12 +3530,12 @@ SpriteRenderer:
   m_SortingLayerID: -1865171161
   m_SortingLayer: 4
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 56e13a9d00b9dd3459ee92192d6537a6, type: 3}
+  m_Sprite: {fileID: 878081119, guid: 56e13a9d00b9dd3459ee92192d6537a6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 86.4, y: 21.6}
+  m_Size: {x: 1.0546875, y: 1.0546875}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -10506,13 +10506,14 @@ MonoBehaviour:
   baseMaxHealth: 1
   baseStaminaDrain: 0.5
   baseHealthSprite: {fileID: 21300000, guid: 19963d63d2588874f9395fba2af3344e, type: 3}
-  baseStaminaSprite: {fileID: 1723109229, guid: 56e13a9d00b9dd3459ee92192d6537a6, type: 3}
+  baseStaminaSprite: {fileID: 878081119, guid: 56e13a9d00b9dd3459ee92192d6537a6, type: 3}
   flickerAmount: 3
   flickerDuration: 0.2
   flickerColor: {r: 1, g: 0, b: 0, a: 1}
   playerSprites:
   - {fileID: 6719000640535181278}
   - {fileID: 3641554651111978421}
+  spawner: {fileID: 1734133263172419469}
 --- !u!114 &2070708429165202679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10666,7 +10667,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1077881768, guid: 56e13a9d00b9dd3459ee92192d6537a6, type: 3}
+  m_Sprite: {fileID: 878081119, guid: 56e13a9d00b9dd3459ee92192d6537a6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

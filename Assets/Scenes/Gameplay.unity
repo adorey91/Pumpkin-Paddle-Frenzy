@@ -212,14 +212,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
-    - target: {fileID: 3641554651111978421, guid: b0ac4b94c05e3dd4ca9f860739a777de, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 878081119, guid: 56e13a9d00b9dd3459ee92192d6537a6, type: 3}
-    - target: {fileID: 3641554651111978421, guid: b0ac4b94c05e3dd4ca9f860739a777de, type: 3}
-      propertyPath: m_WasSpriteAssigned
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5516960624018664553, guid: b0ac4b94c05e3dd4ca9f860739a777de, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

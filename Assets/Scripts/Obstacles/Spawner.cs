@@ -21,6 +21,7 @@ public class Spawner : MonoBehaviour
     private int level = 0; // keep track of times the time increased
     private int winningLevel;
     private bool finishSpawned = false;
+    internal bool spawnedFirstObstacle = false;
 
 
     private void Start()
@@ -76,6 +77,9 @@ public class Spawner : MonoBehaviour
 
         if (obstacleSpawnTimer.UpdateTimer(Time.deltaTime))
         {
+            if(!spawnedFirstObstacle)
+                spawnedFirstObstacle = true;
+
             Spawn();
             obstacleSpawnTimer.StartTimer(_obstacleSpawnTime);
         }
@@ -119,6 +123,7 @@ public class Spawner : MonoBehaviour
     #region Resets
     private void ResetValues()
     {
+        spawnedFirstObstacle = false;
         level = 0;
         Actions.LevelChange(level);
         timeAlive = 1;

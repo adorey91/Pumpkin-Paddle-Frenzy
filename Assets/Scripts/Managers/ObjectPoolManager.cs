@@ -13,7 +13,6 @@ public class ObjectPoolManager : MonoBehaviour
     [SerializeField] private List<GameObject> prefabObjects; // List of all prefab objects
     private Dictionary<PoolType, Queue<GameObject>> poolDictionary;
     [SerializeField] private SpawnableObject[] spawnableObject;
-    private int shuffleCount;
 
 
     private void Start()
@@ -39,7 +38,6 @@ public class ObjectPoolManager : MonoBehaviour
                 }
             }
 
-            //Shuffle the pool
             ShuffleQueue(objectPool);
 
             // Add the pool to the dictionary with PoolType as key
@@ -54,6 +52,7 @@ public class ObjectPoolManager : MonoBehaviour
         Actions.OnReturn += ReturnToPool;
         Actions.SpeedChange += UpdatePoolSpeed;
         Actions.ReturnAllToPool += ReturnAllToPool;
+        Actions.OnGameplay += ShufflePools;
     }
 
     private void OnDisable()
@@ -62,31 +61,24 @@ public class ObjectPoolManager : MonoBehaviour
         Actions.OnReturn -= ReturnToPool;
         Actions.SpeedChange -= UpdatePoolSpeed;
         Actions.ReturnAllToPool -= ReturnAllToPool;
+        Actions.OnGameplay -= ShufflePools;
     }
     #endregion
 
-    // handles the event
+    // handles the spawning event
     private void HandleSpawnEvent(PoolType type)
     {
         SpawnFromPool(type);
-
-        if (shuffleCount == 10)
-            ShufflePools();
-        else
-            shuffleCount++;
     }
 
-    // Spawns an object from a designated pool, sets the rotation and position
+    // Spawns an INACTIVE object from a designated pool, sets the rotation and position
     private GameObject SpawnFromPool(PoolType type)
     {
-        // Spawn constants for readability
         float leftSpawnX = -6f;
         float rightSpawnX = 6f;
         float randomXSpawnMin = -6.7f;
         float randomXSpawnMax = 6.7f;
-
         float randomX = Random.Range(randomXSpawnMin, randomXSpawnMax);
-
 
         if (!poolDictionary.ContainsKey(type))
         {
@@ -94,27 +86,49 @@ public class ObjectPoolManager : MonoBehaviour
             return null;
         }
 
-        GameObject objectToSpawn = poolDictionary[type].Dequeue();
-        objectToSpawn.SetActive(true);
+        Queue<GameObject> pool = poolDictionary[type];
+        GameObject objectToSpawn = null;
 
-        Vector2 spawnPosition = transform.position; // default spawn position
-        Quaternion spawnRotation = Quaternion.identity; // default rotation
-        
-        
-        if (poolDictionary[type] == poolDictionary[PoolType.FinishLine])
+        // Find an inactive object in the pool
+        for (int i = 0; i < pool.Count; i++)
         {
-            // sets position back to the middle
-            spawnPosition = transform.position;
+            GameObject obj = pool.Dequeue();
+            if (!obj.activeInHierarchy)
+            {
+                objectToSpawn = obj;
+                break;
+            }
+            else
+            {
+                // Re-enqueue the active object to check later
+                pool.Enqueue(obj);
+            }
         }
-        else if (poolDictionary[type] == poolDictionary[PoolType.Kayak])
+
+        // If no inactive object was found, return null or handle this case
+        if (objectToSpawn == null)
         {
-            // kayak specific rotation & positioning
-            spawnPosition = new Vector2((randomX <= 0 ? leftSpawnX : rightSpawnX), transform.position.y);
-            spawnRotation = randomX <= 0 ? Quaternion.Euler(0,180,0) : Quaternion.identity;
+            Debug.LogWarning("No inactive objects available in pool for type " + type);
+            return null;
         }
-        else
+
+        // Configure object settings and spawn position
+        objectToSpawn.SetActive(true);
+        Vector2 spawnPosition = transform.position;
+        Quaternion spawnRotation = Quaternion.identity;
+
+        switch (type)
         {
-            spawnPosition = new Vector2(randomX, spawnPosition.y);
+            case PoolType.FinishLine:
+                spawnPosition = transform.position;
+                break;
+            case PoolType.Kayak:
+                spawnPosition = new Vector2((randomX <= 0 ? leftSpawnX : rightSpawnX), transform.position.y);
+                spawnRotation = randomX <= 0 ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
+                break;
+            default:
+                spawnPosition = new Vector2(randomX, spawnPosition.y);
+                break;
         }
 
         objectToSpawn.transform.position = spawnPosition;
@@ -136,7 +150,6 @@ public class ObjectPoolManager : MonoBehaviour
             // Check if the component exists
             if (spawnableBehaviour != null)
             {
-                // Get the SpawnableObject
                 SpawnableObject spawnObj = spawnableBehaviour.GetSpawnableObject();
 
                 // Check if the SpawnableObject is valid
@@ -160,52 +173,46 @@ public class ObjectPoolManager : MonoBehaviour
     // Shuffles each pool of queues
     private void ShufflePools()
     {
-        shuffleCount = 0;
+        if (poolDictionary == null)
+        {
+            //Debug.LogWarning("poolDictionary is not initialized.");
+            return;
+        }
 
         foreach (var pool in poolDictionary)
         {
             Queue<GameObject> queue = pool.Value;
+            if (queue == null)
+            {
+                //Debug.LogWarning($"Queue for {pool.Key} is null.");
+                continue;
+            }
             ShuffleQueue(queue);
         }
     }
 
+
     // Method to shuffle Queue with active objects at the end
     private void ShuffleQueue(Queue<GameObject> queue)
     {
-        // Separate active and inactive objects
-        List<GameObject> inactiveList = new List<GameObject>();
-        List<GameObject> activeList = new List<GameObject>();
+        List<GameObject> list = queue.ToList();
 
-        // Sorts objects into active and inactive lists
-        foreach (GameObject obj in queue)
+        // Shuffle the list
+        for (int i = 0; i < list.Count; i++)
         {
-            if (obj.activeSelf)
-                activeList.Add(obj);
-            else
-                inactiveList.Add(obj);// Collect inactive objects
+            int randomIndex = Random.Range(i, list.Count);
+            GameObject temp = list[i];
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
         }
 
-        // Shuffle only the inactive list
-        for (int i = 0; i < inactiveList.Count; i++)
-        {
-            int randomIndex = Random.Range(i, inactiveList.Count);
-            GameObject temp = inactiveList[i];
-            inactiveList[i] = inactiveList[randomIndex];
-            inactiveList[randomIndex] = temp;
-        }
-
-        // Clear the original queue and re-enqueue shuffled inactive objects, then active objects
+        // Clear the original queue and re-enqueue the shuffled list
         queue.Clear();
-        foreach (GameObject obj in inactiveList)
-        {
-            queue.Enqueue(obj);
-        }
-        foreach (GameObject obj in activeList)
+        foreach (GameObject obj in list)
         {
             queue.Enqueue(obj);
         }
     }
-
 
     // Updates pool speed based on timeAlive value
     private void UpdatePoolSpeed(float timeAlive)
