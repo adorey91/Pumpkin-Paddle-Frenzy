@@ -156,13 +156,12 @@ public class HealthSystem : MonoBehaviour
             {
                 sprite.color = flickerColor;
             }
-
-            yield return new WaitForSeconds(flickerDuration);
+            yield return new WaitForSecondsRealtime(flickerDuration);
             foreach (SpriteRenderer sprite in playerSprites)
             {
                 sprite.color = Color.white;
             }
-            yield return new WaitForSeconds(flickerDuration / 2);
+            yield return new WaitForSecondsRealtime(flickerDuration/2);
         }
         if (curHealth <= 0)
             Actions.OnGameOver();
