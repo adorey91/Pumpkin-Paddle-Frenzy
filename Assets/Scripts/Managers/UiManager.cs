@@ -35,11 +35,16 @@ public class UiManager : MonoBehaviour
     public void Upgrades_UI() => SetActiveUI(ui_Upgrades);
     public void Instructions_UI() => SetActiveUI(ui_Instructions);
     public void Results_UI() => SetActiveUI(ui_Results);
+    
     public void Confirmation_UI(string name)
     {
+        // Sets active uI to confirmation
+        SetActiveUI(ui_Confirmation);
+
+        // Removes all listeners from yes and no buttons
         yesButton.onClick.RemoveAllListeners();
         noButton.onClick.RemoveAllListeners();
-        SetActiveUI(ui_Confirmation);
+
 
         switch (name)
         {
@@ -47,8 +52,8 @@ public class UiManager : MonoBehaviour
                 SetConfirmation($"Do you want to load previous save? \nIf not, current save will be deleted",
                     () =>
                     {
+                        SetActiveUI(null);
                         Actions.LoadSave();
-                        ui_backgroundInstruct.SetActive(false);
                     },
                     () =>
                     {
@@ -88,10 +93,12 @@ public class UiManager : MonoBehaviour
 
         if (activeUI == ui_Instructions)
             ui_backgroundInstruct.SetActive(true);
-
-        activeUI.SetActive(true);
+        
+        if(activeUI != null)       
+            activeUI.SetActive(true);
     }
 
+    // Sets confirmation text, yes button action and no button action
     private void SetConfirmation(string message, UnityEngine.Events.UnityAction yesAction, UnityEngine.Events.UnityAction noAction)
     {
         confirmText.text = message;

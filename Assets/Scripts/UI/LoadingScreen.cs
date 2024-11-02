@@ -25,7 +25,7 @@ public class LoadingScreen : MonoBehaviour
         Actions.OnScreenLoad -= UILoadingScreen;
     }
 
-    public void UILoadingScreen()
+    private void UILoadingScreen()
     {
         StartCoroutine(LoadingUIFadeIN());
     }

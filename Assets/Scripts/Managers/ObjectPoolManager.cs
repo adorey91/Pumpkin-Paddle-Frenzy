@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.Pool;
 
 public class ObjectPoolManager : MonoBehaviour
 {
@@ -27,7 +27,7 @@ public class ObjectPoolManager : MonoBehaviour
         {
             Queue<GameObject> objectPool = new Queue<GameObject>();
             PoolType poolType = group.Key;
-            
+
             foreach (GameObject prefab in group)
             {
                 SpawnableBehaviour obstacle = prefab.GetComponent<SpawnableBehaviour>();
@@ -70,7 +70,7 @@ public class ObjectPoolManager : MonoBehaviour
     {
         SpawnFromPool(type);
 
-        if(shuffleCount == 10)
+        if (shuffleCount == 10)
             ShufflePools();
         else
             shuffleCount++;
@@ -79,50 +79,47 @@ public class ObjectPoolManager : MonoBehaviour
     // Spawns an object from a designated pool, sets the rotation and position
     private GameObject SpawnFromPool(PoolType type)
     {
+        // Spawn constants for readability
+        float leftSpawnX = -6f;
+        float rightSpawnX = 6f;
+        float randomXSpawnMin = -6.7f;
+        float randomXSpawnMax = 6.7f;
+
+        float randomX = Random.Range(randomXSpawnMin, randomXSpawnMax);
+
+
         if (!poolDictionary.ContainsKey(type))
         {
             Debug.LogWarning("Pool with tag " + type + " doesn't exist");
             return null;
         }
-        // The range on the x axis for where the obstacles can spawn
-        float randomX = Random.Range(-6.7f, 6.7f);
 
-
-        //THIS IS THE PROBLEM. IT'S DEQUEUING THE PREVIOUS VALUE SOMETIMES.
         GameObject objectToSpawn = poolDictionary[type].Dequeue();
         objectToSpawn.SetActive(true);
 
+        Vector2 spawnPosition = transform.position; // default spawn position
+        Quaternion spawnRotation = Quaternion.identity; // default rotation
+        
+        
         if (poolDictionary[type] == poolDictionary[PoolType.FinishLine])
         {
-            objectToSpawn.transform.position = new Vector2(0, 7f);
-            objectToSpawn.transform.rotation = Quaternion.identity;
-
+            // sets position back to the middle
+            spawnPosition = transform.position;
         }
         else if (poolDictionary[type] == poolDictionary[PoolType.Kayak])
         {
-            if (randomX <= 0)
-            {
-                randomX = -6f;
-                objectToSpawn.transform.Rotate(0,180f,0);
-            }
-            else
-            {
-                randomX = 6f;
-                objectToSpawn.transform.Rotate(0,0,0);
-            }
-
-            objectToSpawn.transform.position = new Vector2(randomX, 7f);
+            // kayak specific rotation & positioning
+            spawnPosition = new Vector2((randomX <= 0 ? leftSpawnX : rightSpawnX), transform.position.y);
+            spawnRotation = randomX <= 0 ? Quaternion.Euler(0,180,0) : Quaternion.identity;
         }
         else
         {
-            objectToSpawn.transform.position = new Vector2(randomX, 7f);
-
+            spawnPosition = new Vector2(randomX, spawnPosition.y);
         }
 
-        if (poolDictionary[type] != poolDictionary[PoolType.Kayak] || randomX == 6f)
-            objectToSpawn.transform.rotation = Quaternion.identity;
+        objectToSpawn.transform.position = spawnPosition;
+        objectToSpawn.transform.rotation = spawnRotation;
 
-        //Debug.Log(objectToSpawn);
         return objectToSpawn;
     }
 
@@ -182,7 +179,7 @@ public class ObjectPoolManager : MonoBehaviour
         // Sorts objects into active and inactive lists
         foreach (GameObject obj in queue)
         {
-            if (obj.activeSelf)  
+            if (obj.activeSelf)
                 activeList.Add(obj);
             else
                 inactiveList.Add(obj);// Collect inactive objects

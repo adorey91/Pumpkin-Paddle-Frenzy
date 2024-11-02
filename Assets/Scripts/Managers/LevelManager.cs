@@ -26,7 +26,7 @@ public class LevelManager : MonoBehaviour
         LoadScene("GameEnd");
     }
 
-    public void LoadScene(string sceneName)
+    private void LoadScene(string sceneName)
     {
         _sceneName = sceneName;
         LoadAsync(sceneName);
