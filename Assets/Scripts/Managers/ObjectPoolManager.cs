@@ -14,10 +14,30 @@ public class ObjectPoolManager : MonoBehaviour
     private Dictionary<PoolType, Queue<GameObject>> poolDictionary;
     [SerializeField] private SpawnableObject[] spawnableObject;
 
+    [Header("Settings For Apple Collection")]
+    [SerializeField] private GameObject appleGameObject;
+    [SerializeField] private Transform collectableTargetPos;
+    [SerializeField] private float speedToTarget = 7f;
+    private Queue<GameObject> splitApplePool;
+
+
+    private void Awake()
+    {
+        splitApplePool = new Queue<GameObject>();
+
+        // Populate the pool for split apples using prefabObjects[0]
+        for (int i = 0; i < 9; i++) // Adjust the number as needed
+        {
+            GameObject apple = Instantiate(appleGameObject, transform);
+            apple.SetActive(false);
+            splitApplePool.Enqueue(apple);
+        }
+    }
 
     private void Start()
     {
         poolDictionary = new Dictionary<PoolType, Queue<GameObject>>();
+        splitApplePool = new Queue<GameObject>();
 
         // Group prefabs by their PoolType
         var groupedPrefabs = prefabObjects.GroupBy(prefab => prefab.GetComponent<SpawnableBehaviour>().GetSpawnableObject().type);
@@ -65,6 +85,7 @@ public class ObjectPoolManager : MonoBehaviour
     }
     #endregion
 
+    #region Spawning
     // handles the spawning event
     private void HandleSpawnEvent(PoolType type)
     {
@@ -126,6 +147,9 @@ public class ObjectPoolManager : MonoBehaviour
                 spawnPosition = new Vector2((randomX <= 0 ? leftSpawnX : rightSpawnX), transform.position.y);
                 spawnRotation = randomX <= 0 ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
                 break;
+            case PoolType.Collectable:
+                objectToSpawn.transform.localScale = new Vector3(0.4f, 0.4f, 0.5f);
+                break;
             default:
                 spawnPosition = new Vector2(randomX, spawnPosition.y);
                 break;
@@ -136,7 +160,9 @@ public class ObjectPoolManager : MonoBehaviour
 
         return objectToSpawn;
     }
+    #endregion
 
+    #region Return
     // Returns all children under this to their pools and sets them as inactive.
     private void ReturnAllToPool()
     {
@@ -144,19 +170,23 @@ public class ObjectPoolManager : MonoBehaviour
         for (int i = 0; i < transform.childCount; i++)
         {
             Transform child = transform.GetChild(i); // Get immediate child
+            GameObject childObject = child.gameObject; // turn off child before returning
 
-            SpawnableBehaviour spawnableBehaviour = child.GetComponent<SpawnableBehaviour>();
-
-            // Check if the component exists
-            if (spawnableBehaviour != null)
+            if (childObject.activeInHierarchy)
             {
-                SpawnableObject spawnObj = spawnableBehaviour.GetSpawnableObject();
-
-                // Check if the SpawnableObject is valid
-                if (spawnObj != null)
+                SpawnableBehaviour spawnableBehaviour = child.GetComponent<SpawnableBehaviour>();
+                childObject.SetActive(false);
+                // Check if the component exists
+                if (spawnableBehaviour != null)
                 {
-                    PoolType poolObject = spawnObj.type; // Access the PoolType from the SpawnableObject
-                    ReturnToPool(poolObject, child.gameObject); // Return the child to the appropriate pool
+                    SpawnableObject spawnObj = spawnableBehaviour.GetSpawnableObject();
+
+                    // Check if the SpawnableObject is valid
+                    if (spawnObj != null)
+                    {
+                        PoolType poolObject = spawnObj.type; // Access the PoolType from the SpawnableObject
+                        ReturnToPool(poolObject, child.gameObject); // Return the child to the appropriate pool
+                    }
                 }
             }
         }
@@ -165,11 +195,28 @@ public class ObjectPoolManager : MonoBehaviour
     // Returns the gameObject back to the pool and sets it inactive
     private void ReturnToPool(PoolType type, GameObject objectSpawned)
     {
-        objectSpawned.SetActive(false);
-        poolDictionary[type].Enqueue(objectSpawned);
-        //Debug.Log(objectSpawned + "returned to pool");
-    }
+        if(objectSpawned.activeInHierarchy)
+        {
+            if (type == PoolType.Collectable)
+            {
+                if (objectSpawned.name == "Apple(Clone)")
+                {
+                    StartCoroutine(MoveAndScaleToTarget(objectSpawned));
+                }
+                else
+                {
+                    StartCoroutine(CollectGoldenAppleMovement(objectSpawned));
+                }
+            }
+            else
+                objectSpawned.SetActive(false);
 
+            poolDictionary[type].Enqueue(objectSpawned);
+        }
+    }
+    #endregion
+
+    #region Shuffle
     // Shuffles each pool of queues
     private void ShufflePools()
     {
@@ -213,6 +260,7 @@ public class ObjectPoolManager : MonoBehaviour
             queue.Enqueue(obj);
         }
     }
+    #endregion
 
     // Updates pool speed based on timeAlive value
     private void UpdatePoolSpeed(float timeAlive)
@@ -223,5 +271,67 @@ public class ObjectPoolManager : MonoBehaviour
         {
             spawnable.speed = newSpeed;
         }
+    }
+
+    private GameObject GetSplitAppleFromPool()
+    {
+        if (splitApplePool.Count > 0)
+        {
+            GameObject apple = splitApplePool.Dequeue();
+            apple.SetActive(true);
+            Debug.Log("Retrieved apple from pool: " + apple.name); // Debugging message
+            return apple;
+        }
+        Debug.LogWarning("No apples available in split pool!"); // Debugging message
+        return null;
+    }
+
+    private void ReturnSplitAppleToPool(GameObject apple)
+    {
+        apple.SetActive(false);
+        splitApplePool.Enqueue(apple);
+    }
+
+    private IEnumerator CollectGoldenAppleMovement(GameObject goldenApple)
+    {
+        // Disable the golden apple and spawn three smaller ones from the split apple pool
+        goldenApple.SetActive(false);
+
+        GameObject apple1 = GetSplitAppleFromPool();
+        GameObject apple2 = GetSplitAppleFromPool();
+        GameObject apple3 = GetSplitAppleFromPool();
+
+        // If any of the apples are null (pool is empty), stop the coroutine
+        if (apple1 == null || apple2 == null || apple3 == null)
+        {
+            Debug.LogWarning("Not enough apples in the split pool!"); // Debugging message
+            yield break;
+        }
+
+        apple1.transform.position = goldenApple.transform.position + new Vector3(-0.4f, 0, 0);
+        apple2.transform.position = goldenApple.transform.position + new Vector3(0.4f, 0, 0);
+        apple3.transform.position = goldenApple.transform.position + new Vector3(0, 0.4f, 0);
+
+        // Start moving each apple towards the target
+        StartCoroutine(MoveAndScaleToTarget(apple1));
+        StartCoroutine(MoveAndScaleToTarget(apple2));
+        StartCoroutine(MoveAndScaleToTarget(apple3));
+    }
+
+    private IEnumerator MoveAndScaleToTarget(GameObject smallApple)
+    {
+        Vector3 targetScale = Vector3.zero;
+        float moveSpeed = speedToTarget;
+        float scaleSpeed = 2f;
+
+        while (Vector3.Distance(smallApple.transform.position, collectableTargetPos.position) > 0.1f)
+        {
+            smallApple.transform.position = Vector3.MoveTowards(smallApple.transform.position, collectableTargetPos.position, Time.unscaledDeltaTime * moveSpeed);
+            smallApple.transform.localScale = Vector3.Lerp(smallApple.transform.localScale, targetScale, Time.unscaledDeltaTime * scaleSpeed);
+            yield return null;
+        }
+
+        // Once at the target, return the small apple to its pool
+        ReturnSplitAppleToPool(smallApple);
     }
 }
