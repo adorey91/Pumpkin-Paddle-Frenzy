@@ -17,7 +17,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float calculateTime = 10f;
     private float _obstacleSpawnTime;
     private float timeAlive = 1; // spawner uses this to increase the spawntime & speed
-
+    private float timeAliveInRun;
 
     private int level = 0; // keep track of times the time increased
     private float targetValue; // keep track of level float
@@ -74,9 +74,18 @@ public class Spawner : MonoBehaviour
 
     private void UpdateProgressSlider()
     {
-        targetValue = (float)level + (timeAlive / calculateTime);
-        levelProgressSlider.value = Mathf.Lerp(levelProgressSlider.value, targetValue, Time.deltaTime * 2f);
+        timeAliveInRun += Time.deltaTime;
+        // Update the progress bar based on fractional timeAlive progress rather than level increments
+        if(timeAliveInRun > calculateTime)
+            timeAliveInRun -= calculateTime;
+
+        float fractionalLevelProgress = level + (timeAliveInRun / calculateTime); 
+        targetValue = Mathf.Clamp(fractionalLevelProgress, 0, winningLevel); 
+
+        // Smoothly interpolate the slider value to targetValue
+        levelProgressSlider.value = Mathf.Lerp(levelProgressSlider.value, targetValue, Time.deltaTime * 5f);
     }
+
 
     #region Spawn
     // Spawn Loop

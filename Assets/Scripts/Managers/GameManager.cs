@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
     public GameState state;
     public enum GameState { MainMenu, Gameplay, Pause, Options, GameEnd, Upgrade };
     private GameState currentState;
-    [SerializeField]private GameState SetNewState;
     private GameState beforeOptions;
 
     [Header("Game Values")]
@@ -46,8 +45,8 @@ public class GameManager : MonoBehaviour
     // USE FOR DEBUGGING ONLY
     //private void Update()
     //{
-    //    if (SetNewState != currentState)
-    //        SetState(SetNewState);
+    //    if (state != currentState)
+    //        SetState(state);
     //}
 
     private void OnEnable()

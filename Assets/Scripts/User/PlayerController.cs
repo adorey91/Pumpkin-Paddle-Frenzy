@@ -90,19 +90,14 @@ public class PlayerController : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D other)
     {
-        SpawnableBehaviour obstacle = other.GetComponent<SpawnableBehaviour>();
-        GameObject obstacleObj;
+        SpawnableBehaviour obstacle = other.GetComponent<SpawnableBehaviour>() ?? other.GetComponentInParent<SpawnableBehaviour>();
+        GameObject obstacleObj = obstacle.gameObject;
 
         if (obstacle == null)
         {
-            obstacle = other.GetComponentInParent<SpawnableBehaviour>();
-            obstacleObj = other.transform.parent.gameObject;
+            Debug.LogWarning("SpawnableBehaviour not found on collided object or its parent.");
+            return;
         }
-        else
-        {
-            obstacleObj = other.gameObject;
-        }
-
 
         SpawnableObject spawnable = obstacle.GetSpawnableObject();
 
