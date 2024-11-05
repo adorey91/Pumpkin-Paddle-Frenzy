@@ -4870,7 +4870,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 120, y: -200}
+  m_AnchoredPosition: {x: 120, y: -127}
   m_SizeDelta: {x: 780, y: 100}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &7498172978391523951
@@ -5396,9 +5396,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4c32426400a46584da17318943384403, type: 2}
   - {fileID: 11400000, guid: a252255d7563c9944a726fd0cc1090a3, type: 2}
   - {fileID: 11400000, guid: c4a5b78ee84680644bee16eb60e62a46, type: 2}
-  appleGameObject: {fileID: 1475980636802886061, guid: cf66a2e9b259ea54c9d6ec3fff743278, type: 3}
+  splitAppleObject: {fileID: 1475980636802886061, guid: cf66a2e9b259ea54c9d6ec3fff743278, type: 3}
   collectableTargetPos: {fileID: 2111375233845625774}
   speedToTarget: 7
+  showQueue: 0
 --- !u!1 &2872396075565514916
 GameObject:
   m_ObjectHideFlags: 0
@@ -10556,7 +10557,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 120, y: -300}
+  m_AnchoredPosition: {x: 120, y: -227}
   m_SizeDelta: {x: 780, y: 100}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &1154992954422519201
@@ -18963,7 +18964,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3849735213412808203, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3849735213412808203, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_AnchorMin.x
@@ -18971,15 +18972,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3849735213412808203, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3849735213412808203, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 3849735213412808203, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 175
       objectReference: {fileID: 0}
     - target: {fileID: 3849735213412808203, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -19015,7 +19016,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3849735213412808203, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 3849735213412808203, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -19121,7 +19122,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3849735213412808203, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3849735213412808203, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_AnchorMin.x
@@ -19129,15 +19130,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3849735213412808203, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3849735213412808203, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 3849735213412808203, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 175
       objectReference: {fileID: 0}
     - target: {fileID: 3849735213412808203, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_LocalPosition.x
@@ -19173,7 +19174,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3849735213412808203, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 175
       objectReference: {fileID: 0}
     - target: {fileID: 3849735213412808203, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -20498,7 +20499,7 @@ PrefabInstance:
     - target: {fileID: 3540325668434226413, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
-      objectReference: {fileID: 351866791225520600}
+      objectReference: {fileID: 7630019828870217378}
     - target: {fileID: 3540325668434226413, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 1
@@ -20513,7 +20514,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3540325668434226413, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
-      value: CheckForSave
+      value: Instructions_UI
       objectReference: {fileID: 0}
     - target: {fileID: 3540325668434226413, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -20521,7 +20522,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3540325668434226413, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
-      value: SaveManager, Assembly-CSharp
+      value: UiManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3540325668434226413, guid: ad97c9aef35c9df4a81064e8369c42d8, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument

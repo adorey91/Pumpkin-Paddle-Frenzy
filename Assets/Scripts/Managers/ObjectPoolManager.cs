@@ -15,12 +15,12 @@ public class ObjectPoolManager : MonoBehaviour
     [SerializeField] private SpawnableObject[] spawnableObject;
 
     [Header("Settings For Apple Collection")]
-    [SerializeField] private GameObject appleGameObject;
+    [SerializeField] private GameObject splitAppleObject;
     [SerializeField] private Transform collectableTargetPos;
     [SerializeField] private float speedToTarget = 7f;
     private Queue<GameObject> splitApplePool;
 
-
+    public bool showQueue;
     private void Awake()
     {
         splitApplePool = new Queue<GameObject>();
@@ -28,16 +28,15 @@ public class ObjectPoolManager : MonoBehaviour
         // Populate the pool for split apples using prefabObjects[0]
         for (int i = 0; i < 9; i++) // Adjust the number as needed
         {
-            GameObject apple = Instantiate(appleGameObject, transform);
-            apple.SetActive(false);
-            splitApplePool.Enqueue(apple);
+            GameObject splitApple = Instantiate(splitAppleObject, transform);
+            splitApple.SetActive(false);
+            splitApplePool.Enqueue(splitApple);
         }
     }
 
     private void Start()
     {
         poolDictionary = new Dictionary<PoolType, Queue<GameObject>>();
-        splitApplePool = new Queue<GameObject>();
 
         // Group prefabs by their PoolType
         var groupedPrefabs = prefabObjects.GroupBy(prefab => prefab.GetComponent<SpawnableBehaviour>().GetSpawnableObject().type);
@@ -64,6 +63,7 @@ public class ObjectPoolManager : MonoBehaviour
             poolDictionary.Add(poolType, objectPool);
         }
     }
+
 
     #region ActionsEnableDisable
     private void OnEnable()
@@ -176,6 +176,7 @@ public class ObjectPoolManager : MonoBehaviour
             {
                 SpawnableBehaviour spawnableBehaviour = child.GetComponent<SpawnableBehaviour>();
                 childObject.SetActive(false);
+
                 // Check if the component exists
                 if (spawnableBehaviour != null)
                 {

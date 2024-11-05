@@ -156,7 +156,7 @@ public class GameManager : MonoBehaviour
             Actions.ChangeSpriteVisibility("Disable");
             Time.timeScale = 0;
         }
-        if(returnToPool)
+        if (returnToPool)
             Actions.ReturnAllToPool();
     }
 
@@ -165,7 +165,10 @@ public class GameManager : MonoBehaviour
         gameIsEndless = endless;
 
         if (gameIsEndless)
+        {
             Actions.ChangeEndlessVisibility("Disable");
+            Actions.ResetStats();
+        }
         else
             Actions.ChangeEndlessVisibility("Enable");
     }

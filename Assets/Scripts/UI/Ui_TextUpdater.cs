@@ -39,7 +39,10 @@ public class Ui_TextUpdater : MonoBehaviour
 
     public void UpdateAttempt(int attempt)
     {
-        attemptNumber.text = $"Attempt #: {attempt}";
+        if(!GameManager.instance.gameIsEndless)
+            attemptNumber.text = $"Attempt #: {attempt}";
+            else
+            attemptNumber.enabled = false;
     }
 
     public void UpdateAppleCount(int appleCount, int totalApple)
