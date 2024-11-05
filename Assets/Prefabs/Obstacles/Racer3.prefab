@@ -16,6 +16,22 @@ PrefabInstance:
       propertyPath: m_Offset.y
       value: 0.008155629
       objectReference: {fileID: 0}
+    - target: {fileID: 3751937721527008618, guid: bbdc1813adfe78545977929a8a2215ac, type: 3}
+      propertyPath: m_Size.x
+      value: 0.6648665
+      objectReference: {fileID: 0}
+    - target: {fileID: 3751937721527008618, guid: bbdc1813adfe78545977929a8a2215ac, type: 3}
+      propertyPath: m_Size.y
+      value: 0.10718345
+      objectReference: {fileID: 0}
+    - target: {fileID: 3751937721527008618, guid: bbdc1813adfe78545977929a8a2215ac, type: 3}
+      propertyPath: m_Offset.x
+      value: 0.17280313
+      objectReference: {fileID: 0}
+    - target: {fileID: 3751937721527008618, guid: bbdc1813adfe78545977929a8a2215ac, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.12698415
+      objectReference: {fileID: 0}
     - target: {fileID: 3918339268445241835, guid: bbdc1813adfe78545977929a8a2215ac, type: 3}
       propertyPath: m_Name
       value: Racer3

@@ -91,6 +91,19 @@ public class PlayerController : MonoBehaviour
     public void OnTriggerEnter2D(Collider2D other)
     {
         SpawnableBehaviour obstacle = other.GetComponent<SpawnableBehaviour>();
+        GameObject obstacleObj;
+
+        if (obstacle == null)
+        {
+            obstacle = other.GetComponentInParent<SpawnableBehaviour>();
+            obstacleObj = other.transform.parent.gameObject;
+        }
+        else
+        {
+            obstacleObj = other.gameObject;
+        }
+
+
         SpawnableObject spawnable = obstacle.GetSpawnableObject();
 
         switch (spawnable.type)
@@ -100,7 +113,7 @@ public class PlayerController : MonoBehaviour
                 break;
             case PoolType.Collectable:
                 string collectable = spawnable.collectableValue == 1 ? "apple" : "golden";
-                Actions.OnReturn(PoolType.Collectable, other.gameObject);
+                Actions.OnReturn(PoolType.Collectable, obstacleObj, true);
                 Actions.AppleCollection(collectable);
                 break;
             case PoolType.FinishLine:
@@ -111,8 +124,8 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-        if(spawnable.type != PoolType.Collectable)
-            Actions.OnReturn(spawnable.type, other.gameObject);
+        if (spawnable.type != PoolType.Collectable)
+            Actions.OnReturn(spawnable.type, obstacleObj, false);
     }
 
     private void IncreaseMovementSpeed(float timeAlive)

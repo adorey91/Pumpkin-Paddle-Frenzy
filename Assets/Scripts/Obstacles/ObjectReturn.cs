@@ -9,6 +9,6 @@ public class ObjectReturn : MonoBehaviour
         //Debug.Log(other.name);
         SpawnableBehaviour obstacle = other.GetComponent<SpawnableBehaviour>();
         SpawnableObject spawnable = obstacle.GetSpawnableObject();
-        Actions.OnReturn(spawnable.type, other.gameObject);
+        Actions.OnReturn(spawnable.type, other.gameObject, false);
     }
 }

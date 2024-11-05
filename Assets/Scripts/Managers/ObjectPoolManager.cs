@@ -21,6 +21,8 @@ public class ObjectPoolManager : MonoBehaviour
     private Queue<GameObject> splitApplePool;
     [SerializeField] private ScoreManager scoreManager;
 
+    bool isCollected = false;
+
     public bool showQueue;
     private void Awake()
     {
@@ -188,7 +190,7 @@ public class ObjectPoolManager : MonoBehaviour
                     if (spawnObj != null)
                     {
                         PoolType poolObject = spawnObj.type; // Access the PoolType from the SpawnableObject
-                        ReturnToPool(poolObject, child.gameObject); // Return the child to the appropriate pool
+                        ReturnToPool(poolObject, child.gameObject, false); // Return the child to the appropriate pool
                     }
                 }
             }
@@ -196,11 +198,13 @@ public class ObjectPoolManager : MonoBehaviour
     }
 
     // Returns the gameObject back to the pool and sets it inactive
-    private void ReturnToPool(PoolType type, GameObject objectSpawned)
+    private void ReturnToPool(PoolType type, GameObject objectSpawned, bool collected)
     {
+        isCollected = collected;
+
         if(objectSpawned.activeInHierarchy)
         {
-            if (type == PoolType.Collectable)
+            if (type == PoolType.Collectable & isCollected)
             {
                 if (objectSpawned.name == "Apple(Clone)")
                 {

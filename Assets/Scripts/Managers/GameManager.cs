@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     public GameState state;
     public enum GameState { MainMenu, Gameplay, Pause, Options, GameEnd, Upgrade };
     private GameState currentState;
+    [SerializeField]private GameState SetNewState;
     private GameState beforeOptions;
 
     [Header("Game Values")]
@@ -39,6 +40,12 @@ public class GameManager : MonoBehaviour
     {
         Actions.LoadBestRun();
         SetState(GameState.MainMenu);
+    }
+
+    private void Update()
+    {
+        if (SetNewState != currentState)
+            SetState(SetNewState);
     }
 
     private void OnEnable()

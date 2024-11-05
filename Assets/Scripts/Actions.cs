@@ -33,7 +33,7 @@ public static class Actions
 
     // Spawnable Actions
     public static Action<PoolType> OnSpawn;
-    public static Action<PoolType, GameObject> OnReturn;
+    public static Action<PoolType, GameObject, bool> OnReturn;
     public static Action ReturnAllToPool;
 
     // Music Actions
