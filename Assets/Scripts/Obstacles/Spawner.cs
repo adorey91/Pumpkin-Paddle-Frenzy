@@ -14,12 +14,13 @@ public class Spawner : MonoBehaviour
     [Range(0f, 1f)] public float obstacleSpawnFactor = 0.075f;
     [Range(0f, 1f)] public float collectableProbability = 0.4f;
     [Range(0f, 1f)] public float kayakProbability = 0.3f;
-    [SerializeField]private float calculateTime = 10f;
+    [SerializeField] private float calculateTime = 10f;
     private float _obstacleSpawnTime;
     private float timeAlive = 1; // spawner uses this to increase the spawntime & speed
 
 
     private int level = 0; // keep track of times the time increased
+    private float targetValue; // keep track of level float
     private int winningLevel;
     private bool finishSpawned = false;
     internal bool spawnedFirstObstacle = false;
@@ -42,8 +43,8 @@ public class Spawner : MonoBehaviour
     {
         if (!finishSpawned && GameManager.instance.isPlaying)
         {
-            SpawnLoop();
             UpdateProgressSlider();
+            SpawnLoop();
         }
     }
 
@@ -51,11 +52,16 @@ public class Spawner : MonoBehaviour
     private void OnEnable()
     {
         Actions.OnGameplay += ResetValues;
+        Actions.OnGameOver += ResetProcessSlider;
+        Actions.OnGameWin += ResetProcessSlider;
     }
 
     private void OnDisable()
     {
         Actions.OnGameplay -= ResetValues;
+        Actions.OnGameOver -= ResetProcessSlider;
+        Actions.OnGameWin -= ResetProcessSlider;
+
     }
     #endregion
 
@@ -68,15 +74,12 @@ public class Spawner : MonoBehaviour
 
     private void UpdateProgressSlider()
     {
-        float targetValue = level;
+        targetValue = (float)level + (timeAlive / calculateTime);
         levelProgressSlider.value = Mathf.Lerp(levelProgressSlider.value, targetValue, Time.deltaTime * 2f);
-
     }
 
     #region Spawn
-    /// <summary>
-    /// Spawn Loop
-    /// </summary>
+    // Spawn Loop
     private void SpawnLoop()
     {
         timeAlive += Time.deltaTime;
@@ -91,7 +94,7 @@ public class Spawner : MonoBehaviour
 
         if (obstacleSpawnTimer.UpdateTimer(Time.deltaTime))
         {
-            if(!spawnedFirstObstacle)
+            if (!spawnedFirstObstacle)
                 spawnedFirstObstacle = true;
 
             Spawn();
@@ -116,7 +119,7 @@ public class Spawner : MonoBehaviour
         float randomValue = Random.Range(0f, 1f);
 
         // Spawn collectable
-        if(randomValue < collectableProbability)
+        if (randomValue < collectableProbability)
             Actions.OnSpawn(PoolType.Collectable);
         else
             SpawnObstacle();
@@ -137,7 +140,6 @@ public class Spawner : MonoBehaviour
     #region Resets
     private void ResetValues()
     {
-        levelProgressSlider.value = level;
         spawnedFirstObstacle = false;
         level = 0;
         timeAlive = 1;
@@ -146,6 +148,11 @@ public class Spawner : MonoBehaviour
         _obstacleSpawnTime = obstacleSpawnTime;
         obstacleSpawnTimer.StartTimer(_obstacleSpawnTime);
         recalculateTimer.StartTimer(calculateTime);
+    }
+
+    private void ResetProcessSlider()
+    {
+        levelProgressSlider.value = 0;
     }
     #endregion
 }

@@ -39,10 +39,15 @@ public class Ui_TextUpdater : MonoBehaviour
 
     public void UpdateAttempt(int attempt)
     {
-        if(!GameManager.instance.gameIsEndless)
+        if (!GameManager.instance.gameIsEndless)
+        {
             attemptNumber.text = $"Attempt #: {attempt}";
-            else
+            attemptNumber.enabled = true;
+        }
+        else
+        {
             attemptNumber.enabled = false;
+        }
     }
 
     public void UpdateAppleCount(int appleCount, int totalApple)
@@ -53,10 +58,10 @@ public class Ui_TextUpdater : MonoBehaviour
 
     public void RunResultsText(TimeSpan time, TimeSpan bestTime, bool newBestRun, int appleCount)
     {
-        if(GameManager.instance.gameIsEndless)
+        if (GameManager.instance.gameIsEndless)
             SetRunTime(bestTime, newBestRun);
         else
-        bestRunText.enabled = false;
+            bestRunText.enabled = false;
 
         string appleText = appleCount == 1 ? "apple" : "apples";
 
@@ -65,7 +70,7 @@ public class Ui_TextUpdater : MonoBehaviour
 
     private void SetRunTime(TimeSpan bestTime, bool newBestRun)
     {
-        if(GameManager.instance.gameIsEndless)
+        if (GameManager.instance.gameIsEndless)
         {
             bestRunText.enabled = true;
             if (newBestRun)

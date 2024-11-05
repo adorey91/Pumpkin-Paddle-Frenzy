@@ -61,6 +61,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Used for touch screen 
     #region TouchScreenMovement
     // Called when left button is pressed
     public void MoveLeftButtonPress()
@@ -99,6 +100,7 @@ public class PlayerController : MonoBehaviour
                 break;
             case PoolType.Collectable:
                 string collectable = spawnable.collectableValue == 1 ? "apple" : "golden";
+                Actions.OnReturn(PoolType.Collectable, other.gameObject);
                 Actions.AppleCollection(collectable);
                 break;
             case PoolType.FinishLine:
@@ -108,7 +110,9 @@ public class PlayerController : MonoBehaviour
                 Actions.OnPlayerHurt();
                 break;
         }
-        Actions.OnReturn(spawnable.type, other.gameObject);
+
+        if(spawnable.type != PoolType.Collectable)
+            Actions.OnReturn(spawnable.type, other.gameObject);
     }
 
     private void IncreaseMovementSpeed(float timeAlive)

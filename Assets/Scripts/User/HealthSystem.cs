@@ -9,7 +9,7 @@ public class HealthSystem : MonoBehaviour
     [Header("UI Stats")]
     [SerializeField] private GameObject[] stamina;
     [SerializeField] private Image staminaImage;
-    [SerializeField] private TMP_Text healthText;
+    [SerializeField] private Image healthFillImage;
 
     // PlayerUpgrades
     [Header("Upgrades")]
@@ -107,7 +107,7 @@ public class HealthSystem : MonoBehaviour
     public void TakeDamage()
     {
         curHealth--;
-        healthText.text = $"x {curHealth}";
+        healthFillImage.fillAmount = (float)curHealth / (float)maxHealth;
         Actions.OnPlaySFX("Obstacle");
         StartCoroutine(DamageFlicker());
     }
@@ -118,7 +118,7 @@ public class HealthSystem : MonoBehaviour
     {
         staminaImage.fillAmount = 1;
         curHealth = maxHealth;
-        healthText.text = $"x {curHealth}";
+        healthFillImage.fillAmount = (float)curHealth / (float)maxHealth;
     }
 
     // Updates Stamina visibility based on if the game is endless or not

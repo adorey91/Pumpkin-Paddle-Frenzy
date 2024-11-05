@@ -19,6 +19,7 @@ public class ObjectPoolManager : MonoBehaviour
     [SerializeField] private Transform collectableTargetPos;
     [SerializeField] private float speedToTarget = 7f;
     private Queue<GameObject> splitApplePool;
+    [SerializeField] private ScoreManager scoreManager;
 
     public bool showQueue;
     private void Awake()
@@ -280,10 +281,10 @@ public class ObjectPoolManager : MonoBehaviour
         {
             GameObject apple = splitApplePool.Dequeue();
             apple.SetActive(true);
-            Debug.Log("Retrieved apple from pool: " + apple.name); // Debugging message
+            //Debug.Log("Retrieved apple from pool: " + apple.name); // Debugging message
             return apple;
         }
-        Debug.LogWarning("No apples available in split pool!"); // Debugging message
+        //Debug.LogWarning("No apples available in split pool!"); // Debugging message
         return null;
     }
 

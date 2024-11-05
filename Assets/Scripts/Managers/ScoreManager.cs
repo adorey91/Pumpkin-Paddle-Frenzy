@@ -70,7 +70,6 @@ public class ScoreManager : MonoBehaviour
         appleCount = 0;
         runTime = 0;
         attemptNumber++;
-        Actions.UpdateAttemptText(attemptNumber);
         Actions.UpdateAppleText(appleCount, totalAppleCount);
     }
 
@@ -91,8 +90,9 @@ public class ScoreManager : MonoBehaviour
         TimeSpan runTimeSpan = TimeSpan.FromSeconds(runTime);
 
         Actions.UpdateResultsText(runTimeSpan, bestTime, newBestRun, appleCount);
+        Actions.UpdateAttemptText(attemptNumber);
 
-        newBestRun = false; 
+        newBestRun = false;
     }
 
     public float GetBestRun()
