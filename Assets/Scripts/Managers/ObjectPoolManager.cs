@@ -150,6 +150,7 @@ public class ObjectPoolManager : MonoBehaviour
                 break;
             case PoolType.Collectable:
                 objectToSpawn.transform.localScale = new Vector3(0.4f, 0.4f, 0.5f);
+                spawnPosition = new Vector2(randomX, spawnPosition.y);
                 break;
             default:
                 spawnPosition = new Vector2(randomX, spawnPosition.y);
@@ -280,6 +281,7 @@ public class ObjectPoolManager : MonoBehaviour
         if (splitApplePool.Count > 0)
         {
             GameObject apple = splitApplePool.Dequeue();
+            apple.transform.localScale = new Vector3(0.4f, 0.4f, 0.5f);
             apple.SetActive(true);
             //Debug.Log("Retrieved apple from pool: " + apple.name); // Debugging message
             return apple;
