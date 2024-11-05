@@ -13,9 +13,10 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject ui_GameEnd;
     [SerializeField] private GameObject ui_Confirmation;
     [SerializeField] private GameObject ui_Results;
+    [SerializeField] private GameObject ui_Credits;
 
     [Header("Instruction UI")]
-    [SerializeField] private GameObject ui_backgroundInstruct;
+    [SerializeField] private GameObject ui_BackgroundInstruct;
     [SerializeField] private GameObject ui_Instructions;
     [SerializeField] private GameObject ui_HowToPlay;
     [SerializeField] private GameObject ui_HowToPlay2;
@@ -35,6 +36,7 @@ public class UiManager : MonoBehaviour
     public void Upgrades_UI() => SetActiveUI(ui_Upgrades);
     public void Instructions_UI() => SetActiveUI(ui_Instructions);
     public void Results_UI() => SetActiveUI(ui_Results);
+    public void Credits_UI() => SetActiveUI(ui_Credits);
     
     public void Confirmation_UI(string name)
     {
@@ -89,10 +91,11 @@ public class UiManager : MonoBehaviour
         ui_HowToPlay2.SetActive(false);
         ui_Controls.SetActive(false);
         ui_Results.SetActive(false);
-        ui_backgroundInstruct.SetActive(false);
+        ui_BackgroundInstruct.SetActive(false);
+        ui_Credits.SetActive(false);
 
         if (activeUI == ui_Instructions)
-            ui_backgroundInstruct.SetActive(true);
+            ui_BackgroundInstruct.SetActive(true);
         
         if(activeUI != null)       
             activeUI.SetActive(true);

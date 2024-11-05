@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Spawner : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class Spawner : MonoBehaviour
     private int winningLevel;
     private bool finishSpawned = false;
     internal bool spawnedFirstObstacle = false;
+    [SerializeField] private Slider levelProgressSlider;
 
 
     private void Start()
@@ -30,13 +32,19 @@ public class Spawner : MonoBehaviour
         recalculateTimer = new CustomTimer(calculateTime);
         winningLevel = GameManager.instance.winningLevel;
 
+        levelProgressSlider.maxValue = winningLevel;
+        levelProgressSlider.value = level;
+
         ResetValues();
     }
 
     private void Update()
     {
         if (!finishSpawned && GameManager.instance.isPlaying)
+        {
             SpawnLoop();
+            UpdateProgressSlider();
+        }
     }
 
     #region ActionsEnableDisable
@@ -58,6 +66,13 @@ public class Spawner : MonoBehaviour
         Actions.SpeedChange(timeAlive);
     }
 
+    private void UpdateProgressSlider()
+    {
+        float targetValue = level;
+        levelProgressSlider.value = Mathf.Lerp(levelProgressSlider.value, targetValue, Time.deltaTime * 2f);
+
+    }
+
     #region Spawn
     /// <summary>
     /// Spawn Loop
@@ -69,7 +84,6 @@ public class Spawner : MonoBehaviour
         if (recalculateTimer.UpdateTimer(Time.deltaTime))
         {
             level++;
-            Actions.LevelChange(level);
             CalculateFactors();
             Actions.SpeedChange(timeAlive);
             recalculateTimer.StartTimer(calculateTime);
@@ -123,9 +137,9 @@ public class Spawner : MonoBehaviour
     #region Resets
     private void ResetValues()
     {
+        levelProgressSlider.value = level;
         spawnedFirstObstacle = false;
         level = 0;
-        Actions.LevelChange(level);
         timeAlive = 1;
         Actions.SpeedChange(timeAlive);
         finishSpawned = false;

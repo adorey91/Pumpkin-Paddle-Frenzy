@@ -30,7 +30,6 @@ public static class Actions
     public static Action<TimeSpan, TimeSpan, bool, int> UpdateResultsText;
     public static Action<TimeSpan> UpdateMenuBestRun;
     public static Action<float> SpeedChange;
-    public static Action<int> LevelChange;
 
     // Spawnable Actions
     public static Action<PoolType> OnSpawn;

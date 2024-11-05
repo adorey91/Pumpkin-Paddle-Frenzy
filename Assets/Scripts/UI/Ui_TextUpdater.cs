@@ -10,9 +10,6 @@ using UnityEngine;
 /// </summary>
 public class Ui_TextUpdater : MonoBehaviour
 {
-    [Header("Tracker of Spawn Level Progress")]
-    [SerializeField] private TMP_Text levelProgressText;
-
     [Header("Score Text")]
     [SerializeField] private TMP_Text runResultsText;
     [SerializeField] private TMP_Text bestRunText;
@@ -22,15 +19,12 @@ public class Ui_TextUpdater : MonoBehaviour
     [SerializeField] private TMP_Text totalApples;
     [SerializeField] private TMP_Text attemptNumber;
 
-
     #region EnableDisable
     private void OnEnable()
     {
         Actions.UpdateAttemptText += UpdateAttempt;
         Actions.UpdateAppleText += UpdateAppleCount;
         Actions.UpdateResultsText += RunResultsText;
-        Actions.LevelChange += LevelProgressText;
-        Actions.ChangeEndlessVisibility += ProgressVisibilty;
         Actions.UpdateMenuBestRun += SetMenuRunTime;
     }
 
@@ -39,21 +33,9 @@ public class Ui_TextUpdater : MonoBehaviour
         Actions.UpdateAttemptText -= UpdateAttempt;
         Actions.UpdateAppleText -= UpdateAppleCount;
         Actions.UpdateResultsText -= RunResultsText;
-        Actions.LevelChange -= LevelProgressText;
-        Actions.ChangeEndlessVisibility -= ProgressVisibilty;
         Actions.UpdateMenuBestRun -= SetMenuRunTime;
     }
     #endregion
-
-
-    public void LevelProgressText(int level)
-    {
-        float progress = ((float)level / (float)GameManager.instance.winningLevel) * 100;
-        int roundedProgress = Mathf.RoundToInt(progress);
-
-        levelProgressText.text = $"Level Progress: {roundedProgress}%";
-    }
-
 
     public void UpdateAttempt(int attempt)
     {
@@ -99,14 +81,5 @@ public class Ui_TextUpdater : MonoBehaviour
     private void SetMenuRunTime(TimeSpan bestTime)
     {
         bestRunMenuText.text = $"Best Time in Endless Mode: {bestTime.Minutes:D2}:{bestTime.Seconds:D2}";
-    }
-
-    private void ProgressVisibilty(string endless)
-    {
-        switch (endless)
-        {
-            case "Enable": levelProgressText.enabled = true; break;
-            case "Disable": levelProgressText.enabled = false; break;
-        }
     }
 }
