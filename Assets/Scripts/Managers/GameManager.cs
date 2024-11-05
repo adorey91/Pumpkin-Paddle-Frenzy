@@ -42,11 +42,13 @@ public class GameManager : MonoBehaviour
         SetState(GameState.MainMenu);
     }
 
-    private void Update()
-    {
-        if (SetNewState != currentState)
-            SetState(SetNewState);
-    }
+
+    // USE FOR DEBUGGING ONLY
+    //private void Update()
+    //{
+    //    if (SetNewState != currentState)
+    //        SetState(SetNewState);
+    //}
 
     private void OnEnable()
     {
