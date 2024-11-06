@@ -25,7 +25,9 @@ public class Spawner : MonoBehaviour
     private bool finishSpawned = false;
     internal bool spawnedFirstObstacle = false;
     [SerializeField] private Slider levelProgressSlider;
+    private GameObject levelSlider;
     private bool increaseLevel;
+
 
 
     private void Start()
@@ -34,6 +36,7 @@ public class Spawner : MonoBehaviour
         recalculateTimer = new CustomTimer(calculateTime);
         winningLevel = GameManager.instance.winningLevel;
 
+        levelSlider = levelProgressSlider.gameObject;
         levelProgressSlider.maxValue = winningLevel;
         levelProgressSlider.value = level;
 
@@ -45,7 +48,21 @@ public class Spawner : MonoBehaviour
         if (!finishSpawned && GameManager.instance.isPlaying)
         {
             SpawnLoop();
-            UpdateProgressSlider();
+         
+            if(!GameManager.instance.gameIsEndless)
+            {
+                if (!levelSlider.activeSelf)
+                    levelSlider.SetActive(true);
+
+                UpdateProgressSlider();
+            }
+            else
+            {
+                if (levelSlider.activeSelf)
+                    levelSlider.SetActive(false);
+                else
+                    return;
+            }
         }
     }
 
