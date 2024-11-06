@@ -25,6 +25,7 @@ public class Spawner : MonoBehaviour
     private bool finishSpawned = false;
     internal bool spawnedFirstObstacle = false;
     [SerializeField] private Slider levelProgressSlider;
+    private bool increaseLevel;
 
 
     private void Start()
@@ -43,8 +44,8 @@ public class Spawner : MonoBehaviour
     {
         if (!finishSpawned && GameManager.instance.isPlaying)
         {
-            UpdateProgressSlider();
             SpawnLoop();
+            UpdateProgressSlider();
         }
     }
 
@@ -78,12 +79,18 @@ public class Spawner : MonoBehaviour
         // Update the progress bar based on fractional timeAlive progress rather than level increments
         if(timeAliveInRun > calculateTime)
             timeAliveInRun -= calculateTime;
+       
+        if(increaseLevel)
+        {
+            level++;
+            increaseLevel = false;
+        }
 
-        float fractionalLevelProgress = level + (timeAliveInRun / calculateTime); 
+        float fractionalLevelProgress = (float)level + (timeAliveInRun / calculateTime); 
         targetValue = Mathf.Clamp(fractionalLevelProgress, 0, winningLevel); 
 
         // Smoothly interpolate the slider value to targetValue
-        levelProgressSlider.value = Mathf.Lerp(levelProgressSlider.value, targetValue, Time.deltaTime * 5f);
+        levelProgressSlider.value = targetValue;
     }
 
 
@@ -95,7 +102,7 @@ public class Spawner : MonoBehaviour
 
         if (recalculateTimer.UpdateTimer(Time.deltaTime))
         {
-            level++;
+            increaseLevel = true;
             CalculateFactors();
             Actions.SpeedChange(timeAlive);
             recalculateTimer.StartTimer(calculateTime);
@@ -152,6 +159,7 @@ public class Spawner : MonoBehaviour
         spawnedFirstObstacle = false;
         level = 0;
         timeAlive = 1;
+        timeAliveInRun = 0;
         Actions.SpeedChange(timeAlive);
         finishSpawned = false;
         _obstacleSpawnTime = obstacleSpawnTime;
