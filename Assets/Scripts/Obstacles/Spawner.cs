@@ -11,7 +11,7 @@ public class Spawner : MonoBehaviour
 
     [Header("Spawning Base Values")]
     [SerializeField] private float obstacleSpawnTime = 5f;
-    [Range(0f, 1f)] public float obstacleSpawnFactor = 0.075f;
+    [Range(0f, 0.1f)] public float obstacleSpawnFactor = 0.075f;
     [Range(0f, 1f)] public float collectableProbability = 0.4f;
     [Range(0f, 1f)] public float kayakProbability = 0.3f;
     [SerializeField] private float calculateTime = 10f;
