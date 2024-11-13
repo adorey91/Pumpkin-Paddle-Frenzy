@@ -4570,8 +4570,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31b13ca10213e534db6eff9902d0d0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstacleSpawnTime: 4
-  obstacleSpawnFactor: 0.038
+  obstacleSpawnTime: 3.5
+  obstacleSpawnFactor: 0.0507
   collectableProbability: 0.45
   kayakProbability: 0.2
   calculateTime: 10
@@ -5665,7 +5665,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48c43578b8842844da29ee648b09b2f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstacleSpeedFactor: 0.15
+  obstacleSpeedFactor: 0.224
   prefabObjects:
   - {fileID: 1475980636802886061, guid: ad5cd9a75476e8b4dbdce128e27f1bbe, type: 3}
   - {fileID: 6784650486199813947, guid: 2a86691e6712d4740a7dafe42d9f94e2, type: 3}
@@ -12714,7 +12714,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7621322493713516861
 RectTransform:
   m_ObjectHideFlags: 0

@@ -14,8 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onScreenControls: 0
   onScreenPause: 0
-  attemptsMade: 3
-  totalAppleCount: 2
+  attemptsMade: 0
+  totalAppleCount: 22
   purchasedUpgrades:
   - {fileID: 11400000, guid: dcbb0797d8e24bd4883a8d0476eac01e, type: 2}
   - {fileID: 11400000, guid: b18464332b2b02a4db1207340060fb7f, type: 2}
+  - {fileID: 11400000, guid: c36f5e2868b8d914a93c9ede84f470c4, type: 2}
+  - {fileID: 11400000, guid: 75d7b0bd4a8747a4a9e1017e0a8966e5, type: 2}
+  - {fileID: 11400000, guid: e4404cf7489a2bf40af0d180ded5755f, type: 2}
