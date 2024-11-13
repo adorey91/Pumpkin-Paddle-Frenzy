@@ -21,6 +21,18 @@ public class OnScreenButtonControl : MonoBehaviour
         pauseButton.SetActive(activePause);
     }
 
+    public void ToggleScreenControl()
+    {
+        activeControls = !activeControls;
+        onScreenControlsButtons.SetActive(activeControls);
+    }
+
+    public void TogglePauseButton()
+    {
+        activePause = !activePause;
+        pauseButton.SetActive(activePause);
+    }
+
     private void OnEnable()
     {
         Actions.ApplySettings += LoadButtons;

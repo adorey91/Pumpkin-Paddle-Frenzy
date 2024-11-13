@@ -11,6 +11,8 @@ public class SaveManager : MonoBehaviour
     [SerializeField] private UiManager uiManager;
     [SerializeField] private OnScreenButtonControl onScreenButtonControl;
 
+    [SerializeField] private SaveSO saveObject;
+
     private void OnEnable()
     {
         Actions.LoadBestRun += LoadRunData;
@@ -33,10 +35,16 @@ public class SaveManager : MonoBehaviour
     {
         Actions.ResetStats();
 
-        if (File.Exists(GetSavePath() + "/playerInfo.dat"))
+        //if (File.Exists(GetSavePath() + "/playerInfo.dat"))
+        //    uiManager.Confirmation_UI("save");
+        if(saveObject.IsThereData())
+        {
             uiManager.Confirmation_UI("save");
+        }
         else
+        {
             uiManager.Instructions_UI();
+        }
     }
 
     public void SaveData()
@@ -57,17 +65,28 @@ public class SaveManager : MonoBehaviour
             FileStream file = File.Create(GetSavePath() + "/playerInfo.dat");
             PlayerData data = new PlayerData();
 
-            // SavePlayerData the names of all purchased upgrades
-            foreach (UpgradeAsset purchasedUpgrade in upgradeManager.PurchasedUpgrades)
-            {
-                data.purchasedUpgrades.Add(purchasedUpgrade.name); // Add all purchased upgrade names
-            }
+            //// SavePlayerData the names of all purchased upgrades
+            //foreach (UpgradeAsset purchasedUpgrade in upgradeManager.PurchasedUpgrades)
+            //{
+            //    data.purchasedUpgrades.Add(purchasedUpgrade.name); // Add all purchased upgrade names
+            //}
 
-            // SavePlayerData other stats
-            data.appleCount = scoreManager.GetTotalAppleCount();
-            data.attemptsMade = scoreManager.GetAttemptCount();
-            data.onScreenControls = onScreenButtonControl.activeControls;
-            data.onScreenPause = onScreenButtonControl.activePause;
+            //// SavePlayerData other stats
+            //data.appleCount = scoreManager.GetTotalAppleCount();
+            //data.attemptsMade = scoreManager.GetAttemptCount();
+            //data.onScreenControls = onScreenButtonControl.activeControls;
+            //data.onScreenPause = onScreenButtonControl.activePause;
+
+            saveObject.totalAppleCount = scoreManager.GetTotalAppleCount();
+            saveObject.attemptsMade = scoreManager.GetAttemptCount();
+            saveObject.onScreenControls = onScreenButtonControl.activeControls;
+            saveObject.onScreenPause = onScreenButtonControl.activePause;
+
+            foreach(UpgradeAsset purchased in upgradeManager.PurchasedUpgrades)
+            {
+                if(!saveObject.purchasedUpgrades.Contains(purchased))
+                    saveObject.purchasedUpgrades.Add(purchased);
+            }
 
             bf.Serialize(file, data);
             file.Close();
@@ -117,23 +136,35 @@ public class SaveManager : MonoBehaviour
             // Clear the list of purchased upgrades before reloading them from saved data
             upgradeManager.ClearPurchasedUpgrades();
 
-            // Find and apply all upgrades by name
-            foreach (string upgradeName in data.purchasedUpgrades)
+
+            foreach(UpgradeAsset purchased in saveObject.purchasedUpgrades)
             {
-                UpgradeAsset foundUpgrade = upgradeManager.FindUpgradeByName(upgradeName);
-                if (foundUpgrade != null)
-                {
-                    foundUpgrade.isPurchased = true;
-                    upgradeManager.AddPurchasedUpgrades(foundUpgrade);
-                    upgradeManager.ApplyUpgradeToPlayer(foundUpgrade);
-                }
+                upgradeManager.AddPurchasedUpgrades(purchased);
+                upgradeManager.ApplyUpgradeToPlayer(purchased);
             }
 
-            // Load Stats
-            scoreManager.SetTotalAppleCount(data.appleCount);
-            scoreManager.SetAttempt(data.attemptsMade);
-            onScreenButtonControl.activePause = data.onScreenPause;
-            onScreenButtonControl.activeControls = data.onScreenControls;
+            scoreManager.SetTotalAppleCount(saveObject.totalAppleCount);
+            scoreManager.SetAttempt(saveObject.attemptsMade);
+            onScreenButtonControl.activeControls = saveObject.onScreenControls;
+            onScreenButtonControl.activePause = saveObject.onScreenPause;
+
+            //// Find and apply all upgrades by name
+            //foreach (string upgradeName in data.purchasedUpgrades)
+            //{
+            //    UpgradeAsset foundUpgrade = upgradeManager.FindUpgradeByName(upgradeName);
+            //    if (foundUpgrade != null)
+            //    {
+            //        foundUpgrade.isPurchased = true;
+            //        upgradeManager.AddPurchasedUpgrades(foundUpgrade);
+            //        upgradeManager.ApplyUpgradeToPlayer(foundUpgrade);
+            //    }
+            //}
+
+            //// Load Stats
+            //scoreManager.SetTotalAppleCount(data.appleCount);
+            //scoreManager.SetAttempt(data.attemptsMade);
+            //onScreenButtonControl.activePause = data.onScreenPause;
+            //onScreenButtonControl.activeControls = data.onScreenControls;
 
             // Triggers the load settings action
             Actions.ApplySettings();
@@ -153,9 +184,15 @@ public class SaveManager : MonoBehaviour
     // Deletes SavePlayerData
     internal void DeleteSave()
     {
-        if (File.Exists(GetSavePath() + "/playerInfo.dat"))
+        //if (File.Exists(GetSavePath() + "/playerInfo.dat"))
+        //{
+        //    File.Delete(GetSavePath() + "/playerInfo.dat");
+        //    Debug.Log("File Deleted");
+        //}
+
+        if (saveObject.IsThereData())
         {
-            File.Delete(GetSavePath() + "/playerInfo.dat");
+            saveObject.DeleteData();
             Debug.Log("File Deleted");
         }
     }
