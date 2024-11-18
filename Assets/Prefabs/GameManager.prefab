@@ -4242,8 +4242,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onScreenControlsButtons: {fileID: 5723108772692586096}
   pauseButton: {fileID: 2161857016684248151}
-  activeControls: 0
-  activePause: 0
+  activeControls: 1
+  activePause: 1
 --- !u!1 &2320130040280494577
 GameObject:
   m_ObjectHideFlags: 0
@@ -9731,7 +9731,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: bcb85524cbf4f8642babfc30508aad0c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: df1f9ad4f4680f64488dfb5f8c75d12f, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -12561,7 +12561,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7621322493713516861
 RectTransform:
   m_ObjectHideFlags: 0
@@ -16354,7 +16354,6 @@ MonoBehaviour:
   upgradeManager: {fileID: 2392319122608181880}
   uiManager: {fileID: 7630019828870217378}
   onScreenButtonControl: {fileID: 7401567095487625832}
-  saveObject: {fileID: 11400000, guid: fd8dbfcae18891f4e9985ea4b4d36c52, type: 2}
 --- !u!1 &8045660982371102869
 GameObject:
   m_ObjectHideFlags: 0
