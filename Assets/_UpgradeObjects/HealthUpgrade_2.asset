@@ -17,7 +17,7 @@ MonoBehaviour:
   preRequisites: {fileID: 11400000, guid: b18464332b2b02a4db1207340060fb7f, type: 2}
   newSprite: {fileID: 21300000, guid: 5b331d271e0c4894b97b28d5a0ab2671, type: 3}
   newStats: 5
-  cost: 10
-  baseCost: 10
+  cost: 15
+  baseCost: 15
   isPurchased: 0
   colliderRadius: 1.13

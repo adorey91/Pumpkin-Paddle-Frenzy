@@ -1011,7 +1011,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 160}
+  m_SizeDelta: {x: 0, y: 200}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &9035521463366213572
 MonoBehaviour:
@@ -1034,7 +1034,7 @@ MonoBehaviour:
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 200, y: 200}
-  m_Spacing: {x: 60, y: 0}
+  m_Spacing: {x: 80, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!1 &441686155813158968
@@ -4242,8 +4242,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onScreenControlsButtons: {fileID: 5723108772692586096}
   pauseButton: {fileID: 2161857016684248151}
-  activeControls: 1
-  activePause: 1
+  activeControls: 0
+  activePause: 0
 --- !u!1 &2320130040280494577
 GameObject:
   m_ObjectHideFlags: 0
@@ -5445,6 +5445,7 @@ MonoBehaviour:
   - {fileID: 3918339268445241835, guid: bbdc1813adfe78545977929a8a2215ac, type: 3}
   - {fileID: 5264893634185116976, guid: 7222b85137dbfff4991113bccece6771, type: 3}
   - {fileID: 8942721719948907454, guid: c6bb2ea6e3e2b2c478f08db26f543cef, type: 3}
+  - {fileID: 7990516250440911761, guid: c529512169b7ff44b8efb407604f3911, type: 3}
   - {fileID: 8378838994371166745, guid: 672d80b1c330f4d46a9763a010c8e905, type: 3}
   - {fileID: 5071919050148719766, guid: 3232aeb392de62c46be7ce9d04738713, type: 3}
   - {fileID: 3750996794638030427, guid: 1b5d3cc7497ef4e44bdb20c3792ef209, type: 3}
@@ -5498,7 +5499,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -275}
-  m_SizeDelta: {x: 1500, y: 330}
+  m_SizeDelta: {x: 1500, y: 350}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &2898678038443524634
 GameObject:
@@ -12561,7 +12562,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7621322493713516861
 RectTransform:
   m_ObjectHideFlags: 0

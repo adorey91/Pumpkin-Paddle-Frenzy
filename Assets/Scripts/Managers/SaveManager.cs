@@ -35,6 +35,8 @@ public class SaveManager : MonoBehaviour
 
         if (File.Exists(GetSavePath() + "/playerInfo.dat"))
             uiManager.Confirmation_UI("save");
+        else
+            uiManager.Instructions_UI();
     }
 
     public void SaveData()
