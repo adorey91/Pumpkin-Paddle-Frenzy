@@ -13,19 +13,26 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject ui_GameEnd;
     [SerializeField] private GameObject ui_Confirmation;
     [SerializeField] private GameObject ui_Results;
-    [SerializeField] private GameObject ui_Credits;
 
     [Header("Instruction UI")]
     [SerializeField] private GameObject ui_BackgroundInstruct;
     [SerializeField] private GameObject ui_Instructions;
     [SerializeField] private GameObject ui_HowToPlay;
     [SerializeField] private GameObject ui_HowToPlay2;
-    [SerializeField] private GameObject ui_Controls;
+    [SerializeField] private GameObject ui_HowToControls;
 
     [Header("Confirmation Panel")]
     [SerializeField] private TextMeshProUGUI confirmText;
     [SerializeField] private Button yesButton;
     [SerializeField] private Button noButton;
+
+    [Header("Options UI")]
+    [SerializeField] private GameObject ui_Audio;
+    [SerializeField] private GameObject ui_Video;
+    [SerializeField] private GameObject ui_Controls;
+    [SerializeField] private GameObject ui_Credits;
+
+
 
 
     public void MainMenu_UI() => SetActiveUI(ui_MainMenu);
@@ -37,7 +44,10 @@ public class UiManager : MonoBehaviour
     public void Instructions_UI() => SetActiveUI(ui_Instructions);
     public void Results_UI() => SetActiveUI(ui_Results);
     public void Credits_UI() => SetActiveUI(ui_Credits);
-    
+    public void Audio_UI() => SetActiveUI(ui_Audio);
+    public void Video_UI() => SetActiveUI(ui_Video);
+    public void Controls_UI() => SetActiveUI(ui_Controls);
+
     public void Confirmation_UI(string name)
     {
         // Sets active uI to confirmation
@@ -89,10 +99,14 @@ public class UiManager : MonoBehaviour
         ui_Confirmation.SetActive(false);
         ui_HowToPlay.SetActive(false);
         ui_HowToPlay2.SetActive(false);
-        ui_Controls.SetActive(false);
+        ui_HowToControls.SetActive(false);
         ui_Results.SetActive(false);
         ui_BackgroundInstruct.SetActive(false);
         ui_Credits.SetActive(false);
+        ui_Audio.SetActive(false);
+        ui_Video.SetActive(false);
+        ui_Controls.SetActive(false);
+
 
         if (activeUI == ui_Instructions)
             ui_BackgroundInstruct.SetActive(true);
