@@ -34,6 +34,8 @@ public class VideoOptions : MonoBehaviour
             currentResIndex = resolutions.Count - 1;
             UpdateResLabel();
         }
+
+        ApplyGraphics();
     }
 
     public void ApplyGraphics()
