@@ -41,7 +41,6 @@ public class GameManager : MonoBehaviour
         SetState(GameState.MainMenu);
     }
 
-
     // USE FOR DEBUGGING ONLY
     //private void Update()
     //{
@@ -63,10 +62,14 @@ public class GameManager : MonoBehaviour
 
     public void LoadState(string stateName)
     {
+        if (stateName == "beforeOptions")
+        {
+            LoadState(beforeOptions);
+            return;
+        }
+        
         if (Enum.TryParse(stateName, out GameState gamestate))
             LoadState(gamestate);
-        else if (stateName == "beforeOptions")
-            LoadState(beforeOptions);
         else
             Debug.LogError(stateName + " doesn't exist");
     }

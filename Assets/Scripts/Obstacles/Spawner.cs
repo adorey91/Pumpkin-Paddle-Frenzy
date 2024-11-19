@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class Spawner : MonoBehaviour
 {
+    // Timers for spawning and recalculating
     private CustomTimer obstacleSpawnTimer; // used to count how long until next spawn
     private CustomTimer recalculateTimer; // used to recalculate spawning speeds/spawn values 
 

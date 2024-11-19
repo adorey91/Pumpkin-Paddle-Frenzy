@@ -28,8 +28,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip sfxUpgradeClip;
     [SerializeField] private AudioClip sfcSelectionClip;
 
-
-
+    
     public void Start()
     {
         musicSource.loop = true;

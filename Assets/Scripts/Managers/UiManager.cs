@@ -33,8 +33,6 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject ui_Credits;
 
 
-
-
     public void MainMenu_UI() => SetActiveUI(ui_MainMenu);
     public void Pause_UI() => SetActiveUI(ui_Pause);
     public void Options_UI() => SetActiveUI(ui_Options);
