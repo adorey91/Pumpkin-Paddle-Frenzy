@@ -21,6 +21,8 @@ public class Spawner : MonoBehaviour
     private float timeAliveInRun;
 
     private int level = 0; // keep track of times the time increased
+    private float levelInFloat = 0; // for progress bar
+
     private float targetValue; // keep track of level float
     private int winningLevel;
     private bool finishSpawned = false;
@@ -38,8 +40,8 @@ public class Spawner : MonoBehaviour
         winningLevel = GameManager.instance.winningLevel;
 
         levelSlider = levelProgressSlider.gameObject;
-        levelProgressSlider.maxValue = winningLevel;
-        levelProgressSlider.value = level;
+        levelProgressSlider.maxValue = winningLevel * calculateTime;
+        levelProgressSlider.value = levelInFloat;
 
         ResetValues();
     }
@@ -93,10 +95,8 @@ public class Spawner : MonoBehaviour
 
     private void UpdateProgressSlider()
     {
-        timeAliveInRun += Time.deltaTime;
+        levelInFloat += Time.deltaTime;
         // Update the progress bar based on fractional timeAlive progress rather than level increments
-        if(timeAliveInRun > calculateTime)
-            timeAliveInRun -= calculateTime;
        
         if(increaseLevel)
         {
@@ -104,11 +104,8 @@ public class Spawner : MonoBehaviour
             increaseLevel = false;
         }
 
-        float fractionalLevelProgress = (float)level + (timeAliveInRun / calculateTime); 
-        targetValue = Mathf.Clamp(fractionalLevelProgress, 0, winningLevel); 
-
         // Smoothly interpolate the slider value to targetValue
-        levelProgressSlider.value = targetValue;
+        levelProgressSlider.value = levelInFloat;
     }
 
 
@@ -176,6 +173,7 @@ public class Spawner : MonoBehaviour
     {
         spawnedFirstObstacle = false;
         level = 0;
+        levelInFloat = 0;
         timeAlive = 1;
         timeAliveInRun = 0;
         Actions.SpeedChange(timeAlive);
