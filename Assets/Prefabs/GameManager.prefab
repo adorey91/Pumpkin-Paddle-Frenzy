@@ -6959,7 +6959,7 @@ MonoBehaviour:
   uiManager: {fileID: 7630019828870217378}
   scoreManager: {fileID: 4718690846639148293}
   state: 0
-  winningLevel: 20
+  winningLevel: 5
   gameIsEndless: 0
 --- !u!1 &2684655166495019565
 GameObject:
@@ -20387,7 +20387,7 @@ MonoBehaviour:
   applesThisRun: {fileID: 4641774236854282974}
   totalApples: {fileID: 2924080420257816928}
   attemptNumber: {fileID: 5321554445705572893}
-  gameEndResults: {fileID: 0}
+  gameEndResults: {fileID: 7792412607799065788}
 --- !u!1 &7070769422058967976
 GameObject:
   m_ObjectHideFlags: 0

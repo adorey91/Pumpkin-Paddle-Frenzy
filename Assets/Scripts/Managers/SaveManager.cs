@@ -135,6 +135,8 @@ public class SaveManager : MonoBehaviour
             onScreenButtonControl.activePause = data.onScreenPause;
             onScreenButtonControl.activeControls = data.onScreenControls;
 
+            Ui_TextUpdater._AppleTotalEndGame = upgradeManager.GetTotalCost();
+
             // Triggers the load settings action
             Actions.ApplySettings();
 
@@ -145,11 +147,14 @@ public class SaveManager : MonoBehaviour
     }
     #endregion
 
+
+
     // Returns the save path
     private static string GetSavePath()
     {
         return Application.persistentDataPath;
     }
+
 
     // Deletes SavePlayerData
     internal void DeleteSave()

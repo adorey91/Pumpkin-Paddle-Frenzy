@@ -21,8 +21,6 @@ public class ScoreManager : MonoBehaviour
     {
         attemptNumber = 0;
         appleCount = 0;
-        //Actions.UpdateAttemptText(attemptNumber);
-        //Actions.UpdateAppleText(appleCount, totalAppleCount);
     }
 
     private void Update()

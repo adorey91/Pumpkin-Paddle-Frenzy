@@ -21,9 +21,15 @@ public class Ui_TextUpdater : MonoBehaviour
 
     [SerializeField] private TMP_Text gameEndResults;
 
-    private int _AppleTotalEndGame;
+    public static int _AppleTotalEndGame;
     private int _AttemptTotalEndGame;
     private int _CrashAmountsEndGame;
+
+
+    private void Start()
+    {
+        _AppleTotalEndGame = 0;
+    }
 
     #region EnableDisable
     private void OnEnable()
@@ -32,6 +38,7 @@ public class Ui_TextUpdater : MonoBehaviour
         Actions.UpdateAppleText += UpdateAppleCount;
         Actions.UpdateResultsText += RunResultsText;
         Actions.UpdateMenuBestRun += SetMenuRunTime;
+        Actions.OnGameWin += SetEndScreenText;
     }
 
     private void OnDisable()
@@ -40,6 +47,7 @@ public class Ui_TextUpdater : MonoBehaviour
         Actions.UpdateAppleText -= UpdateAppleCount;
         Actions.UpdateResultsText -= RunResultsText;
         Actions.UpdateMenuBestRun -= SetMenuRunTime;
+        Actions.OnGameWin -= SetEndScreenText;
     }
     #endregion
 
@@ -63,7 +71,7 @@ public class Ui_TextUpdater : MonoBehaviour
         applesThisRun.text = $"x {appleCount}";
         totalApples.text = $"x {totalApple}";
 
-        _AppleTotalEndGame += appleCount;
+        
     }
 
     public void RunResultsText(TimeSpan time, TimeSpan bestTime, bool newBestRun, int appleCount)
