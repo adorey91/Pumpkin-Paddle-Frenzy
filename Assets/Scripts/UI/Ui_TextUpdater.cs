@@ -41,6 +41,7 @@ public class Ui_TextUpdater : MonoBehaviour
     {
         if (!GameManager.instance.gameIsEndless)
         {
+            Debug.Log($"Attempt #: {attempt}");
             attemptNumber.text = $"Attempt #: {attempt}";
             attemptNumber.enabled = true;
         }
@@ -54,6 +55,7 @@ public class Ui_TextUpdater : MonoBehaviour
     {
         applesThisRun.text = $"x {appleCount}";
         totalApples.text = $"x {totalApple}";
+        Debug.Log($"total apples: {totalApple}");
     }
 
     public void RunResultsText(TimeSpan time, TimeSpan bestTime, bool newBestRun, int appleCount)

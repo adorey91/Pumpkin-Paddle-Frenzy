@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Gamestate")]
     public GameState state;
-    public enum GameState { MainMenu, Gameplay, Pause, Options, GameEnd, Upgrade };
+    public enum GameState { MainMenu, Gameplay, Pause, Options, GameEnd, Results, Upgrades };
     private GameState currentState;
     private GameState beforeOptions;
 
@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
     public bool gameIsEndless = false;
     internal bool isPlaying;
     private bool isNewRun = true;
+
+    internal bool loadUpgrade = false;
 
     private void Awake()
     {
@@ -50,14 +52,12 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Actions.OnGameOver += Upgrades;
-        Actions.OnGameWin += GameWin;
+        Actions.OnGameOver += Results;
     }
 
     private void OnDisable()
     {
-        Actions.OnGameOver -= Upgrades;
-        Actions.OnGameWin -= GameWin;
+        Actions.OnGameOver -= Results;
     }
 
     public void LoadState(string stateName)
@@ -95,7 +95,8 @@ public class GameManager : MonoBehaviour
             case GameState.Options: Options(); break;
             case GameState.Pause: Pause(); break;
             case GameState.GameEnd: GameWin(); break;
-            case GameState.Upgrade: Upgrades(); break;
+            case GameState.Results: Results(); break;
+            case GameState.Upgrades: Upgrades(); break;
         }
     }
 
@@ -111,7 +112,6 @@ public class GameManager : MonoBehaviour
     private void MainMenu()
     {
         PlayingState(false, true, true);
-        scoreManager.SetTotalAppleCount(0);
         Actions.OnPlayMusic("MainMenu");
         Actions.ResetStats();
         uiManager.MainMenu_UI();
@@ -126,12 +126,17 @@ public class GameManager : MonoBehaviour
         PlayingState(true, false, false);
         uiManager.Gameplay_UI();
     }
-    private void Upgrades()
+    private void Results()
     {
         PlayingState(false, true, true);
         uiManager.Results_UI();
     }
 
+    private void Upgrades()
+    {
+        PlayingState(false, true, true);
+        uiManager.Upgrades_UI();
+    }
 
     private void Pause()
     {

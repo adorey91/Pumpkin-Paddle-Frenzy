@@ -139,6 +139,7 @@ public class SaveManager : MonoBehaviour
             Actions.ApplySettings();
 
             // Load the gameplay scene after applying player data
+            GameManager.instance.loadUpgrade = true;
             Actions.LoadScene("Gameplay");
         }
     }
