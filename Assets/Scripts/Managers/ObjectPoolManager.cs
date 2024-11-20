@@ -29,7 +29,7 @@ public class ObjectPoolManager : MonoBehaviour
         splitApplePool = new Queue<GameObject>();
 
         // Populate the pool for split apples using prefabObjects[0]
-        for (int i = 0; i < 9; i++) // Adjust the number as needed
+        for (int i = 0; i < 12; i++) // Adjust the number as needed
         {
             GameObject splitApple = Instantiate(splitAppleObject, transform);
             splitApple.SetActive(false);
@@ -202,18 +202,11 @@ public class ObjectPoolManager : MonoBehaviour
     {
         isCollected = collected;
 
-        if(objectSpawned.activeInHierarchy)
+        if (objectSpawned.activeInHierarchy)
         {
             if (type == PoolType.Collectable & isCollected)
             {
-                if (objectSpawned.name == "Apple(Clone)")
-                {
-                    StartCoroutine(MoveAndScaleToTarget(objectSpawned));
-                }
-                else
-                {
-                    StartCoroutine(CollectGoldenAppleMovement(objectSpawned));
-                }
+                CollectAppleMovement(objectSpawned);
             }
             else
                 objectSpawned.SetActive(false);
@@ -300,30 +293,34 @@ public class ObjectPoolManager : MonoBehaviour
         splitApplePool.Enqueue(apple);
     }
 
-    private IEnumerator CollectGoldenAppleMovement(GameObject goldenApple)
+    private void CollectAppleMovement(GameObject apple)
     {
-        // Disable the golden apple and spawn three smaller ones from the split apple pool
-        goldenApple.SetActive(false);
+        apple.SetActive(false);
+        Transform applePos = apple.transform;
 
-        GameObject apple1 = GetSplitAppleFromPool();
-        GameObject apple2 = GetSplitAppleFromPool();
-        GameObject apple3 = GetSplitAppleFromPool();
-
-        // If any of the apples are null (pool is empty), stop the coroutine
-        if (apple1 == null || apple2 == null || apple3 == null)
+        if (apple.name == "Apple(Clone)")
         {
-            Debug.LogWarning("Not enough apples in the split pool!"); // Debugging message
-            yield break;
+            GameObject singleApple = GetSplitAppleFromPool();
+            singleApple.transform.position = applePos.position + new Vector3(0.4f, 0, 0);
+
+            // Start moving each apple towards the target
+            StartCoroutine(MoveAndScaleToTarget(singleApple));
         }
+        else
+        {
+            GameObject apple1 = GetSplitAppleFromPool();
+            GameObject apple2 = GetSplitAppleFromPool();
+            GameObject apple3 = GetSplitAppleFromPool();
 
-        apple1.transform.position = goldenApple.transform.position + new Vector3(-0.4f, 0, 0);
-        apple2.transform.position = goldenApple.transform.position + new Vector3(0.4f, 0, 0);
-        apple3.transform.position = goldenApple.transform.position + new Vector3(0, 0.4f, 0);
+            apple1.transform.position = applePos.position + new Vector3(-0.4f, 0, 0);
+            apple2.transform.position = applePos.position + new Vector3(0.4f, 0, 0);
+            apple3.transform.position = applePos.position + new Vector3(0, 0.4f, 0);
 
-        // Start moving each apple towards the target
-        StartCoroutine(MoveAndScaleToTarget(apple1));
-        StartCoroutine(MoveAndScaleToTarget(apple2));
-        StartCoroutine(MoveAndScaleToTarget(apple3));
+            // Start moving each apple towards the target
+            StartCoroutine(MoveAndScaleToTarget(apple1));
+            StartCoroutine(MoveAndScaleToTarget(apple2));
+            StartCoroutine(MoveAndScaleToTarget(apple3));
+        }
     }
 
     private IEnumerator MoveAndScaleToTarget(GameObject smallApple)

@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class ScoreManager : MonoBehaviour
 {
     [Header("Counts needed for score")]
+    
     private int totalAppleCount;
     private int appleCount;
     private int attemptNumber;
@@ -20,8 +21,8 @@ public class ScoreManager : MonoBehaviour
     {
         attemptNumber = 0;
         appleCount = 0;
-        Actions.UpdateAttemptText(attemptNumber);
-        Actions.UpdateAppleText(appleCount, totalAppleCount);
+        //Actions.UpdateAttemptText(attemptNumber);
+        //Actions.UpdateAppleText(appleCount, totalAppleCount);
     }
 
     private void Update()
@@ -54,8 +55,8 @@ public class ScoreManager : MonoBehaviour
             case "apple": value = 1; break;
             case "golden": value = 3; break;
             default: value = 0; break;
-
         }
+
         appleCount += value;
         totalAppleCount += value;
         Actions.OnPlaySFX("Collection");
@@ -116,8 +117,8 @@ public class ScoreManager : MonoBehaviour
     {
         if (value >= 0)
             totalAppleCount = value;
-        else
-            totalAppleCount = 0;
+    
+        Actions.UpdateAppleText(appleCount, totalAppleCount);
     }
 
     public int GetAttemptCount()
@@ -128,5 +129,6 @@ public class ScoreManager : MonoBehaviour
     public void SetAttempt(int attempt)
     {
         attemptNumber = attempt;
+        Actions.UpdateAttemptText(attemptNumber);
     }    
 }
