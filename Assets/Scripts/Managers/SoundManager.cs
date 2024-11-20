@@ -24,9 +24,10 @@ public class SoundManager : MonoBehaviour
     [Header("SFX Clips")]
     [SerializeField] private AudioClip sfxCollectClip;
     [SerializeField] private AudioClip sfxCrashClip;
+    [SerializeField] private AudioClip sfxStaminaDrainedClip;
     [SerializeField] private AudioClip sfxVictoryClip;
     [SerializeField] private AudioClip sfxUpgradeClip;
-    [SerializeField] private AudioClip sfcSelectionClip;
+    [SerializeField] private AudioClip sfxSelectionClip;
 
     
     public void Start()
@@ -76,13 +77,14 @@ public class SoundManager : MonoBehaviour
             case "Victory": sfxSource.PlayOneShot(sfxVictoryClip, 1f); break;
             case "Collection": sfxSource.PlayOneShot(sfxCollectClip, 1f); break;
             case "Obstacle": sfxSource.PlayOneShot(sfxCrashClip, 1f); break;
+            case "Stamina": sfxSource.PlayOneShot(sfxStaminaDrainedClip, 1f); break;
             case "Upgrade": sfxSource.PlayOneShot(sfxUpgradeClip, 1f); break;
         }
     }
 
     public void PlaySelectionSFX()
     {
-        sfxSource.PlayOneShot(sfcSelectionClip, 1f);
+        sfxSource.PlayOneShot(sfxSelectionClip, 1f);
     }
 
     #region VolumeControls

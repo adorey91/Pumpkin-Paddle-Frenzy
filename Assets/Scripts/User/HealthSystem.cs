@@ -33,10 +33,12 @@ public class HealthSystem : MonoBehaviour
     private CircleCollider2D playerCollider;
 
     [Header("Damage Flicker Settings")]
-    public int flickerAmount = 3;
-    public float flickerDuration = 0.1f;
-    public Color flickerColor = Color.red;
+    [SerializeField] private int flickerAmount = 3;
+    [SerializeField] private float flickerDuration = 0.1f;
+    [SerializeField] private Color damageColor = Color.red;
+    [SerializeField] private Color staminaDrainColor;
     [SerializeField] private SpriteRenderer[] playerSprites;
+    private bool staminaHurt;
 
     [Header("Spawner / Drain control")]
     [SerializeField] private Spawner spawner;
@@ -94,6 +96,7 @@ public class HealthSystem : MonoBehaviour
             // If stamina hits zero, take damage but if the current health is greater than zero fill the stamina bar back to 1
             if (staminaImage.fillAmount <= 0)
             {
+                staminaHurt = true;
                 TakeDamage();
                 if (curHealth > 0)
                     staminaImage.fillAmount = 1;
@@ -108,7 +111,14 @@ public class HealthSystem : MonoBehaviour
     {
         curHealth--;
         healthFillImage.fillAmount = (float)curHealth / (float)maxHealth;
-        Actions.OnPlaySFX("Obstacle");
+
+        if(staminaHurt)
+        {
+            Actions.OnPlaySFX("Stamina");
+        }
+        else
+            Actions.OnPlaySFX("Obstacle");
+
         StartCoroutine(DamageFlicker());
     }
 
@@ -149,12 +159,22 @@ public class HealthSystem : MonoBehaviour
     private IEnumerator DamageFlicker()
     {
         playerCollider.enabled = false;
+        Color damageFlickerColor;
+
+        if (staminaHurt)
+        {
+            damageFlickerColor = staminaDrainColor;
+            staminaHurt = false;
+        }
+        else
+            damageFlickerColor = damageColor;
+
 
         for (int i = 0; i < flickerAmount; i++)
         {
             foreach (SpriteRenderer sprite in playerSprites)
             {
-                sprite.color = flickerColor;
+                sprite.color = damageFlickerColor;
             }
             yield return new WaitForSecondsRealtime(flickerDuration);
             foreach (SpriteRenderer sprite in playerSprites)

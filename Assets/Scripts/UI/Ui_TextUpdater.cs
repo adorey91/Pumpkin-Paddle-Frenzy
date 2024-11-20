@@ -19,6 +19,12 @@ public class Ui_TextUpdater : MonoBehaviour
     [SerializeField] private TMP_Text totalApples;
     [SerializeField] private TMP_Text attemptNumber;
 
+    [SerializeField] private TMP_Text gameEndResults;
+
+    private int _AppleTotalEndGame;
+    private int _AttemptTotalEndGame;
+    private int _CrashAmountsEndGame;
+
     #region EnableDisable
     private void OnEnable()
     {
@@ -48,12 +54,16 @@ public class Ui_TextUpdater : MonoBehaviour
         {
             attemptNumber.enabled = false;
         }
+
+        _AttemptTotalEndGame = attempt;
     }
 
     public void UpdateAppleCount(int appleCount, int totalApple)
     {
         applesThisRun.text = $"x {appleCount}";
         totalApples.text = $"x {totalApple}";
+
+        _AppleTotalEndGame += appleCount;
     }
 
     public void RunResultsText(TimeSpan time, TimeSpan bestTime, bool newBestRun, int appleCount)
@@ -66,6 +76,11 @@ public class Ui_TextUpdater : MonoBehaviour
         string appleText = appleCount == 1 ? "apple" : "apples";
 
         runResultsText.text = $"You survived for {time.Minutes:D2}:{time.Seconds:D2} \nCollected {appleCount} {appleText} this run!";
+    }
+
+    private void SetEndScreenText()
+    {
+        gameEndResults.text = $"Stats:\nYou collected {_AppleTotalEndGame} apples overall \nYou finished in {_AttemptTotalEndGame} attempts";
     }
 
     private void SetRunTime(TimeSpan bestTime, bool newBestRun)
