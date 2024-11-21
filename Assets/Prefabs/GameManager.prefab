@@ -6959,7 +6959,7 @@ MonoBehaviour:
   uiManager: {fileID: 7630019828870217378}
   scoreManager: {fileID: 4718690846639148293}
   state: 0
-  winningLevel: 5
+  winningLevel: 20
   gameIsEndless: 0
 --- !u!1 &2684655166495019565
 GameObject:
@@ -11420,7 +11420,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 247, y: 134}
+  m_AnchoredPosition: {x: 328, y: 134}
   m_SizeDelta: {x: 900, y: 800}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &4190850852579228384
@@ -20867,8 +20867,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -150, y: -98.3}
-  m_SizeDelta: {x: 300, y: 390}
+  m_AnchoredPosition: {x: -150, y: 100}
+  m_SizeDelta: {x: 300, y: 175}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &622546577858984046
 MonoBehaviour:

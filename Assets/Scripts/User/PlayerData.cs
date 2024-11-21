@@ -8,7 +8,8 @@ public class PlayerData
 {
     public int healthAmount;
     public float staminaDrain;
-    public int appleCount;
+    public int availableAppleCount;
+    public int lifetimeAppleCount;
     public int attemptsMade;
     public bool onScreenPause;
     public bool onScreenControls;

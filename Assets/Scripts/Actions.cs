@@ -26,7 +26,7 @@ public static class Actions
     // UI Actions
     public static Action OnScreenLoad;
     public static Action<int> UpdateAttemptText;
-    public static Action<int, int> UpdateAppleText;
+    public static Action<int, int, int> UpdateAppleText;
     public static Action<TimeSpan, TimeSpan, bool, int> UpdateResultsText;
     public static Action<TimeSpan> UpdateMenuBestRun;
     public static Action<float> SpeedChange;

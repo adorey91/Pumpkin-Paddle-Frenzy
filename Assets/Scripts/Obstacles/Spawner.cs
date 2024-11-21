@@ -11,61 +11,59 @@ public class Spawner : MonoBehaviour
     private CustomTimer recalculateTimer; // used to recalculate spawning speeds/spawn values 
 
     [Header("Spawning Base Values")]
-    [SerializeField] private float obstacleSpawnTime = 5f;
-    [Range(0f, 0.1f)] public float obstacleSpawnFactor = 0.075f;
-    [Range(0f, 1f)] public float collectableProbability = 0.4f;
-    [Range(0f, 1f)] public float kayakProbability = 0.3f;
-    [SerializeField] private float calculateTime = 10f;
-    private float _obstacleSpawnTime;
+    [SerializeField] private float obstacleSpawnTime = 5f; // time between spawns
+    [Range(0f, 0.1f)]
+    [SerializeField] private float obstacleSpawnFactor = 0.075f; // used to increase the spawn time
+    [Range(0f, 1f)]
+    [SerializeField] private float collectableProbability = 0.4f; // probability of spawning a collectable
+    [Range(0f, 1f)]
+    [SerializeField] private float kayakProbability = 0.3f; // probability of spawning a kayak
+    [SerializeField] private float calculateTime = 10f; // time between recalculating the spawn values (starting value)
+    private float recalculateTime; // used to store the current recalculate time
+    private float _obstacleSpawnTime; // used to store the current spawn time
     private float timeAlive = 1; // spawner uses this to increase the spawntime & speed
-    private float timeAliveInRun;
 
-    private int level = 0; // keep track of times the time increased
-    private float levelInFloat = 0; // for progress bar
+    // Endless Mode Stats
+    private float timeAliveInRun; // used to keep track of time alive in the run - for endless mode
 
-    private float targetValue; // keep track of level float
-    private int winningLevel;
-    private bool finishSpawned = false;
-    internal bool spawnedFirstObstacle = false;
+    [Header("Level Progress Stats")]
     [SerializeField] private Slider levelProgressSlider;
     private GameObject levelSlider;
-    private bool increaseLevel;
+    bool isLevelSliderActive; // used to keep track of the level slider
+    private int level = 0; // keep track of times the time increased
+    private float levelInFloat = 0; // for progress bar
+    private bool increaseLevel; // used to keep track of when to increase the level
 
+    private int winningLevel; // the level the player needs to reach to win the game
+    private bool finishSpawned = false; // used to keep track of if the finish line was spawned
+    internal bool spawnedFirstObstacle = false; // used to keep track of if the first obstacle was spawned
 
 
     private void Start()
     {
+        // Set up the timers
         obstacleSpawnTimer = new CustomTimer(obstacleSpawnTime);
         recalculateTimer = new CustomTimer(calculateTime);
+
+        // Get the winning level from the game manager
         winningLevel = GameManager.instance.winningLevel;
 
+        // Set up the level slider
         levelSlider = levelProgressSlider.gameObject;
         levelProgressSlider.maxValue = winningLevel * calculateTime;
         levelProgressSlider.value = levelInFloat;
 
+        // Reset the values
         ResetValues();
     }
 
     private void Update()
     {
+        // if the game is playing and the finish line hasnt been spawned
         if (!finishSpawned && GameManager.instance.isPlaying)
         {
-            SpawnLoop();
-         
-            if(!GameManager.instance.gameIsEndless)
-            {
-                if (!levelSlider.activeSelf)
-                    levelSlider.SetActive(true);
-
-                UpdateProgressSlider();
-            }
-            else
-            {
-                if (levelSlider.activeSelf)
-                    levelSlider.SetActive(false);
-                else
-                    return;
-            }
+            HandleSpawning();
+            HandleProgressSlider();
         }
     }
 
@@ -86,6 +84,30 @@ public class Spawner : MonoBehaviour
     }
     #endregion
 
+    private void HandleProgressSlider()
+    {
+        // if game is endless turn off the level slider and dont update it
+        if (GameManager.instance.gameIsEndless)
+        {
+            if (isLevelSliderActive)
+            {
+                levelSlider.SetActive(false);
+                isLevelSliderActive = false;
+            }
+        }
+        else
+        {
+            // if game is not endless turn on the level slider and update it
+            if (!isLevelSliderActive)
+            {
+                levelSlider.SetActive(true);
+                isLevelSliderActive = true;
+            }
+
+            UpdateProgressSlider();
+        }
+    }
+
     private void CalculateFactors()
     {
         _obstacleSpawnTime = obstacleSpawnTime / Mathf.Pow(timeAlive, obstacleSpawnFactor);
@@ -96,9 +118,8 @@ public class Spawner : MonoBehaviour
     private void UpdateProgressSlider()
     {
         levelInFloat += Time.deltaTime;
-        // Update the progress bar based on fractional timeAlive progress rather than level increments
-       
-        if(increaseLevel)
+
+        if (increaseLevel)
         {
             level++;
             increaseLevel = false;
@@ -111,10 +132,11 @@ public class Spawner : MonoBehaviour
 
     #region Spawn
     // Spawn Loop
-    private void SpawnLoop()
+    private void HandleSpawning()
     {
         timeAlive += Time.deltaTime;
 
+        // if the recalculate timer is done, calculate the new factors
         if (recalculateTimer.UpdateTimer(Time.deltaTime))
         {
             increaseLevel = true;
@@ -123,6 +145,7 @@ public class Spawner : MonoBehaviour
             recalculateTimer.StartTimer(calculateTime);
         }
 
+        // if the obstacle spawn timer is done, spawn an obstacle
         if (obstacleSpawnTimer.UpdateTimer(Time.deltaTime))
         {
             if (!spawnedFirstObstacle)

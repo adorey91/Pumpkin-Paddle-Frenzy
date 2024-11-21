@@ -66,12 +66,12 @@ public class Ui_TextUpdater : MonoBehaviour
         _AttemptTotalEndGame = attempt;
     }
 
-    public void UpdateAppleCount(int appleCount, int totalApple)
+    public void UpdateAppleCount(int currentRunAppleCount, int availableAppleCount, int lifetimeAppleCount)
     {
-        applesThisRun.text = $"x {appleCount}";
-        totalApples.text = $"x {totalApple}";
+        applesThisRun.text = $"x {currentRunAppleCount}";
+        totalApples.text = $"x {availableAppleCount}";
 
-        
+        _AppleTotalEndGame = lifetimeAppleCount;
     }
 
     public void RunResultsText(TimeSpan time, TimeSpan bestTime, bool newBestRun, int appleCount)

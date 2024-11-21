@@ -64,7 +64,8 @@ public class SaveManager : MonoBehaviour
             }
 
             // SavePlayerData other stats
-            data.appleCount = scoreManager.GetTotalAppleCount();
+            data.availableAppleCount = scoreManager.GetTotalAppleCount();
+            data.lifetimeAppleCount = scoreManager.GetLifetimeAppleCount();
             data.attemptsMade = scoreManager.GetAttemptCount();
             data.onScreenControls = onScreenButtonControl.activeControls;
             data.onScreenPause = onScreenButtonControl.activePause;
@@ -130,7 +131,7 @@ public class SaveManager : MonoBehaviour
             }
 
             // Load Stats
-            scoreManager.SetTotalAppleCount(data.appleCount);
+            scoreManager.SetTotalAppleCount(data.availableAppleCount, data.lifetimeAppleCount);
             scoreManager.SetAttempt(data.attemptsMade);
             onScreenButtonControl.activePause = data.onScreenPause;
             onScreenButtonControl.activeControls = data.onScreenControls;
