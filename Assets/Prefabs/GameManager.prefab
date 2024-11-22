@@ -18767,7 +18767,7 @@ MonoBehaviour:
   sfxStaminaDrainedClip: {fileID: 0}
   sfxVictoryClip: {fileID: 8300000, guid: 2f464e78f91caaa43854a9c17f705e36, type: 3}
   sfxUpgradeClip: {fileID: 8300000, guid: 509c15495ff7a244f818dff9e62552b5, type: 3}
-  sfxSelectionClip: {fileID: 0}
+  sfxSelectionClip: {fileID: 8300000, guid: daf016044ad619b4cb1e736190ecdb9c, type: 3}
 --- !u!1 &6488505358720653829
 GameObject:
   m_ObjectHideFlags: 0
