@@ -46,15 +46,21 @@ public class PlayerController : MonoBehaviour
 
     private void Movement()
     {
-        // if there's input, move the player
-        if(playerMovement != Vector2.zero)
+        if (playerMovement != Vector2.zero)
+        {
+            // Set velocity based on player input
             currentVelocity = new Vector2(playerMovement.x, 0) * moveSpeed;
-        // if there's no input, decelerate the player based on the deceleration factor
+        }
         else
-            currentVelocity = Vector2.Lerp(currentVelocity, Vector2.zero, decelerationFactor * Time.deltaTime);
+        {
+            // Decelerate smoothly
+            currentVelocity = Vector2.MoveTowards(currentVelocity, Vector2.zero, decelerationFactor * Time.deltaTime);
+        }
 
-        rb.MovePosition(rb.position + currentVelocity * Time.deltaTime);
+        // Apply movement
+        rb.MovePosition(rb.position + currentVelocity * Time.fixedDeltaTime);
     }
+
 
     public void Move(InputAction.CallbackContext context)
     {
@@ -76,17 +82,17 @@ public class PlayerController : MonoBehaviour
     public void MoveLeftButtonPress()
     {
         isMovingLeft = true;
-        isMovingRight = false; // Disable right movement if left is pressed
-        playerMovement = new Vector2(-1, 0); // Simulate left movement
+        isMovingRight = false;
+        playerMovement = Vector2.Lerp(playerMovement, new Vector2(-1, 0), decelerationFactor * Time.deltaTime);
     }
 
-    // Used for touch screen when right button is pressed
     public void MoveRightButtonPress()
     {
         isMovingRight = true;
-        isMovingLeft = false; // Disable left movement if right is pressed
-        playerMovement = new Vector2(1, 0); // Simulate right movement
+        isMovingLeft = false;
+        playerMovement = Vector2.Lerp(playerMovement, new Vector2(1, 0), decelerationFactor * Time.deltaTime);
     }
+
 
     // Optional: if you want to stop movement when the button is released
     public void StopMovement()

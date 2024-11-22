@@ -23933,7 +23933,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 4
-  decelerationFactor: 3
+  decelerationFactor: 8.5
 --- !u!1 &6453756804283558033
 GameObject:
   m_ObjectHideFlags: 0
@@ -28545,8 +28545,6 @@ MonoBehaviour:
   pauseButtonToggles:
   - {fileID: 275033628414831219}
   - {fileID: 5154657661899713843}
-  onScreenControls: {fileID: 0}
-  pauseButton: {fileID: 0}
 --- !u!1 &8005986581715897675
 GameObject:
   m_ObjectHideFlags: 0

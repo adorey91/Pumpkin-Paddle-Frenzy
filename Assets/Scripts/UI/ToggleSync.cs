@@ -58,7 +58,8 @@ public class ToggleSync : MonoBehaviour
         {
             onScreenControls.SetActive(currentToggle.isOn);
         }
-        else if (type == ToggleType.PauseButton)
+        
+        if (type == ToggleType.PauseButton)
         {
             pauseButton.SetActive(currentToggle.isOn);
         }

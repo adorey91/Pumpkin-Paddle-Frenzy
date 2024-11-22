@@ -7,8 +7,7 @@ public class ToggleManager : MonoBehaviour
     public ToggleSync[] onScreenControlToggles;
     public ToggleSync[] pauseButtonToggles;
 
-    public GameObject onScreenControls;
-    public GameObject pauseButton;
+  
 
     // Method to set the OnScreenControls toggle state
     public void SetOnScreenControlsState(bool state)
