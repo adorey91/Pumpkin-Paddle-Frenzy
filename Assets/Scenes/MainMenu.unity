@@ -252,10 +252,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
-    - target: {fileID: 5427190459688337095, guid: 02c71e55e01ab1640ab37432dc638c6e, type: 3}
-      propertyPath: decelerationFactor
-      value: 8.5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

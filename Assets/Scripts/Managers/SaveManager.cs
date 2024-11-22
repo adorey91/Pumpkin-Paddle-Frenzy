@@ -165,5 +165,8 @@ public class SaveManager : MonoBehaviour
             File.Delete(GetSavePath() + "/playerInfo.dat");
             Debug.Log("File Deleted");
         }
+
+        scoreManager.SetAttempt(0);
+        scoreManager.SetTotalAppleCount(0, 0);
     }
 }

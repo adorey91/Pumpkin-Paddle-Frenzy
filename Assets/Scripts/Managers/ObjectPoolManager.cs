@@ -7,7 +7,7 @@ using UnityEngine;
 public class ObjectPoolManager : MonoBehaviour
 {
     [Header("Obstacle Base Values")]
-    private float objectBaseSpeed = 1f;
+    private float objectBaseSpeed = 1.5f;
     [Range(0f, 1f)] public float obstacleSpeedFactor = 0.15f;
 
     [SerializeField] private List<GameObject> prefabObjects; // List of all prefab objects
@@ -262,7 +262,7 @@ public class ObjectPoolManager : MonoBehaviour
     }
     #endregion
 
-    // Updates pool speed based on timeAlive value
+    // Updates pool currentSpeed based on timeAlive value
     private void UpdatePoolSpeed(float timeAlive)
     {
         float newSpeed = objectBaseSpeed * Mathf.Pow(timeAlive, obstacleSpeedFactor);

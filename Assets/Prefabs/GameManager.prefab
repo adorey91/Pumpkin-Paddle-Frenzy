@@ -12105,10 +12105,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obstacleSpawnTime: 3
-  obstacleSpawnFactor: 0.0507
-  collectableProbability: 0.45
+  obstacleSpawnFactor: 0.05
+  collectableProbability: 0.3
   kayakProbability: 0.2
-  calculateTime: 10
+  calculateTime: 30
   levelProgressSlider: {fileID: 7988608150499525659}
 --- !u!1 &3566441075851293831
 GameObject:

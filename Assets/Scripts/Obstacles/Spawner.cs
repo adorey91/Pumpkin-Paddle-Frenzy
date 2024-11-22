@@ -21,7 +21,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float calculateTime = 10f; // time between recalculating the spawn values (starting value)
     private float recalculateTime; // used to store the current recalculate time
     private float _obstacleSpawnTime; // used to store the current spawn time
-    private float timeAlive = 1; // spawner uses this to increase the spawntime & speed
+    private float timeAlive = 1; // spawner uses this to increase the spawntime & currentSpeed
 
     // Endless Mode Stats
     private float timeAliveInRun; // used to keep track of time alive in the run - for endless mode
@@ -50,8 +50,7 @@ public class Spawner : MonoBehaviour
 
         // Set up the level slider
         levelSlider = levelProgressSlider.gameObject;
-        levelProgressSlider.maxValue = winningLevel * calculateTime;
-        levelProgressSlider.value = levelInFloat;
+        UpdateMaxProgressBarValue();
 
         // Reset the values
         ResetValues();
@@ -108,10 +107,26 @@ public class Spawner : MonoBehaviour
         }
     }
 
+    private void UpdateMaxProgressBarValue()
+    {
+        float maxValue = 0f;
+        float tempTimeAlive = 1f;
+
+        // Calculate the max value of the progress bar
+        for (int i = 0; i < winningLevel; i++)
+        {
+            float recalculation = calculateTime / Mathf.Pow(tempTimeAlive, 0.15f);
+            maxValue += recalculation;
+            tempTimeAlive += recalculation;
+        }
+        levelProgressSlider.maxValue = maxValue;
+        levelProgressSlider.value = 0;
+    }
+
     private void CalculateFactors()
     {
         _obstacleSpawnTime = obstacleSpawnTime / Mathf.Pow(timeAlive, obstacleSpawnFactor);
-
+        recalculateTime = calculateTime / Mathf.Pow(timeAlive, 0.15f);
         Actions.SpeedChange(timeAlive);
     }
 
@@ -142,7 +157,7 @@ public class Spawner : MonoBehaviour
             increaseLevel = true;
             CalculateFactors();
             Actions.SpeedChange(timeAlive);
-            recalculateTimer.StartTimer(calculateTime);
+            recalculateTimer.StartTimer(recalculateTime);
         }
 
         // if the obstacle spawn timer is done, spawn an obstacle
@@ -208,7 +223,7 @@ public class Spawner : MonoBehaviour
 
     private void ResetProcessSlider()
     {
-        levelProgressSlider.value = 0;
+        UpdateMaxProgressBarValue();
     }
     #endregion
 }
