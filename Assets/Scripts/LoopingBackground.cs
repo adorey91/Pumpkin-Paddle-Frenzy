@@ -42,21 +42,38 @@ public class LoopingBackground : MonoBehaviour
         }
     }
 
-    private void IncreaseSpeed(float timeAlive)
-    {
-        newSpeed = baseSpeed * Mathf.Pow(timeAlive, 0.2f);
-
-        increasingSpeed = true;
-    }
-
     private void IncreasingGradualSpeed()
     {
+        // Increment progress proportionally based on smoothSpeedTransitionTime
         speedLerpProgress += Time.deltaTime / smoothSpeedTransitionTime;
+        speedLerpProgress = Mathf.Clamp01(speedLerpProgress);
+
+        // Smoothly interpolate between currentSpeed and newSpeed
         currentSpeed = Mathf.Lerp(currentSpeed, newSpeed, speedLerpProgress);
 
-        if (currentSpeed == newSpeed)
-            increasingSpeed = false;
+        // Stop increasing when close enough to newSpeed
+        if (Mathf.Abs(currentSpeed - newSpeed) < 0.001f)
+        {
+            currentSpeed = newSpeed; // Snap to target
+            increasingSpeed = false; // Stop interpolation
+        }
     }
+
+
+    private void IncreaseSpeed(float timeAlive)
+    {
+        // Adjust the growth curve of speed to control how fast it increases
+        newSpeed = baseSpeed * Mathf.Pow(timeAlive, 0.2f);
+
+        // Reset interpolation progress
+        speedLerpProgress = 0f;
+        increasingSpeed = true;
+
+        // Debug log to verify speed values
+        Debug.Log($"Time Alive: {timeAlive}, New Speed: {newSpeed}");
+    }
+
+
 
     private void ResetSpeed()
     {
