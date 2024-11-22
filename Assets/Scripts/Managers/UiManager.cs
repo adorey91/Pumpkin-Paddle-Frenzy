@@ -32,6 +32,8 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject ui_Controls;
     [SerializeField] private GameObject ui_Credits;
 
+    [Header("On ScreenButtons")]
+    [SerializeField] private ToggleManager toggleManager;
 
     public void MainMenu_UI() => SetActiveUI(ui_MainMenu);
     public void Pause_UI() => SetActiveUI(ui_Pause);
@@ -67,8 +69,10 @@ public class UiManager : MonoBehaviour
                     },
                     () =>
                     {
-                        Instructions_UI();
                         Actions.DeleteSave();
+                        toggleManager.SetOnScreenControlsState(true);
+                        toggleManager.SetPauseButtonState(true);
+                        Instructions_UI();
                     }
                     ); break;
             case "quit":

@@ -7,10 +7,13 @@ public class PlayerController : MonoBehaviour
     // playerMovement variables
     [Header("Movement Variables")]
     private float baseMoveSpeed;
-    public float moveSpeed = 4f; // Speed of player left and right playerMovement
+    [SerializeField] private float moveSpeed = 4f; // Speed of player left and right playerMovement
+    [SerializeField] private float decelerationFactor = 3f; // How fast the player stops moving
 
     private Rigidbody2D rb;
     private Vector2 playerMovement;
+    private Vector2 currentVelocity; // Used to store the current velocity of the player
+
     private bool isMovingLeft = false;
     private bool isMovingRight = false;
 
@@ -43,7 +46,14 @@ public class PlayerController : MonoBehaviour
 
     private void Movement()
     {
-        rb.MovePosition(rb.position + new Vector2(playerMovement.x, 0) * moveSpeed * Time.deltaTime);
+        // if there's input, move the player
+        if(playerMovement != Vector2.zero)
+            currentVelocity = new Vector2(playerMovement.x, 0) * moveSpeed;
+        // if there's no input, decelerate the player based on the deceleration factor
+        else
+            currentVelocity = Vector2.Lerp(currentVelocity, Vector2.zero, decelerationFactor * Time.deltaTime);
+
+        rb.MovePosition(rb.position + currentVelocity * Time.deltaTime);
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -61,9 +71,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Used for touch screen 
     #region TouchScreenMovement
-    // Called when left button is pressed
+    // used for touch screen when left button is pressed
     public void MoveLeftButtonPress()
     {
         isMovingLeft = true;
@@ -71,7 +80,7 @@ public class PlayerController : MonoBehaviour
         playerMovement = new Vector2(-1, 0); // Simulate left movement
     }
 
-    // Called when right button is pressed
+    // Used for touch screen when right button is pressed
     public void MoveRightButtonPress()
     {
         isMovingRight = true;

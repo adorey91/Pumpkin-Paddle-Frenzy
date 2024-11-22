@@ -25,7 +25,7 @@ public class VideoOptions : MonoBehaviour
 
         if (!foundRes)
         {
-            Debug.Log($"Resolution not found, creating new resolution");
+            //Debug.Log($"Resolution not found, creating new resolution");
             ResItem newRes = new ResItem();
             newRes.horizontal = Screen.width;
             newRes.vertical = Screen.height;

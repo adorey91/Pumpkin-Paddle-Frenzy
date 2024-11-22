@@ -9,7 +9,7 @@ public class SaveManager : MonoBehaviour
     [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private UpgradeManager upgradeManager;
     [SerializeField] private UiManager uiManager;
-    [SerializeField] private OnScreenButtonControl onScreenButtonControl;
+    [SerializeField] private ToggleManager toggleManager;
 
     private void OnEnable()
     {
@@ -67,8 +67,8 @@ public class SaveManager : MonoBehaviour
             data.availableAppleCount = scoreManager.GetTotalAppleCount();
             data.lifetimeAppleCount = scoreManager.GetLifetimeAppleCount();
             data.attemptsMade = scoreManager.GetAttemptCount();
-            data.onScreenControls = onScreenButtonControl.activeControls;
-            data.onScreenPause = onScreenButtonControl.activePause;
+            data.onScreenControls = toggleManager.GetOnScreenControls();
+            data.onScreenPause = toggleManager.GetPauseButton();
 
             bf.Serialize(file, data);
             file.Close();
@@ -133,8 +133,8 @@ public class SaveManager : MonoBehaviour
             // Load Stats
             scoreManager.SetTotalAppleCount(data.availableAppleCount, data.lifetimeAppleCount);
             scoreManager.SetAttempt(data.attemptsMade);
-            onScreenButtonControl.activePause = data.onScreenPause;
-            onScreenButtonControl.activeControls = data.onScreenControls;
+            toggleManager.SetOnScreenControlsState(data.onScreenControls);
+            toggleManager.SetPauseButtonState(data.onScreenPause);
 
             Ui_TextUpdater._AppleTotalEndGame = upgradeManager.GetTotalCost();
 
