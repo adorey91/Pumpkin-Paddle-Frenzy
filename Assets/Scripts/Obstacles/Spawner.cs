@@ -12,7 +12,7 @@ public class Spawner : MonoBehaviour
 
     [Header("Spawning Base Values")]
     [SerializeField] private float obstacleSpawnTime = 5f; // time between spawns
-    [Range(0f, 0.1f)]
+    [Range(0f, 1)]
     [SerializeField] private float obstacleSpawnFactor = 0.075f; // used to increase the spawn time
     [Range(0f, 1f)]
     [SerializeField] private float collectableProbability = 0.4f; // probability of spawning a collectable

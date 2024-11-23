@@ -7078,7 +7078,7 @@ MonoBehaviour:
   uiManager: {fileID: 4708413020168892547}
   scoreManager: {fileID: 9145115147999723359}
   state: 0
-  winningLevel: 20
+  winningLevel: 18
   gameIsEndless: 0
 --- !u!1 &2473241871314512731
 GameObject:
@@ -12105,7 +12105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obstacleSpawnTime: 3
-  obstacleSpawnFactor: 0.05
+  obstacleSpawnFactor: 0.18
   collectableProbability: 0.3
   kayakProbability: 0.2
   calculateTime: 30
@@ -19069,7 +19069,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48c43578b8842844da29ee648b09b2f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obstacleSpeedFactor: 0.224
+  obstacleSpeedFactor: 0.2
   prefabObjects:
   - {fileID: 1475980636802886061, guid: ad5cd9a75476e8b4dbdce128e27f1bbe, type: 3}
   - {fileID: 6784650486199813947, guid: 2a86691e6712d4740a7dafe42d9f94e2, type: 3}

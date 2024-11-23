@@ -8,8 +8,8 @@ public class LoopingBackground : MonoBehaviour
     private float currentSpeed;
     private float newSpeed;
     private Renderer backgroundRenderer;
-    private float smoothSpeedTransitionTime = 1.0f; // Time it takes to reach the target currentSpeed
-    private float speedLerpProgress = 0f; // Keeps track of the interpolation progress
+    private float smoothSpeedTransitionTime = 10f; // Time it takes to reach the target currentSpeed
+    private float speedStepProgress = 0f; // Keeps track of the interpolation progress
     bool increasingSpeed = false; // Used to keep track of if the currentSpeed is increasing
 
     //[SerializeField] private Spawner spawner;
@@ -45,11 +45,11 @@ public class LoopingBackground : MonoBehaviour
     private void IncreasingGradualSpeed()
     {
         // Increment progress proportionally based on smoothSpeedTransitionTime
-        speedLerpProgress += Time.deltaTime / smoothSpeedTransitionTime;
-        speedLerpProgress = Mathf.Clamp01(speedLerpProgress);
+        speedStepProgress += Time.deltaTime / smoothSpeedTransitionTime;
+        speedStepProgress = Mathf.Clamp01(speedStepProgress);
 
         // Smoothly interpolate between currentSpeed and newSpeed
-        currentSpeed = Mathf.Lerp(currentSpeed, newSpeed, speedLerpProgress);
+        currentSpeed = Mathf.SmoothStep(currentSpeed, newSpeed, speedStepProgress);
 
         // Stop increasing when close enough to newSpeed
         if (Mathf.Abs(currentSpeed - newSpeed) < 0.001f)
@@ -66,7 +66,7 @@ public class LoopingBackground : MonoBehaviour
         newSpeed = baseSpeed * Mathf.Pow(timeAlive, 0.2f);
 
         // Reset interpolation progress
-        speedLerpProgress = 0f;
+        speedStepProgress = 0f;
         increasingSpeed = true;
 
         // Debug log to verify speed values
