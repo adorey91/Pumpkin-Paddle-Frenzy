@@ -128,6 +128,8 @@ public class ScoreManager : MonoBehaviour
 
         lifetimeAppleCount = LifetimeCount;
 
+        Debug.Log("Set Total Apple Count: " + availableAppleCount + "Lifetime apple count: " + lifetimeAppleCount);
+
         Actions.UpdateAppleText(currentRunAppleCount, availableAppleCount, lifetimeAppleCount);
     }
 
