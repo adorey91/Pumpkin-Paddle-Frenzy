@@ -325,18 +325,41 @@ public class ObjectPoolManager : MonoBehaviour
 
     private IEnumerator MoveAndScaleToTarget(GameObject smallApple)
     {
+        Vector3 startPosition = smallApple.transform.position;
+        Vector3 endPosition = collectableTargetPos.position;
+
+        float moveDuration = 1f; // Adjust based on your desired speed
+        float elapsedTime = 0f;
+        float arcHeight = 2f; // Adjust for the height of the curve
+
         Vector3 targetScale = Vector3.zero;
-        float moveSpeed = speedToTarget;
         float scaleSpeed = 2f;
 
-        while (Vector3.Distance(smallApple.transform.position, collectableTargetPos.position) > 0.1f)
+        while (elapsedTime < moveDuration)
         {
-            smallApple.transform.position = Vector3.MoveTowards(smallApple.transform.position, collectableTargetPos.position, Time.unscaledDeltaTime * moveSpeed);
+            elapsedTime += Time.unscaledDeltaTime;
+
+            float t = elapsedTime / moveDuration;
+            t = Mathf.Clamp01(t);
+
+            // Interpolate position along a parabolic path
+            float height = Mathf.Sin(t * Mathf.PI) * arcHeight; // Sin curve for the height
+            Vector3 nextPosition = Vector3.Lerp(startPosition, endPosition, t);
+            nextPosition.y += height;
+
+            smallApple.transform.position = nextPosition;
+
+            // Scale down the apple
             smallApple.transform.localScale = Vector3.Lerp(smallApple.transform.localScale, targetScale, Time.unscaledDeltaTime * scaleSpeed);
+
             yield return null;
         }
 
-        // Once at the target, return the small apple to its pool
+        // Ensure the apple reaches the exact end position
+        smallApple.transform.position = endPosition;
+        smallApple.transform.localScale = targetScale;
+
+        // Return the small apple to its pool
         ReturnSplitAppleToPool(smallApple);
     }
 }

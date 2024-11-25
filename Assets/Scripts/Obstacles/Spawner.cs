@@ -198,7 +198,7 @@ public class Spawner : MonoBehaviour
     {
         float value = Random.Range(0f, 1f);
 
-        if (value < kayakProbability)
+        if (value < kayakProbability & level >= 6)
             Actions.OnSpawn(PoolType.Kayak);
         else
             Actions.OnSpawn(PoolType.Obstacle);

@@ -70,7 +70,7 @@ public class LoopingBackground : MonoBehaviour
         increasingSpeed = true;
 
         // Debug log to verify speed values
-        Debug.Log($"Time Alive: {timeAlive}, New Speed: {newSpeed}");
+        //Debug.Log($"Time Alive: {timeAlive}, New Speed: {newSpeed}");
     }
 
 

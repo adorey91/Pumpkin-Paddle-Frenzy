@@ -19,6 +19,7 @@ public class Ui_TextUpdater : MonoBehaviour
     [SerializeField] private TMP_Text totalApples;
     [SerializeField] private TMP_Text attemptNumber;
 
+    [SerializeField] private TMP_Text gameEndAppleResults;
     [SerializeField] private TMP_Text gameEndResults;
 
     public static int _AppleTotalEndGame;
@@ -83,12 +84,12 @@ public class Ui_TextUpdater : MonoBehaviour
 
         string appleText = appleCount == 1 ? "apple" : "apples";
 
-        runResultsText.text = $"You survived for {time.Minutes:D2}:{time.Seconds:D2} \nCollected {appleCount} {appleText} this run!";
+        runResultsText.text = $"x {appleCount}";
     }
 
     private void SetEndScreenText()
     {
-        gameEndResults.text = $"Stats:\nYou collected {_AppleTotalEndGame} apples overall \nYou finished in {_AttemptTotalEndGame} attempts";
+        gameEndResults.text = $"End Game Stats:\nCollected {_AppleTotalEndGame} apples overall \nFinished in {_AttemptTotalEndGame} attempts";
     }
 
     private void SetRunTime(TimeSpan bestTime, bool newBestRun)

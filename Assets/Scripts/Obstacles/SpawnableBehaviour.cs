@@ -14,7 +14,7 @@ public class SpawnableBehaviour : MonoBehaviour
 
     private void FixedUpdate()
     {
-            rb.MovePosition(rb.position + (Vector2.down * spawnableObject.speed * Time.deltaTime));
+        rb.MovePosition(rb.position + (Vector2.down * spawnableObject.speed * Time.deltaTime));
     }
 
     public SpawnableObject GetSpawnableObject() { return spawnableObject; }
