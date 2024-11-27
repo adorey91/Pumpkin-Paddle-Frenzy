@@ -4835,7 +4835,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &9076410420904966116
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6172,7 +6172,7 @@ MonoBehaviour:
   mainClip: {fileID: 8300000, guid: 18dbd8209145ce24e8bcba7ef2af519c, type: 3}
   gameplayClip: {fileID: 8300000, guid: d825922ffe1863847b91ec14792526ed, type: 3}
   sfxCollectClip: {fileID: 8300000, guid: d519b4497f511c347898afacb9e719cc, type: 3}
-  sfxCrashClip: {fileID: 8300000, guid: 511865a84bc7948449893d097311d45b, type: 3}
+  sfxCrashClip: {fileID: 8300000, guid: 91d3deed2930389488437dafcca57e84, type: 3}
   sfxStaminaDrainedClip: {fileID: 8300000, guid: 7312cc8e9edfd8b49b68a893ba266a09, type: 3}
   sfxVictoryClip: {fileID: 8300000, guid: 2f464e78f91caaa43854a9c17f705e36, type: 3}
   sfxUpgradeClip: {fileID: 8300000, guid: 509c15495ff7a244f818dff9e62552b5, type: 3}
@@ -9778,7 +9778,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e051ec5f53d187a4f89b7b008a83feba, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6d7e832c26e8017448de1ce14f51a6fd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -19176,7 +19176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9716981, g: 0.90434235, b: 0.79294235, a: 1}
+  m_Color: {r: 1, g: 0.8956632, b: 0.8160377, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -19214,8 +19214,8 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_NormalColor: {r: 0.9150943, g: 0.88487893, b: 0.88487893, a: 1}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -21934,14 +21934,14 @@ RectTransform:
   m_GameObject: {fileID: 6095199494010843171}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.2, y: 1.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9076410420904966116}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -239}
+  m_AnchoredPosition: {x: 100, y: -217.3}
   m_SizeDelta: {x: 1200, y: 150}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &2462911264605929969
@@ -21988,8 +21988,8 @@ MonoBehaviour:
   m_fontColorGradient:
     topLeft: {r: 0.9811321, g: 0.86080456, b: 0.8006408, a: 1}
     topRight: {r: 0.9811321, g: 0.86080456, b: 0.8006408, a: 1}
-    bottomLeft: {r: 0.7686275, g: 0.36078432, b: 0.14901961, a: 1}
-    bottomRight: {r: 0.7686275, g: 0.36078432, b: 0.14901961, a: 1}
+    bottomLeft: {r: 0.735849, g: 0.33598796, b: 0.12842648, a: 1}
+    bottomRight: {r: 0.735849, g: 0.33598796, b: 0.12842648, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
@@ -24075,7 +24075,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &91854954343654439
 RectTransform:
   m_ObjectHideFlags: 0
@@ -29981,7 +29981,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 0.9137255, g: 0.8862745, b: 0.8862745, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -31357,7 +31357,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 0.9137255, g: 0.8862745, b: 0.8862745, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
