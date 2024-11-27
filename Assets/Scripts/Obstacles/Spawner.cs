@@ -22,6 +22,7 @@ public class Spawner : MonoBehaviour
     private float recalculateTime; // used to store the current recalculate time
     private float _obstacleSpawnTime; // used to store the current spawn time
     private float timeAlive = 1; // spawner uses this to increase the spawntime & currentSpeed
+    private bool canSpawn = true;
 
     // Endless Mode Stats
     private float timeAliveInRun; // used to keep track of time alive in the run - for endless mode
@@ -198,10 +199,16 @@ public class Spawner : MonoBehaviour
     {
         float value = Random.Range(0f, 1f);
 
-        if (value < kayakProbability & level >= 6)
+        if (value < kayakProbability & level >= 6 && canSpawn)
+        {
             Actions.OnSpawn(PoolType.Kayak);
+            canSpawn = false;
+        }
         else
+        {
             Actions.OnSpawn(PoolType.Obstacle);
+            canSpawn = true;
+        }
 
     }
     #endregion
