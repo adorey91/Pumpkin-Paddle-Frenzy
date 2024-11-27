@@ -21,6 +21,14 @@ public class ObjectPoolManager : MonoBehaviour
     private Queue<GameObject> splitApplePool;
     [SerializeField] private ScoreManager scoreManager;
 
+
+    [Header("Settings for Speed Transition")]
+    [SerializeField] private float smoothSpeedTransitionTime = 10f;
+    private float currentSpeed;
+    private float newSpeed;
+    private float speedStepProgress = 0f;
+    bool increasingSpeed = false;
+
     bool isCollected = false;
 
     public bool showQueue;
@@ -265,7 +273,9 @@ public class ObjectPoolManager : MonoBehaviour
     // Updates pool currentSpeed based on timeAlive value
     private void UpdatePoolSpeed(float timeAlive)
     {
-        float newSpeed = objectBaseSpeed * Mathf.Pow(timeAlive, obstacleSpeedFactor);
+        newSpeed = objectBaseSpeed * Mathf.Pow(timeAlive, obstacleSpeedFactor);
+
+
 
         foreach (SpawnableObject spawnable in spawnableObject)
         {
@@ -323,6 +333,7 @@ public class ObjectPoolManager : MonoBehaviour
         }
     }
 
+
     private IEnumerator MoveAndScaleToTarget(GameObject smallApple)
     {
         Vector3 startPosition = smallApple.transform.position;
@@ -361,5 +372,35 @@ public class ObjectPoolManager : MonoBehaviour
 
         // Return the small apple to its pool
         ReturnSplitAppleToPool(smallApple);
+    }
+
+    private void IncreasingGradualSpeed()
+    {
+        // Increment progress proportionally based on smoothSpeedTransitionTime
+        speedStepProgress += Time.deltaTime / smoothSpeedTransitionTime;
+        speedStepProgress = Mathf.Clamp01(speedStepProgress);
+
+        // Smoothly interpolate between currentSpeed and newSpeed
+        currentSpeed = Mathf.SmoothStep(currentSpeed, newSpeed, speedStepProgress);
+
+        // Stop increasing when close enough to newSpeed
+        if (Mathf.Abs(currentSpeed - newSpeed) < 0.001f)
+        {
+            currentSpeed = newSpeed; // Snap to target
+            increasingSpeed = false; // Stop interpolation
+        }
+    }
+
+    private void IncreaseSpeed(float timeAlive)
+    {
+        // Adjust the growth curve of speed to control how fast it increases
+        newSpeed = objectBaseSpeed * Mathf.Pow(timeAlive, 0.2f);
+
+        // Reset interpolation progress
+        speedStepProgress = 0f;
+        increasingSpeed = true;
+
+        // Debug log to verify speed values
+        //Debug.Log($"Time Alive: {timeAlive}, New Speed: {newSpeed}");
     }
 }

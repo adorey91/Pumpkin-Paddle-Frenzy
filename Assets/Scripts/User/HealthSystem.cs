@@ -10,6 +10,8 @@ public class HealthSystem : MonoBehaviour
     [SerializeField] private GameObject[] stamina;
     [SerializeField] private Image staminaImage;
     [SerializeField] private Image healthFillImage;
+    [SerializeField] private Image[] healthIcons;
+
 
     // PlayerUpgrades
     [Header("Upgrades")]
@@ -110,9 +112,13 @@ public class HealthSystem : MonoBehaviour
     public void TakeDamage()
     {
         curHealth--;
-        healthFillImage.fillAmount = (float)curHealth / (float)maxHealth;
 
-        if(staminaHurt)
+        for (int i = curHealth; i < maxHealth; i++)
+        {
+            healthIcons[i].color = new Color(99, 99, 99);
+        }
+
+        if (staminaHurt)
         {
             Actions.OnPlaySFX("Stamina");
         }
@@ -128,7 +134,13 @@ public class HealthSystem : MonoBehaviour
     {
         staminaImage.fillAmount = 1;
         curHealth = maxHealth;
-        healthFillImage.fillAmount = (float)curHealth / (float)maxHealth;
+
+        for (int i = 0; i < maxHealth + 1; i++)
+        {
+            healthIcons[i].fillAmount = 1;
+        }
+
+        //healthFillImage.fillAmount = (float)curHealth / (float)maxHealth;
     }
 
     // Updates Stamina visibility based on if the game is endless or not
@@ -181,7 +193,7 @@ public class HealthSystem : MonoBehaviour
             {
                 sprite.color = Color.white;
             }
-            yield return new WaitForSecondsRealtime(flickerDuration/2);
+            yield return new WaitForSecondsRealtime(flickerDuration / 2);
         }
         if (curHealth <= 0)
             Actions.OnGameOver();
@@ -194,6 +206,12 @@ public class HealthSystem : MonoBehaviour
     {
         staminaDrain = baseStaminaDrain;
         maxHealth = baseMaxHealth;
+
+        for (int i = 0; i < maxHealth; i++)
+        {
+            healthIcons[i].color = new Color(255, 255, 255);
+        }
+
         playerSprites[0].sprite = baseHealthSprite;
         playerSprites[1].sprite = baseStaminaSprite;
     }
@@ -211,9 +229,9 @@ public class HealthSystem : MonoBehaviour
         {
             curStaminaUpgrade = upgrade;
             SetStaminaDrain(upgrade.newStats);
-        }    
+        }
     }
-   
+
     private float GetStaminaDrain()
     { return staminaDrain; }
 
