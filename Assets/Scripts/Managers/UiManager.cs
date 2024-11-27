@@ -18,7 +18,6 @@ public class UiManager : MonoBehaviour
     [SerializeField] private GameObject ui_BackgroundInstruct;
     [SerializeField] private GameObject ui_Instructions;
     [SerializeField] private GameObject ui_HowToPlay;
-    [SerializeField] private GameObject ui_HowToPlay2;
     [SerializeField] private GameObject ui_HowToControls;
 
     [Header("Confirmation Panel")]
@@ -100,7 +99,6 @@ public class UiManager : MonoBehaviour
         ui_Instructions.SetActive(false);
         ui_Confirmation.SetActive(false);
         ui_HowToPlay.SetActive(false);
-        ui_HowToPlay2.SetActive(false);
         ui_HowToControls.SetActive(false);
         ui_Results.SetActive(false);
         ui_BackgroundInstruct.SetActive(false);

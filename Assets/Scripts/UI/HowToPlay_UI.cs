@@ -6,26 +6,22 @@ using UnityEngine.UI;
 
 public class HowToPlay_UI : MonoBehaviour
 {
+    [Header("For Stamina Holder")]
     [SerializeField] private Image staminaBar;
     [SerializeField] private Image health;
-    [SerializeField] private Image[] player;
-
+    [SerializeField] private Image[] staminaPlayer;
     [SerializeField] private Sprite[] boats;
     [SerializeField] private Sprite[] paddles;
-
     [SerializeField] private float[] staminaDrain;
     [SerializeField] private float[] healthAmount;
     private float maxHealth;
     private float currentHealth;
-
     [SerializeField] private Color drainColor;
-
     bool startDrain = false;
     private bool staminaDrained = false;
-
     private int upgradeIndex = 0;
 
-    public void OnEnable()
+    public void Start()
     {
         InitializeDefaults();
     }
@@ -34,15 +30,15 @@ public class HowToPlay_UI : MonoBehaviour
     {
         // Set initial player sprites
         upgradeIndex = 0;
-        player[0].sprite = boats[upgradeIndex];
-        player[1].sprite = paddles[upgradeIndex];
+        staminaPlayer[0].sprite = boats[upgradeIndex];
+        staminaPlayer[1].sprite = paddles[upgradeIndex];
 
         // Reset stamina and state
         staminaBar.fillAmount = 1;
         maxHealth = healthAmount[upgradeIndex];
         currentHealth = maxHealth;
         health.fillAmount = 1;
-        startDrain = true;
+        //startDrain = true;
         staminaDrained = false;
     }
 
@@ -61,6 +57,8 @@ public class HowToPlay_UI : MonoBehaviour
         }
     }
 
+    public void StartDrain() => startDrain = true;
+
     private IEnumerator HandleStaminaDepletion()
     {
         // Trigger flicker effect to indicate damage
@@ -76,13 +74,13 @@ public class HowToPlay_UI : MonoBehaviour
         // Only update sprites and reset health if health reaches 0
         if (health.fillAmount <= 0)
         {
-            if (upgradeIndex < boats.Length - 1)
-                upgradeIndex++;
-            else
+            if (upgradeIndex >= boats.Length - 1)
                 upgradeIndex = 0;
+            else
+                upgradeIndex++;
 
-            player[0].sprite = boats[upgradeIndex];
-            player[1].sprite = paddles[upgradeIndex];
+            staminaPlayer[0].sprite = boats[upgradeIndex];
+            staminaPlayer[1].sprite = paddles[upgradeIndex];
 
             maxHealth = healthAmount[upgradeIndex];
             currentHealth = maxHealth;
@@ -99,14 +97,14 @@ public class HowToPlay_UI : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             // Change player color to indicate damage
-            foreach (var playerImage in player)
+            foreach (var playerImage in staminaPlayer)
             {
                 playerImage.color = drainColor;
             }
             yield return new WaitForSecondsRealtime(0.1f);
 
             // Revert player color
-            foreach (var playerImage in player)
+            foreach (var playerImage in staminaPlayer)
             {
                 playerImage.color = Color.white;
             }
