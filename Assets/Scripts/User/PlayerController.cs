@@ -46,19 +46,7 @@ public class PlayerController : MonoBehaviour
 
     private void Movement()
     {
-        if (playerMovement != Vector2.zero)
-        {
-            // Set velocity based on player input
-            currentVelocity = new Vector2(playerMovement.x, 0) * moveSpeed;
-        }
-        else
-        {
-            // Decelerate smoothly
-            currentVelocity = Vector2.MoveTowards(currentVelocity, Vector2.zero, decelerationFactor * Time.deltaTime);
-        }
-
-        // Apply movement
-        rb.MovePosition(rb.position + currentVelocity * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + new Vector2(playerMovement.x, 0) * moveSpeed * Time.deltaTime);
     }
 
 
