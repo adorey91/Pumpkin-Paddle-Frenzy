@@ -115,7 +115,7 @@ public class HealthSystem : MonoBehaviour
 
         for (int i = curHealth; i < maxHealth; i++)
         {
-            healthIcons[i].color = new Color(99, 99, 99);
+            healthIcons[i].color = new Color32(120,120,120, 255);
         }
 
         if (staminaHurt)
@@ -209,7 +209,7 @@ public class HealthSystem : MonoBehaviour
 
         for (int i = 0; i < maxHealth; i++)
         {
-            healthIcons[i].color = new Color(255, 255, 255);
+            healthIcons[i].color = new Color(255, 255, 255, 255);
         }
 
         playerSprites[0].sprite = baseHealthSprite;
