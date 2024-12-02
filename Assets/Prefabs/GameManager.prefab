@@ -15074,9 +15074,7 @@ MonoBehaviour:
   type: 0
   currentToggle: {fileID: 2542846249011213675}
   allToggles:
-  - {fileID: 0}
   - {fileID: 3001613751330052439}
-  - {fileID: 0}
   - {fileID: 5154657661899713843}
   onScreenControls: {fileID: 6261046070387798211}
   pauseButton: {fileID: 1625951145317340484}
