@@ -182,7 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 974975598}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &813088691
@@ -200,6 +200,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &974975598 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4185033487362761680, guid: 02c71e55e01ab1640ab37432dc638c6e, type: 3}
+  m_PrefabInstance: {fileID: 1077617204}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1077617204
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -246,6 +251,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 42144355804874351, guid: 02c71e55e01ab1640ab37432dc638c6e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 501358891004766929, guid: 02c71e55e01ab1640ab37432dc638c6e, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2335921344889088049, guid: 02c71e55e01ab1640ab37432dc638c6e, type: 3}
+      propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2375770233083068851, guid: 02c71e55e01ab1640ab37432dc638c6e, type: 3}

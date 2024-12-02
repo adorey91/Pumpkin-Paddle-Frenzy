@@ -8,25 +8,22 @@ public class HowToPlay_UI : MonoBehaviour
 {
     [Header("For Stamina Holder")]
     [SerializeField] private Image staminaBar;
-    [SerializeField] private Image health;
+    [SerializeField] private Image[] healthIcons;
     [SerializeField] private Image[] staminaPlayer;
     [SerializeField] private Sprite[] boats;
     [SerializeField] private Sprite[] paddles;
     [SerializeField] private float[] staminaDrain;
-    [SerializeField] private float[] healthAmount;
-    private float maxHealth;
-    private float currentHealth;
+    [SerializeField] private int[] healthAmount;
+    private int maxHealth;
+    private int currentHealth;
     [SerializeField] private Color drainColor;
     bool startDrain = false;
+    bool changeSprites;
     private bool staminaDrained = false;
     private int upgradeIndex = 0;
 
-    public void Start()
-    {
-        InitializeDefaults();
-    }
 
-    private void InitializeDefaults()
+    public void InitializeDefaults()
     {
         // Set initial player sprites
         upgradeIndex = 0;
@@ -37,7 +34,12 @@ public class HowToPlay_UI : MonoBehaviour
         staminaBar.fillAmount = 1;
         maxHealth = healthAmount[upgradeIndex];
         currentHealth = maxHealth;
-        health.fillAmount = 1;
+
+        for (int i = 0; i < maxHealth; i++)
+        {
+            healthIcons[i].color = new Color32(255, 255, 255, 255);
+        }
+
         //startDrain = true;
         staminaDrained = false;
     }
@@ -53,26 +55,41 @@ public class HowToPlay_UI : MonoBehaviour
         if (staminaBar.fillAmount <= 0 && !staminaDrained)
         {
             staminaDrained = true;
+            startDrain = false;
+
+            // Reduce health
+            currentHealth--;
+
+            for (int i = currentHealth; i < maxHealth; i++)
+            {
+                healthIcons[i].color = new Color32(120, 120, 120, 255);
+            }
+
             StartCoroutine(HandleStaminaDepletion());
         }
     }
 
     public void StartDrain() => startDrain = true;
+    public void StopDrain() => startDrain = false;
 
     private IEnumerator HandleStaminaDepletion()
     {
         // Trigger flicker effect to indicate damage
         yield return StartCoroutine(DrainFlicker());
 
-        // Reduce health
-        currentHealth--;
-        health.fillAmount = currentHealth/ maxHealth;
 
         // Wait before resetting stamina
         yield return new WaitForSecondsRealtime(0.75f);
 
+        // Check if health is depleted
+        if (currentHealth <= 0)
+        {
+            // Reset player sprites and health
+            changeSprites = true;
+        }
+
         // Only update sprites and reset health if health reaches 0
-        if (health.fillAmount <= 0)
+        if (changeSprites)
         {
             if (upgradeIndex >= boats.Length - 1)
                 upgradeIndex = 0;
@@ -82,14 +99,22 @@ public class HowToPlay_UI : MonoBehaviour
             staminaPlayer[0].sprite = boats[upgradeIndex];
             staminaPlayer[1].sprite = paddles[upgradeIndex];
 
+
             maxHealth = healthAmount[upgradeIndex];
+
+            for (int i = 0; i < maxHealth; i++)
+            {
+                healthIcons[i].color = new Color32(255, 255, 255, 255);
+            }
+
             currentHealth = maxHealth;
-            health.fillAmount = 1;
+            changeSprites = false;
         }
 
         // Reset stamina
         staminaBar.fillAmount = 1;
         staminaDrained = false;
+        startDrain = true;
     }
 
     private IEnumerator DrainFlicker()

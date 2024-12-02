@@ -8,6 +8,9 @@ public class CollisionObstacles : MonoBehaviour
     [Header("For Damage Holder")]
     [SerializeField] private Image[] collisionPlayer;
     [SerializeField] private Sprite[] collisionSprites;
+
+    [SerializeField] private Animator playerAnimator;
+
     int spriteNumber = 0;
     Image collisionImage;
 
@@ -22,6 +25,12 @@ public class CollisionObstacles : MonoBehaviour
     public void TakeDamage()
     {
         StartCoroutine(DamageFlicker());
+    }
+
+    public void StartPlayerAnimation(string direction)
+    {
+        playerAnimator.SetTrigger(direction);
+        Debug.Log(direction);
     }
 
     public void ChangeSprite()
