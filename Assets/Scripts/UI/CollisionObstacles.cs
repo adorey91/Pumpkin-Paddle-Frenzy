@@ -27,10 +27,9 @@ public class CollisionObstacles : MonoBehaviour
         StartCoroutine(DamageFlicker());
     }
 
-    public void StartPlayerAnimation(string direction)
+    public void StartPlayerAnimation()
     {
-        playerAnimator.SetTrigger(direction);
-        Debug.Log(direction);
+        playerAnimator.SetTrigger("move");
     }
 
     public void ChangeSprite()

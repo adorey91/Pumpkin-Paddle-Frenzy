@@ -165,11 +165,13 @@ public class GameManager : MonoBehaviour
         if (isPlaying)
         {
             Actions.ChangeSpriteVisibility("Enable");
+            Cursor.visible = false;
             Time.timeScale = 1;
         }
         else
         {
             Actions.ChangeSpriteVisibility("Disable");
+            Cursor.visible = true;
             Time.timeScale = 0;
         }
         if (returnToPool)
