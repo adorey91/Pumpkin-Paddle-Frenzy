@@ -30,6 +30,7 @@ public class CollisionObstacles : MonoBehaviour
     public void StartPlayerAnimation(string direction)
     {
         playerAnimator.SetTrigger(direction);
+        Debug.Log(direction);
     }
 
     public void ChangeSprite()
