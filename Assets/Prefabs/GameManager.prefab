@@ -6497,10 +6497,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<b>Artist:</b> Sasha Postma\n<b>Programmer:</b> Adrian Dorey\n<b>Main
+  m_text: "<b>Artist:</b> Sasha Postma     <b>Programmer:</b> Adrian Dorey\n<b>Main
     Menu Music:</b> pixabay.com/music/solo-piano-ordinary-loop-minimal-piano-182046/
-    \r\n<b>Gameplay Music:</b> suno.com/song/b181fb92-9b47-4fab-923d-acac4decc99b\n<b>Victory
-    SFX:</b> pixabay.com/sound-effects/brass-fanfare-with-timpani-and-winchimes-reverberated-146260\n<b>Wave
+    \r\n<b>Gameplay Music:</b> suno.com/song/b181fb92-9b47-4fab-923d-acac4decc99b\n<b>Crash
+    SFX:</b> https://pixabay.com/sound-effects/water-splash-199583/\nhttps://pixabay.com/sound-effects/female-grunts-breaths-7081/\nhttps://pixabay.com/sound-effects/hit-tree-02-266307/\n<b>Stamina
+    Drain SFX:</b> pixabay.com/sound-effects/brass-fanfare-with-timpani-and-winchimes-reverberated-146260\n<b>Wave
     Crash SFX:</b> pixabay.com/sound-effects/ocean-wave-really-fast-236008/\n<b>Collection
     SFX:</b> pixabay.com/sound-effects/collect-points-190037/\n<b>Upgrade SFX:</b>pixabay.com/sound-effects/cute-level-up-3-189853/
     \n<b>Button Click SFX:</b> pixabay.com/sound-effects/minimal-pop-click-ui-1-198301/"
@@ -6530,8 +6531,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 45
-  m_fontSizeBase: 45
+  m_fontSize: 35
+  m_fontSizeBase: 35
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -17905,7 +17906,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6738705782959009580
 RectTransform:
   m_ObjectHideFlags: 0
