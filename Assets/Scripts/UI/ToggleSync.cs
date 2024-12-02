@@ -43,15 +43,6 @@ public class ToggleSync : MonoBehaviour
         {
             previousState = value;  // Save the new state
             currentToggle.isOn = value;
-
-            // Sync with other toggles of the same type
-            foreach (var toggle in allToggles)
-            {
-                if (toggle != null && toggle.type == type && toggle != this)
-                {
-                    toggle.currentToggle.isOn = value;
-                }
-            }
         }
 
         if(type == ToggleType.OnScreenControls)

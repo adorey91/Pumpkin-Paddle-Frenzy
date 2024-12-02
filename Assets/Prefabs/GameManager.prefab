@@ -20929,12 +20929,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a23e3ff5933347142b04c680f76d4790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onScreenControlToggles:
-  - {fileID: 0}
-  - {fileID: 3001613751330052439}
-  pauseButtonToggles:
-  - {fileID: 0}
-  - {fileID: 5154657661899713843}
+  onScreenControlToggle: {fileID: 3001613751330052439}
+  pauseButtonToggle: {fileID: 5154657661899713843}
 --- !u!1 &8005986581715897675
 GameObject:
   m_ObjectHideFlags: 0

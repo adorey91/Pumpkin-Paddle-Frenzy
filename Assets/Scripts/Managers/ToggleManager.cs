@@ -1,61 +1,47 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ToggleManager : MonoBehaviour
 {
-    public ToggleSync[] onScreenControlToggles;
-    public ToggleSync[] pauseButtonToggles;
+    public ToggleSync onScreenControlToggle;
+    public ToggleSync pauseButtonToggle;
 
-  
+
+    private void Start()
+    {
+        foreach(InputDevice device in InputSystem.devices)
+        {
+            if(device.name == "Keyboard")
+            {
+                SetOnScreenControlsState(false);
+                SetPauseButtonState(false);
+            }
+        }
+    }
 
     // Method to set the OnScreenControls toggle state
     public void SetOnScreenControlsState(bool state)
     {
-        foreach (var toggle in onScreenControlToggles)
-        {
-            if (toggle != null && toggle.type == ToggleSync.ToggleType.OnScreenControls)
-            {
-                toggle.SetToggleState(state);
-            }
-        }
+        onScreenControlToggle.SetToggleState(state);
     }
 
     // Method to set the PauseButton toggle state
     public void SetPauseButtonState(bool state)
     {
-        foreach (var toggle in pauseButtonToggles)
-        {
-            if (toggle != null && toggle.type == ToggleSync.ToggleType.PauseButton)
-            {
-                toggle.SetToggleState(state);
-            }
-        }
+        pauseButtonToggle.SetToggleState(state);
     }
 
     // Get the global state of OnScreenControls toggles (all must match to return a value)
     public bool GetOnScreenControls()
     {
-        foreach (var toggle in onScreenControlToggles)
-        {
-            if (toggle != null && toggle.type == ToggleSync.ToggleType.OnScreenControls)
-            {
-                return toggle.currentToggle.isOn; // Return the state of the first OnScreenControls toggle
-            }
-        }
-        return false; // Default if no toggles found
+        return onScreenControlToggle.currentToggle.isOn;
     }
 
     // Get the global state of PauseButton toggles (all must match to return a value)
     public bool GetPauseButton()
     {
-        foreach (var toggle in onScreenControlToggles)
-        {
-            if (toggle != null && toggle.type == ToggleSync.ToggleType.PauseButton)
-            {
-                return toggle.currentToggle.isOn; // Return the state of the first PauseButton toggle
-            }
-        }
-        return false; // Default if no toggles found
+        return pauseButtonToggle.currentToggle.isOn;
     }
 }
