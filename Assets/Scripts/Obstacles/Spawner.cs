@@ -23,6 +23,7 @@ public class Spawner : MonoBehaviour
     private float _obstacleSpawnTime; // used to store the current spawn time
     private float timeAlive = 1; // spawner uses this to increase the spawntime & currentSpeed
     private bool canSpawnKayak = true;
+    [SerializeField] private int kayakSpawnLevel = 6; // the level the player needs to reach to spawn a kayak
 
     // Endless Mode Stats
     private float timeAliveInRun; // used to keep track of time alive in the run - for endless mode
@@ -199,7 +200,7 @@ public class Spawner : MonoBehaviour
     {
         float value = Random.Range(0f, 1f);
 
-        if (value < kayakProbability & level >= 6 && canSpawnKayak)
+        if (value < kayakProbability & level >= kayakSpawnLevel && canSpawnKayak)
         {
             Actions.OnSpawn(PoolType.Kayak);
             canSpawnKayak = false;

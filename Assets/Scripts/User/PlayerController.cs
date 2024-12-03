@@ -16,10 +16,48 @@ public class PlayerController : MonoBehaviour
     public bool isMovingLeft = false;
     public bool isMovingRight = false;
 
+    private bool isNotMoving = true; // tracking current movement state
+    private bool wasNotMoving = true; // used to track previous movement state
+
+    public CustomTimer movementTimer;
+    public float forceSpawnCount = 14f;
+    bool restartedTimer = false;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         baseMoveSpeed = moveSpeed;
+        movementTimer = new CustomTimer(forceSpawnCount);
+    }
+
+    private void Update()
+    {
+        if (GameManager.instance.isPlaying)
+        {
+            if (isNotMoving)
+            {
+                // if the player is still not moving update the timer
+                if (wasNotMoving)
+                {
+                    if (movementTimer.UpdateTimer(Time.deltaTime))
+                    {
+                        Actions.ForceSpawn(transform.position.x);
+                        movementTimer.StartTimer(forceSpawnCount);
+                    }
+                }
+                else
+                {
+                    // player just stopped moving, reset the timer
+                    movementTimer.ResetTimer();
+                    wasNotMoving = true;
+                }
+            }
+            else
+            {
+                // player is moving
+                wasNotMoving = false;
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -50,14 +88,24 @@ public class PlayerController : MonoBehaviour
         {
             isMovingLeft = false;
             isMovingRight = true;
+            isNotMoving = false;
         }
         else if (playerMovement.x < 0)
         {
             isMovingLeft = true;
             isMovingRight = false;
+            isNotMoving = false;
         }
         else
+        {
             StopMovement();
+        }
+    }
+
+    public void IncreaseSpeed(InputAction.CallbackContext context)
+    {
+       if(context.performed)
+            Actions.OnUseEnergy();
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -95,7 +143,9 @@ public class PlayerController : MonoBehaviour
     {
         isMovingLeft = false;
         isMovingRight = false;
+        isNotMoving = true;
         playerMovement = Vector2.zero; // Stop movement
+        restartedTimer = false;
     }
     #endregion
 
@@ -141,6 +191,7 @@ public class PlayerController : MonoBehaviour
 
     private void ResetPlayer()
     {
+        movementTimer.StartTimer(forceSpawnCount);
         moveSpeed = baseMoveSpeed;
         transform.position = new Vector2(0, -2.7f);
     }

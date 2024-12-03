@@ -14,45 +14,22 @@ public class ToggleSync : MonoBehaviour
     public ToggleType type;  // Define if the toggle is for OnScreenControls or PauseButton
     public Toggle currentToggle;
 
-    public ToggleSync[] allToggles;
-
-    private bool previousState; // Keep track of the previous state
-
-    public GameObject onScreenControls;
-    public GameObject pauseButton;
+    public GameObject onScreenObject;
 
     private void Start()
     {
         // Get the Toggle component attached to this object
-        if(currentToggle == null)
+        if (currentToggle == null)
             currentToggle = GetComponent<Toggle>();
-    }
 
-    private void Update()
-    {
-        if(currentToggle.isOn != previousState)
-        {
-            previousState = currentToggle.isOn;
-            SetToggleState(currentToggle.isOn);
-        }
+        currentToggle.onValueChanged.AddListener(SetToggleState);
     }
 
     public void SetToggleState(bool value)
     {
-        if (currentToggle != null)
-        {
-            previousState = value;  // Save the new state
-            currentToggle.isOn = value;
-        }
-
-        if(type == ToggleType.OnScreenControls)
-        {
-            onScreenControls.SetActive(currentToggle.isOn);
-        }
-        
-        if (type == ToggleType.PauseButton)
-        {
-            pauseButton.SetActive(currentToggle.isOn);
-        }
+        if (onScreenObject != null)
+            onScreenObject.SetActive(value);
+        else
+            Debug.LogWarning("No object assigned to toggle.");
     }
 }

@@ -10,6 +10,13 @@ public class SaveManager : MonoBehaviour
     [SerializeField] private UpgradeManager upgradeManager;
     [SerializeField] private UiManager uiManager;
     [SerializeField] private ToggleManager toggleManager;
+    private string savePath;
+    private string saveFileName = "playerInfo.json";
+
+    public void Start()
+    {
+        savePath = Path.Combine(GetSavePath(), saveFileName);
+    }
 
     private void OnEnable()
     {
@@ -33,7 +40,7 @@ public class SaveManager : MonoBehaviour
     {
         Actions.ResetStats();
 
-        if (File.Exists(GetSavePath() + "/playerInfo.dat"))
+        if (File.Exists(savePath))
             uiManager.Confirmation_UI("save");
         else
             uiManager.Instructions_UI();
@@ -41,7 +48,7 @@ public class SaveManager : MonoBehaviour
 
     public void SaveData()
     {
-        if(GameManager.instance.gameIsEndless)
+        if (GameManager.instance.gameIsEndless)
             SaveRunData();
         else
             SavePlayerData();
@@ -51,10 +58,9 @@ public class SaveManager : MonoBehaviour
     /// Saves game player stats.
     private void SavePlayerData()
     {
-        if(!GameManager.instance.gameIsEndless)
+        if (!GameManager.instance.gameIsEndless)
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Create(GetSavePath() + "/playerInfo.dat");
+            string filePath = Path.Combine(GetSavePath(), saveFileName);
             PlayerData data = new PlayerData();
 
             // SavePlayerData the names of all purchased upgrades
@@ -67,25 +73,24 @@ public class SaveManager : MonoBehaviour
             data.availableAppleCount = scoreManager.GetTotalAppleCount();
             data.lifetimeAppleCount = scoreManager.GetLifetimeAppleCount();
             data.attemptsMade = scoreManager.GetAttemptCount();
-            data.onScreenControls = toggleManager.GetOnScreenControls();
-            data.onScreenPause = toggleManager.GetPauseButton();
+            data.onScreenControls = toggleManager.GetOnScreenControlsState();
+            data.onScreenPause = toggleManager.GetPauseButtonState();
 
-            bf.Serialize(file, data);
-            file.Close();
+            string json = JsonUtility.ToJson(data, true);
+            File.WriteAllText(filePath, json);
         }
     }
 
     // Saves Best Run Data
     private void SaveRunData()
     {
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream file = File.Create(GetSavePath() + "/bestRunInfo.dat");
+        string runFilePath = Path.Combine(GetSavePath(), "bestRunInfo.dat");
         RunData runData = new RunData();
 
         runData.bestTime = scoreManager.GetBestRun();
 
-        bf.Serialize(file, runData);
-        file.Close();
+        string json = JsonUtility.ToJson(runData, true);
+        File.WriteAllText(runFilePath, json);
     }
     #endregion
 
@@ -93,80 +98,91 @@ public class SaveManager : MonoBehaviour
     // Loads Best Run Data before menu UI
     public void LoadRunData()
     {
-        if (File.Exists(GetSavePath() + "/bestRunInfo.dat"))
+        string runFilePath = Path.Combine(GetSavePath(), "bestRunInfo.dat");
+        if (File.Exists(runFilePath))
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(GetSavePath() + "/bestRunInfo.dat", FileMode.Open);
-            RunData runData = (RunData)bf.Deserialize(file);
-            file.Close();
+            try
+            {
+                string json = File.ReadAllText(runFilePath);
+                RunData runData = JsonUtility.FromJson<RunData>(json);
 
-            //Debug.Log("Set best run " +  runData.bestTime);
-            scoreManager.SetBestRun(runData.bestTime);
+                scoreManager.SetBestRun(runData.bestTime);
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError("Failed to load save data: " + ex.Message);
+                // Optionally delete corrupted save
+                File.Delete(runFilePath);
+            }
         }
     }
 
     // Loads Player Stats
-    internal void Load()
+    private void Load()
     {
-        if (File.Exists(GetSavePath() + "/playerInfo.dat"))
+        if (File.Exists(savePath))
         {
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream file = File.Open(GetSavePath() + "/playerInfo.dat", FileMode.Open);
-            PlayerData data = (PlayerData)bf.Deserialize(file);
-            file.Close();
-
-            // Clear the list of purchased upgrades before reloading them from saved data
-            upgradeManager.ClearPurchasedUpgrades();
-
-            // Find and apply all upgrades by name
-            foreach (string upgradeName in data.purchasedUpgrades)
+            try
             {
-                UpgradeAsset foundUpgrade = upgradeManager.FindUpgradeByName(upgradeName);
-                if (foundUpgrade != null)
+                string json = File.ReadAllText(savePath);
+                PlayerData data = JsonUtility.FromJson<PlayerData>(json);
+
+                upgradeManager.ClearPurchasedUpgrades();
+                foreach (string upgradeName in data.purchasedUpgrades)
                 {
-                    foundUpgrade.isPurchased = true;
-                    upgradeManager.AddPurchasedUpgrades(foundUpgrade);
-                    upgradeManager.ApplyUpgradeToPlayer(foundUpgrade);
+                    UpgradeAsset foundUpgrade = upgradeManager.FindUpgradeByName(upgradeName);
+                    if (foundUpgrade != null)
+                    {
+                        foundUpgrade.isPurchased = true;
+                        upgradeManager.AddPurchasedUpgrades(foundUpgrade);
+                        upgradeManager.ApplyUpgradeToPlayer(foundUpgrade);
+                    }
                 }
+
+                // Load other stats
+                scoreManager.SetTotalAppleCount(data.availableAppleCount, data.lifetimeAppleCount);
+                scoreManager.SetAttempt(data.attemptsMade);
+                toggleManager.SetOnScreenControlsState(data.onScreenControls);
+                toggleManager.SetPauseButtonState(data.onScreenPause);
+
+                Ui_TextUpdater._AppleTotalEndGame = upgradeManager.GetTotalCost();
+
+                Actions.ApplySettings();
+
+                GameManager.instance.loadUpgrade = true;
+                Actions.LoadScene("Gameplay");
             }
-
-            // Load Stats
-            scoreManager.SetTotalAppleCount(data.availableAppleCount, data.lifetimeAppleCount);
-            scoreManager.SetAttempt(data.attemptsMade);
-            toggleManager.SetOnScreenControlsState(data.onScreenControls);
-            toggleManager.SetPauseButtonState(data.onScreenPause);
-
-            Ui_TextUpdater._AppleTotalEndGame = upgradeManager.GetTotalCost();
-
-            // Triggers the load settings action
-            Actions.ApplySettings();
-
-            // Load the gameplay scene after applying player data
-            GameManager.instance.loadUpgrade = true;
-            Actions.LoadScene("Gameplay");
+            catch (System.Exception ex)
+            {
+                Debug.LogError("Failed to load save data: " + ex.Message);
+                // Optionally delete corrupted save
+                File.Delete(savePath);
+            }
         }
     }
     #endregion
 
-
-
     // Returns the save path
     private static string GetSavePath()
     {
-        return Application.persistentDataPath;
+        string path = Application.persistentDataPath;
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+        return path;
     }
-
 
     // Deletes SavePlayerData
     internal void DeleteSave()
     {
-        if (File.Exists(GetSavePath() + "/playerInfo.dat"))
+        if (File.Exists(savePath))
         {
-            File.Delete(GetSavePath() + "/playerInfo.dat");
+            File.Delete(savePath);
             Debug.Log("File Deleted");
         }
 
-        toggleManager.CheckForKeyboard();
+        toggleManager.CheckForKeyboard(); 
         scoreManager.SetAttempt(0);
         scoreManager.SetTotalAppleCount(0, 0);
     }

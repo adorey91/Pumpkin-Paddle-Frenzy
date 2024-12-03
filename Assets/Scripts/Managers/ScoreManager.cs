@@ -62,7 +62,7 @@ public class ScoreManager : MonoBehaviour
         availableAppleCount += value;
         lifetimeAppleCount += value;
 
-        Actions.OnPlaySFX("Collection");
+        Actions.OnPlaySFX("AppleCollection");
         Actions.UpdateAppleText(currentRunAppleCount, availableAppleCount, lifetimeAppleCount);
     }
 

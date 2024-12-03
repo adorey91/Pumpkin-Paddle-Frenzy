@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum PoolType { Obstacle, Collectable, FinishLine, Kayak,}
+public enum PoolType { Obstacle, Collectable, FinishLine, Kayak, }
 
 [CreateAssetMenu(fileName = "SpawnableObject")]
 public class SpawnableObject : ScriptableObject

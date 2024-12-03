@@ -1,23 +1,18 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class CustomTimer
+[CreateAssetMenu(fileName = "New Timer", menuName = "Timer")]
+public class CustomTimerSO : ScriptableObject
 {
     public float duration;
     public float elapsedTime = 0f;
     public bool isRunning = false;
 
-
-    public CustomTimer(float newDuration)
-    {
-        this.duration = newDuration;
-        this.elapsedTime = 0f;
-        this.isRunning = false;
-    }
-
-    public void StartTimer(float newDuration)
+    public void StartTimer(float newTime)
     {
         elapsedTime = 0;
-        this.duration = newDuration;
+        duration = newTime;
         isRunning = true;
     }
 

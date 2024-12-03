@@ -29,6 +29,8 @@ public class ObjectPoolManager : MonoBehaviour
     private bool speedIncreasing = false;
 
     bool isCollected = false;
+    bool forceSpawn = false;
+    private float playerX_Pos;
 
     private void Awake()
     {
@@ -94,6 +96,7 @@ public class ObjectPoolManager : MonoBehaviour
         Actions.SpeedChange += UpdatePoolSpeed;
         Actions.ReturnAllToPool += ReturnAllToPool;
         Actions.OnGameplay += ShufflePools;
+        Actions.ForceSpawn += ForceSpawn;
     }
 
     private void OnDisable()
@@ -103,15 +106,24 @@ public class ObjectPoolManager : MonoBehaviour
         Actions.SpeedChange -= UpdatePoolSpeed;
         Actions.ReturnAllToPool -= ReturnAllToPool;
         Actions.OnGameplay -= ShufflePools;
+        Actions.ForceSpawn -= ForceSpawn;
     }
     #endregion
 
     #region Spawning
+    private void ForceSpawn(float playerPosition)
+    {
+        forceSpawn = true;
+        playerX_Pos = playerPosition;
+        HandleSpawnEvent(PoolType.Obstacle);
+    }
+    
     // handles the spawning event
     private void HandleSpawnEvent(PoolType type)
     {
         SpawnFromPool(type);
     }
+
 
     // Spawns an INACTIVE object from a designated pool, sets the rotation and position
     private GameObject SpawnFromPool(PoolType type)
@@ -176,9 +188,15 @@ public class ObjectPoolManager : MonoBehaviour
                 spawnPosition = new Vector2(randomX, spawnPosition.y);
                 break;
         }
-
-        objectToSpawn.transform.position = spawnPosition;
+        
         objectToSpawn.transform.rotation = spawnRotation;
+        if(forceSpawn)
+            objectToSpawn.transform.position = new Vector2(playerX_Pos, spawnPosition.y);
+        else
+            objectToSpawn.transform.position = spawnPosition;
+
+
+        forceSpawn = false;
 
         return objectToSpawn;
     }

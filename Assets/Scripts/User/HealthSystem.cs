@@ -61,7 +61,7 @@ public class HealthSystem : MonoBehaviour
     {
         if (GameManager.instance.isPlaying && !GameManager.instance.gameIsEndless && spawner.spawnedFirstObstacle)
         {
-            if(playerController.isMovingLeft || playerController.isMovingRight)
+            if(playerController.isMovingLeft || playerController.isMovingRight || Time.timeScale == 2)
                 StaminaDrain();
         }
     }

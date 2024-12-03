@@ -10,6 +10,10 @@ public class SpawnableBehaviour : MonoBehaviour
     private bool moveRight;
     private bool setMovement;
 
+    // kayak movement
+    Vector2 leftMovement = new Vector2(-1, 0);
+    Vector2 rightMovement = new Vector2(1, 0);
+    Vector2 downMovement = Vector2.down;
 
     private void Start()
     {
@@ -18,14 +22,9 @@ public class SpawnableBehaviour : MonoBehaviour
 
     private void FixedUpdate()
     {
-
         if (spawnableObject.type == PoolType.Kayak)
         {
-            Vector2 leftMovement = new Vector2(-1, 0);
-            Vector2 rightMovement = new Vector2(1, 0);
-            Vector2 downMovement = Vector2.down;
-
-            if(!setMovement)
+            if (!setMovement)
             {
                 if (transform.position.x > 0)
                     moveLeft = true;
@@ -35,13 +34,13 @@ public class SpawnableBehaviour : MonoBehaviour
                 setMovement = true;
             }
 
-            if(moveLeft)
+            if (moveLeft)
             {
                 rb.MovePosition(rb.position + (leftMovement * (spawnableObject.speed / 2) * Time.deltaTime) + (downMovement * spawnableObject.speed * Time.deltaTime));
                 if (transform.position.x <= -6)
                     moveLeft = false;
             }
-            if(moveRight)
+            if (moveRight)
             {
                 rb.MovePosition(rb.position + (rightMovement * (spawnableObject.speed / 2) * Time.deltaTime) + (downMovement * spawnableObject.speed * Time.deltaTime));
                 if (transform.position.x >= 6)

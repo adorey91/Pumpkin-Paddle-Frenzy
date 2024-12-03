@@ -20,16 +20,18 @@ public class SoundManager : MonoBehaviour
     [Header("Background Clips")]
     [SerializeField] private AudioClip mainClip;
     [SerializeField] private AudioClip gameplayClip;
-    
+
     [Header("SFX Clips")]
-    [SerializeField] private AudioClip sfxCollectClip;
+    [SerializeField] private AudioClip sfxAppleCollectClip;
+    [SerializeField] private AudioClip sfxEnergyCollectClip;
+    [SerializeField] private AudioClip sfxEnergyUseClip;
     [SerializeField] private AudioClip sfxCrashClip;
     [SerializeField] private AudioClip sfxStaminaDrainedClip;
     [SerializeField] private AudioClip sfxVictoryClip;
     [SerializeField] private AudioClip sfxUpgradeClip;
     [SerializeField] private AudioClip sfxSelectionClip;
 
-    
+
     public void Start()
     {
         musicSource.loop = true;
@@ -45,12 +47,14 @@ public class SoundManager : MonoBehaviour
     {
         Actions.OnPlaySFX += PlaySFX;
         Actions.OnPlayMusic += PlayBackgroundMusic;
+        Actions.OnUseEnergy += PlayUseEnergy;
     }
 
     private void OnDisable()
     {
         Actions.OnPlaySFX -= PlaySFX;
         Actions.OnPlayMusic -= PlayBackgroundMusic;
+        Actions.OnUseEnergy -= PlayUseEnergy;
     }
     #endregion
 
@@ -75,11 +79,18 @@ public class SoundManager : MonoBehaviour
         switch (type)
         {
             case "Victory": sfxSource.PlayOneShot(sfxVictoryClip, 1f); break;
-            case "Collection": sfxSource.PlayOneShot(sfxCollectClip, 1f); break;
+            case "AppleCollection": sfxSource.PlayOneShot(sfxAppleCollectClip, 1f); break;
+            case "EnergyCollection": sfxSource.PlayOneShot(sfxEnergyCollectClip, 1f); break;
             case "Obstacle": sfxSource.PlayOneShot(sfxCrashClip, 1f); break;
             case "Stamina": sfxSource.PlayOneShot(sfxStaminaDrainedClip, 1f); break;
             case "Upgrade": sfxSource.PlayOneShot(sfxUpgradeClip, 1f); break;
+            default: Debug.LogError($"SFX for '{type}' not recognized."); break;
         }
+    }
+
+    private void PlayUseEnergy()
+    {
+        sfxSource.PlayOneShot(sfxEnergyUseClip, 1f);
     }
 
     public void PlaySelectionSFX()
