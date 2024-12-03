@@ -17,7 +17,6 @@ public class ObjectPoolManager : MonoBehaviour
     [Header("Settings For Apple Collection")]
     [SerializeField] private GameObject splitAppleObject;
     [SerializeField] private Transform collectableTargetPos;
-    [SerializeField] private float speedToTarget = 7f;
     private Queue<GameObject> splitApplePool;
     [SerializeField] private ScoreManager scoreManager;
 
@@ -27,16 +26,15 @@ public class ObjectPoolManager : MonoBehaviour
     private float currentSpeed;
     private float newSpeed;
     private float speedStepProgress = 0f;
-    bool increasingSpeed = false;
+    private bool speedIncreasing = false;
 
     bool isCollected = false;
 
-    public bool showQueue;
     private void Awake()
     {
         splitApplePool = new Queue<GameObject>();
 
-        // Populate the pool for split apples using prefabObjects[0]
+        // Populate the pool for split apples
         for (int i = 0; i < 12; i++) // Adjust the number as needed
         {
             GameObject splitApple = Instantiate(splitAppleObject, transform);
@@ -75,6 +73,18 @@ public class ObjectPoolManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if(speedIncreasing)
+        {
+            IncreasingGradualSpeed();
+
+            foreach (SpawnableObject spawnable in spawnableObject)
+            {
+                spawnable.speed = currentSpeed;
+            }
+        }
+    }
 
     #region ActionsEnableDisable
     private void OnEnable()
@@ -270,19 +280,7 @@ public class ObjectPoolManager : MonoBehaviour
     }
     #endregion
 
-    // Updates pool currentSpeed based on timeAlive value
-    private void UpdatePoolSpeed(float timeAlive)
-    {
-        newSpeed = objectBaseSpeed * Mathf.Pow(timeAlive, obstacleSpeedFactor);
-
-
-
-        foreach (SpawnableObject spawnable in spawnableObject)
-        {
-            spawnable.speed = newSpeed;
-        }
-    }
-
+    #region SplitApple_Collection
     private GameObject GetSplitAppleFromPool()
     {
         if (splitApplePool.Count > 0)
@@ -373,6 +371,18 @@ public class ObjectPoolManager : MonoBehaviour
         // Return the small apple to its pool
         ReturnSplitAppleToPool(smallApple);
     }
+    #endregion
+
+    #region PoolSpeedUpdate
+    // Updates pool currentSpeed based on timeAlive value
+    private void UpdatePoolSpeed(float timeAlive)
+    {
+        newSpeed = objectBaseSpeed * Mathf.Pow(timeAlive, obstacleSpeedFactor);
+        
+        // Reset interpolation progress
+        speedStepProgress = 0f;
+        speedIncreasing = true;
+    }
 
     private void IncreasingGradualSpeed()
     {
@@ -387,20 +397,8 @@ public class ObjectPoolManager : MonoBehaviour
         if (Mathf.Abs(currentSpeed - newSpeed) < 0.001f)
         {
             currentSpeed = newSpeed; // Snap to target
-            increasingSpeed = false; // Stop interpolation
+            speedIncreasing = false;
         }
     }
-
-    private void IncreaseSpeed(float timeAlive)
-    {
-        // Adjust the growth curve of speed to control how fast it increases
-        newSpeed = objectBaseSpeed * Mathf.Pow(timeAlive, 0.2f);
-
-        // Reset interpolation progress
-        speedStepProgress = 0f;
-        increasingSpeed = true;
-
-        // Debug log to verify speed values
-        //Debug.Log($"Time Alive: {timeAlive}, New Speed: {newSpeed}");
-    }
+    #endregion
 }

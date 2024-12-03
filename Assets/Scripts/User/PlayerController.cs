@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static SpawnableBehaviour;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,8 +13,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 playerMovement;
     private Vector2 currentVelocity; // Used to store the current velocity of the player
 
-    private bool isMovingLeft = false;
-    private bool isMovingRight = false;
+    public bool isMovingLeft = false;
+    public bool isMovingRight = false;
 
     private void Awake()
     {
@@ -28,7 +27,6 @@ public class PlayerController : MonoBehaviour
         if (GameManager.instance.isPlaying)
             Movement();
     }
-
 
     #region ActionsEnableDisable
     private void OnEnable()
@@ -47,15 +45,26 @@ public class PlayerController : MonoBehaviour
     private void Movement()
     {
         rb.MovePosition(rb.position + new Vector2(playerMovement.x, 0) * moveSpeed * Time.deltaTime);
-    }
 
+        if (playerMovement.x > 0)
+        {
+            isMovingLeft = false;
+            isMovingRight = true;
+        }
+        else if (playerMovement.x < 0)
+        {
+            isMovingLeft = true;
+            isMovingRight = false;
+        }
+        else
+            StopMovement();
+    }
 
     public void Move(InputAction.CallbackContext context)
     {
         playerMovement = context.ReadValue<Vector2>();
     }
 
-    // Pauses when player presses the button set in the PlayerInputManager it will go to pause or back to gameplay ONLY in gameplay / pause
     public void Pause(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -80,7 +89,6 @@ public class PlayerController : MonoBehaviour
         isMovingLeft = false;
         playerMovement = Vector2.Lerp(playerMovement, new Vector2(1, 0), decelerationFactor * Time.deltaTime);
     }
-
 
     // Optional: if you want to stop movement when the button is released
     public void StopMovement()

@@ -12,7 +12,6 @@ public class HealthSystem : MonoBehaviour
     [SerializeField] private Image healthFillImage;
     [SerializeField] private Image[] healthIcons;
 
-
     // PlayerUpgrades
     [Header("Upgrades")]
     private UpgradeAsset curHealthUpgrade;
@@ -31,8 +30,9 @@ public class HealthSystem : MonoBehaviour
     private int curHealth;
     private float staminaDrain;
 
-    [Header("Player Collider")]
+    [Header("Player")]
     private CircleCollider2D playerCollider;
+    private PlayerController playerController;
 
     [Header("Damage Flicker Settings")]
     [SerializeField] private int flickerAmount = 3;
@@ -49,6 +49,7 @@ public class HealthSystem : MonoBehaviour
     {
         playerSprites = GetComponentsInChildren<SpriteRenderer>();
         playerCollider = GetComponent<CircleCollider2D>();
+        playerController = GetComponent<PlayerController>();
     }
 
     private void Start()
@@ -59,7 +60,10 @@ public class HealthSystem : MonoBehaviour
     public void Update()
     {
         if (GameManager.instance.isPlaying && !GameManager.instance.gameIsEndless && spawner.spawnedFirstObstacle)
-            StaminaDrain();
+        {
+            if(playerController.isMovingLeft || playerController.isMovingRight)
+                StaminaDrain();
+        }
     }
 
     #region EnableDisable

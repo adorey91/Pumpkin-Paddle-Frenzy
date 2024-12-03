@@ -11,9 +11,14 @@ public class ToggleManager : MonoBehaviour
 
     private void Start()
     {
-        foreach(InputDevice device in InputSystem.devices)
+        CheckForKeyboard();
+    }
+
+    public void CheckForKeyboard()
+    {
+        foreach (InputDevice device in InputSystem.devices)
         {
-            if(device.name == "Keyboard")
+            if (device.name == "Keyboard")
             {
                 SetOnScreenControlsState(false);
                 SetPauseButtonState(false);

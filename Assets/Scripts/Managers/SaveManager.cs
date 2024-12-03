@@ -166,6 +166,7 @@ public class SaveManager : MonoBehaviour
             Debug.Log("File Deleted");
         }
 
+        toggleManager.CheckForKeyboard();
         scoreManager.SetAttempt(0);
         scoreManager.SetTotalAppleCount(0, 0);
     }

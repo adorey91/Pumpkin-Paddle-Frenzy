@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour
         Actions.OnGameOver -= Results;
     }
 
+    // loads state using string or trys to parse it into a gamestate
     public void LoadState(string stateName)
     {
         if (stateName == "beforeOptions")
@@ -126,6 +127,7 @@ public class GameManager : MonoBehaviour
         PlayingState(true, false, false);
         uiManager.Gameplay_UI();
     }
+
     private void Results()
     {
         PlayingState(false, true, true);
@@ -165,15 +167,18 @@ public class GameManager : MonoBehaviour
         if (isPlaying)
         {
             Actions.ChangeSpriteVisibility("Enable");
+            Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             Time.timeScale = 1;
         }
         else
         {
             Actions.ChangeSpriteVisibility("Disable");
+            Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = true;
             Time.timeScale = 0;
         }
+
         if (returnToPool)
             Actions.ReturnAllToPool();
     }
