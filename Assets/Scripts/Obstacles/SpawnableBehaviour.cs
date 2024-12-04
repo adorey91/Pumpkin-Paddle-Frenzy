@@ -37,13 +37,13 @@ public class SpawnableBehaviour : MonoBehaviour
             if (moveLeft)
             {
                 rb.MovePosition(rb.position + (leftMovement * (spawnableObject.speed / 2) * Time.deltaTime) + (downMovement * spawnableObject.speed * Time.deltaTime));
-                if (transform.position.x <= -6)
+                if (transform.position.x <= spawnableObject.kayakXminSpawn)
                     moveLeft = false;
             }
             if (moveRight)
             {
                 rb.MovePosition(rb.position + (rightMovement * (spawnableObject.speed / 2) * Time.deltaTime) + (downMovement * spawnableObject.speed * Time.deltaTime));
-                if (transform.position.x >= 6)
+                if (transform.position.x >= spawnableObject.kayakXmaxSpawn)
                     moveRight = false;
             }
         }
@@ -53,5 +53,9 @@ public class SpawnableBehaviour : MonoBehaviour
         }
     }
 
-    public SpawnableObject GetSpawnableObject() { return spawnableObject; }
+    public SpawnableObject GetSpawnableObject()
+    {
+        setMovement = false;
+        return spawnableObject;
+    }
 }

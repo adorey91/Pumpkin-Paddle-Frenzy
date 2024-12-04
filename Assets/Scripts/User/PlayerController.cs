@@ -155,7 +155,7 @@ public class PlayerController : MonoBehaviour
 
         if (obstacle == null)
         {
-            Debug.LogWarning("SpawnableBehaviour not found on collided object or its parent.");
+            Debug.Log("SpawnableBehaviour not found on collided object or its parent.");
             return;
         }
 
