@@ -2210,7 +2210,7 @@ MonoBehaviour:
   energyTextAmnt: {fileID: 8952620881153098667}
   energyButton: {fileID: 8794878346442484035}
   initialEnergyAmount: 0
-  energyDuration: 8
+  energyDuration: 6
   energySpeedMultiplier: 1.5
   energyTimer: {fileID: 11400000, guid: 34595c8845d7038488fe732527fe6992, type: 2}
 --- !u!1 &872166941260843626

@@ -112,6 +112,7 @@ public class InventoryManager : MonoBehaviour
     {
         isUsingEnergy = true;
         energyAmount--;
+        Actions.OnPlaySFX("EnergyUse");
 
         UpdateEnergyUI();
         SetEnergyButtonState(false);
