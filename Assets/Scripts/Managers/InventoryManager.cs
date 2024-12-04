@@ -6,18 +6,26 @@ using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
+
+    [Header("Ui References")]
     [SerializeField] private TMP_Text energyTextAmnt;
-    public int energyAmount;
     [SerializeField] private Button energyButton;
-    private bool canUseEnergy;
-    private bool usingEnergy = false;
+
+    [Header("Energy Settings")]
+    [SerializeField] private int initialEnergyAmount = 0;
     [SerializeField] private float energyDuration = 10f;
 
-   [SerializeField] private CustomTimerSO energyTimer;
+    [Header("Timer Reference")]
+    [SerializeField] private CustomTimerSO energyTimer;
+
+    private int energyAmount;
+    private bool canUseEnergy;
+    private bool usingEnergy = false;
+
 
     private void Start()
     {
-        //Reset();
+        energyAmount = initialEnergyAmount;
     }
 
     private void OnEnable()
@@ -57,12 +65,23 @@ public class InventoryManager : MonoBehaviour
         }
 
     }
+
+    public int GetEnergyAmount()
+    {
+        return energyAmount;
+    }
+
+    public void SetEnergyAmount(int amount)
+    {
+        energyAmount = amount;
+    }
+
     private void CollectEnergy()
     {
         energyAmount++;
         energyTextAmnt.text = $"x {energyAmount}";
 
-        if (energyAmount > 0)
+        if (energyAmount > 0 && !usingEnergy)
         {
             energyButton.interactable = true;
             canUseEnergy = true;
@@ -97,12 +116,30 @@ public class InventoryManager : MonoBehaviour
 
     }
 
+    private void UpdateEnergyUI()
+    {
+        energyTextAmnt.text = $"x {energyAmount}";
+    }
+
+    private void UpdateEnergyTimerUI()
+    {
+        Time.timeScale = 2;
+        energyButton.image.fillAmount = energyTimer.GetRemainingTime() / energyTimer.duration;
+    }
+
 
     private void Reset()
     {
-        energyAmount = 0;
         energyTextAmnt.text = $"x {energyAmount}";
-        energyButton.interactable = false;
+
+        if (energyAmount > 0)
+        {
+            energyButton.interactable = true;
+            canUseEnergy = true;
+        }
+        else
+            energyButton.interactable = false;
+
         energyTimer.ResetTimer();
         canUseEnergy = false;
         usingEnergy = false;

@@ -16,9 +16,14 @@ public class ObjectPoolManager : MonoBehaviour
 
     [Header("Settings For Apple Collection")]
     [SerializeField] private GameObject splitAppleObject;
-    [SerializeField] private Transform collectableTargetPos;
+    [SerializeField] private Transform appleTargetPos;
     private Queue<GameObject> splitApplePool;
     [SerializeField] private ScoreManager scoreManager;
+
+    [Header("Settings for Energy Collection")]
+    [SerializeField] private GameObject energyObject;
+    [SerializeField] private Transform energyTargetPos;
+    private Queue<GameObject> energyPool;
 
 
     [Header("Settings for Speed Transition")]
@@ -35,6 +40,7 @@ public class ObjectPoolManager : MonoBehaviour
     private void Awake()
     {
         splitApplePool = new Queue<GameObject>();
+        energyPool = new Queue<GameObject>();
 
         // Populate the pool for split apples
         for (int i = 0; i < 12; i++) // Adjust the number as needed
@@ -42,6 +48,14 @@ public class ObjectPoolManager : MonoBehaviour
             GameObject splitApple = Instantiate(splitAppleObject, transform);
             splitApple.SetActive(false);
             splitApplePool.Enqueue(splitApple);
+        }
+
+        // Populate the pool for energy
+        for (int i = 0; i < 12; i++) // Adjust the number as needed
+        {
+            GameObject energy = Instantiate(energyObject, transform);
+            energy.SetActive(false);
+            energyPool.Enqueue(energy);
         }
     }
 
@@ -77,7 +91,7 @@ public class ObjectPoolManager : MonoBehaviour
 
     private void Update()
     {
-        if(speedIncreasing)
+        if (speedIncreasing)
         {
             IncreasingGradualSpeed();
 
@@ -117,7 +131,7 @@ public class ObjectPoolManager : MonoBehaviour
         playerX_Pos = playerPosition;
         HandleSpawnEvent(PoolType.Obstacle);
     }
-    
+
     // handles the spawning event
     private void HandleSpawnEvent(PoolType type)
     {
@@ -188,9 +202,9 @@ public class ObjectPoolManager : MonoBehaviour
                 spawnPosition = new Vector2(randomX, spawnPosition.y);
                 break;
         }
-        
+
         objectToSpawn.transform.rotation = spawnRotation;
-        if(forceSpawn)
+        if (forceSpawn)
             objectToSpawn.transform.position = new Vector2(playerX_Pos, spawnPosition.y);
         else
             objectToSpawn.transform.position = spawnPosition;
@@ -242,7 +256,10 @@ public class ObjectPoolManager : MonoBehaviour
         {
             if (type == PoolType.Collectable & isCollected)
             {
-                CollectAppleMovement(objectSpawned);
+                if (objectSpawned.name == "Apple(Clone)" || objectSpawned.name == "GoldenApple(Clone)")
+                    CollectAppleMovement(objectSpawned);
+                else
+                    CollectEnergyMovement(objectSpawned);
             }
             else
                 objectSpawned.SetActive(false);
@@ -306,7 +323,7 @@ public class ObjectPoolManager : MonoBehaviour
             GameObject apple = splitApplePool.Dequeue();
             apple.transform.localScale = new Vector3(0.4f, 0.4f, 0.5f);
             apple.SetActive(true);
-            //Debug.Log("Retrieved apple from pool: " + apple.name); // Debugging message
+            //Debug.Log("Retrieved energyCan from pool: " + energyCan.name); // Debugging message
             return apple;
         }
         //Debug.LogWarning("No apples available in split pool!"); // Debugging message
@@ -329,7 +346,7 @@ public class ObjectPoolManager : MonoBehaviour
             GameObject singleApple = GetSplitAppleFromPool();
             singleApple.transform.position = applePos.position + new Vector3(0.4f, 0, 0);
 
-            // Start moving each apple towards the target
+            // Start moving each energyCan towards the target
             StartCoroutine(MoveAndScaleToTarget(singleApple));
         }
         else
@@ -342,7 +359,7 @@ public class ObjectPoolManager : MonoBehaviour
             apple2.transform.position = applePos.position + new Vector3(0.4f, 0, 0);
             apple3.transform.position = applePos.position + new Vector3(0, 0.4f, 0);
 
-            // Start moving each apple towards the target
+            // Start moving each energyCan towards the target
             StartCoroutine(MoveAndScaleToTarget(apple1));
             StartCoroutine(MoveAndScaleToTarget(apple2));
             StartCoroutine(MoveAndScaleToTarget(apple3));
@@ -353,7 +370,7 @@ public class ObjectPoolManager : MonoBehaviour
     private IEnumerator MoveAndScaleToTarget(GameObject smallApple)
     {
         Vector3 startPosition = smallApple.transform.position;
-        Vector3 endPosition = collectableTargetPos.position;
+        Vector3 endPosition = appleTargetPos.position;
 
         float moveDuration = 1f; // Adjust based on your desired speed
         float elapsedTime = 0f;
@@ -376,19 +393,95 @@ public class ObjectPoolManager : MonoBehaviour
 
             smallApple.transform.position = nextPosition;
 
-            // Scale down the apple
+            // Scale down the energyCan
             smallApple.transform.localScale = Vector3.Lerp(smallApple.transform.localScale, targetScale, Time.unscaledDeltaTime * scaleSpeed);
 
             yield return null;
         }
 
-        // Ensure the apple reaches the exact end position
+        // Ensure the energyCan reaches the exact end position
         smallApple.transform.position = endPosition;
         smallApple.transform.localScale = targetScale;
 
-        // Return the small apple to its pool
+        // Return the small energyCan to its pool
         ReturnSplitAppleToPool(smallApple);
     }
+    #endregion
+
+    #region Energy_Collection
+    private GameObject GetEnergyFromPool()
+    {
+        if (energyPool.Count > 0)
+        {
+            GameObject energy = energyPool.Dequeue();
+            energy.transform.localScale = new Vector3(0.4f, 0.4f, 0.5f);
+            energy.SetActive(true);
+            //Debug.Log("Retrieved energyCan from pool: " + energyCan.name); // Debugging message
+            return energy;
+        }
+        //Debug.LogWarning("No energy available in pool!"); // Debugging message
+        return null;
+    }
+
+    private void ReturnEnergyToPool(GameObject energyCan)
+    {
+        energyCan.SetActive(false);
+        energyPool.Enqueue(energyCan);
+    }
+
+    private void CollectEnergyMovement(GameObject energyCan)
+    {
+        energyCan.SetActive(false);
+        Transform energyPos = energyCan.transform;
+
+        GameObject energy = GetEnergyFromPool();
+        energy.transform.position = energyPos.position + new Vector3(0.4f, 0, 0);
+
+        // Start moving each energyCan towards the target
+        StartCoroutine(MoveAndScaleEnergyToTarget(energy));
+    }
+
+
+    private IEnumerator MoveAndScaleEnergyToTarget(GameObject energyCan)
+    {
+        Vector3 startPosition = energyCan.transform.position;
+        Vector3 endPosition = energyTargetPos.position;
+
+        float moveDuration = 1f; // Adjust based on your desired speed
+        float elapsedTime = 0f;
+        float arcHeight = 2f; // Adjust for the height of the curve
+
+        Vector3 targetScale = Vector3.zero;
+        float scaleSpeed = 2f;
+
+        while (elapsedTime < moveDuration)
+        {
+            elapsedTime += Time.unscaledDeltaTime;
+
+            float t = elapsedTime / moveDuration;
+            t = Mathf.Clamp01(t);
+
+            // Interpolate position along a parabolic path
+            float height = Mathf.Sin(t * Mathf.PI) * arcHeight; // Sin curve for the height
+            Vector3 nextPosition = Vector3.Lerp(startPosition, endPosition, t);
+            nextPosition.y += height;
+
+            energyCan.transform.position = nextPosition;
+
+            // Scale down the energyCan
+            energyCan.transform.localScale = Vector3.Lerp(energyCan.transform.localScale, targetScale, Time.unscaledDeltaTime * scaleSpeed);
+
+            yield return null;
+        }
+
+        // Ensure the energyCan reaches the exact end position
+        energyCan.transform.position = endPosition;
+        energyCan.transform.localScale = targetScale;
+
+        // Return the small energyCan to its pool
+        ReturnEnergyToPool(energyCan);
+    }
+
     #endregion
 
     #region PoolSpeedUpdate
@@ -396,7 +489,7 @@ public class ObjectPoolManager : MonoBehaviour
     private void UpdatePoolSpeed(float timeAlive)
     {
         newSpeed = objectBaseSpeed * Mathf.Pow(timeAlive, obstacleSpeedFactor);
-        
+
         // Reset interpolation progress
         speedStepProgress = 0f;
         speedIncreasing = true;

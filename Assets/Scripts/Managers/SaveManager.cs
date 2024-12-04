@@ -10,6 +10,8 @@ public class SaveManager : MonoBehaviour
     [SerializeField] private UpgradeManager upgradeManager;
     [SerializeField] private UiManager uiManager;
     [SerializeField] private ToggleManager toggleManager;
+    [SerializeField] private InventoryManager inventoryManager;
+
     private string savePath;
     private string saveFileName = "playerInfo.json";
 
@@ -75,6 +77,7 @@ public class SaveManager : MonoBehaviour
             data.attemptsMade = scoreManager.GetAttemptCount();
             data.onScreenControls = toggleManager.GetOnScreenControlsState();
             data.onScreenPause = toggleManager.GetPauseButtonState();
+            data.energyAmount = inventoryManager.GetEnergyAmount();
 
             string json = JsonUtility.ToJson(data, true);
             File.WriteAllText(filePath, json);
@@ -144,6 +147,7 @@ public class SaveManager : MonoBehaviour
                 scoreManager.SetAttempt(data.attemptsMade);
                 toggleManager.SetOnScreenControlsState(data.onScreenControls);
                 toggleManager.SetPauseButtonState(data.onScreenPause);
+                inventoryManager.SetEnergyAmount(data.energyAmount);
 
                 Ui_TextUpdater._AppleTotalEndGame = upgradeManager.GetTotalCost();
 
@@ -185,5 +189,6 @@ public class SaveManager : MonoBehaviour
         toggleManager.CheckForKeyboard(); 
         scoreManager.SetAttempt(0);
         scoreManager.SetTotalAppleCount(0, 0);
+        inventoryManager.SetEnergyAmount(0);
     }
 }

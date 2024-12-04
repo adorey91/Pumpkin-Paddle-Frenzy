@@ -13,7 +13,7 @@ public class PlayerData
     public int attemptsMade;
     public bool onScreenPause;
     public bool onScreenControls;
-    public float bestResults;
+    public int energyAmount;
 
     public List<string> purchasedUpgrades = new List<string>(); // saving names of upgrades
 }

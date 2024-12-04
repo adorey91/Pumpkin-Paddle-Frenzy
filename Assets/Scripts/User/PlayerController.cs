@@ -168,9 +168,17 @@ public class PlayerController : MonoBehaviour
                 Actions.OnPlayerHurt();
                 break;
             case PoolType.Collectable:
-                string collectable = spawnable.collectableValue == 1 ? "apple" : "golden";
-                Actions.OnReturn(PoolType.Collectable, obstacleObj, true);
-                Actions.AppleCollection(collectable);
+                if(spawnable.name == "Apple" || spawnable.name == "GoldenApple")
+                {
+                    string collectable = spawnable.collectableValue == 1 ? "apple" : "golden";
+                    Actions.OnReturn(PoolType.Collectable, obstacleObj, true);
+                    Actions.AppleCollection(collectable);
+                }
+                else
+                {
+                    Actions.OnReturn(PoolType.Collectable, obstacleObj, true);
+                    Actions.EnergyCollection();
+                }
                 break;
             case PoolType.FinishLine:
                 Actions.OnGameWin();
