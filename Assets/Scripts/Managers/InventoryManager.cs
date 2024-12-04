@@ -59,6 +59,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    #region GettersSetters
     public int GetEnergyAmount()
     {
         return energyAmount;
@@ -68,7 +69,9 @@ public class InventoryManager : MonoBehaviour
     {
         energyAmount = amount;
     }
+    #endregion
 
+    // Event Handlers
     private void OnEnergyCollected()
     {
         energyAmount++;
@@ -80,12 +83,14 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    // Sets state of the energy button
     private void SetEnergyButtonState(bool state)
     {
         canUseEnergy = state;
         energyButton.interactable = state;
     }
 
+    // Event Handler for using energy
     public void OnEnergyUsed()
     {
         if (isUsingEnergy || energyAmount <= 0)
@@ -101,6 +106,7 @@ public class InventoryManager : MonoBehaviour
 
     }
 
+    // Start using energy
     private void StartUsingEnergy()
     {
         isUsingEnergy = true;
@@ -113,6 +119,7 @@ public class InventoryManager : MonoBehaviour
         Debug.Log($"Timer Started: {energyTimer.isRunning}, Duration: {energyTimer.duration}");
     }
 
+    // Stop using energy, sets everything back to normal
     private void StopUsingEnergy()
     {
         isUsingEnergy = false;
@@ -126,6 +133,7 @@ public class InventoryManager : MonoBehaviour
         ResetTimerUI();
     }
 
+    // UI Updates
     private void UpdateEnergyUI()
     {
         energyTextAmnt.text = $"x {energyAmount}";
