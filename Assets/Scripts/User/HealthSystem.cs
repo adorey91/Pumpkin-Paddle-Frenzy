@@ -61,7 +61,7 @@ public class HealthSystem : MonoBehaviour
     {
         if (GameManager.instance.isPlaying && !GameManager.instance.gameIsEndless && spawner.spawnedFirstObstacle)
         {
-            if(playerController.isMovingLeft || playerController.isMovingRight || Time.timeScale == 2)
+            if(playerController.isMovingLeft || playerController.isMovingRight || Time.timeScale == 1.5)
                 StaminaDrain();
         }
     }
@@ -94,10 +94,17 @@ public class HealthSystem : MonoBehaviour
     private void StaminaDrain()
     {
         float drainSpeedMultiplier = 0.1f;  // Adjust this value to control the drain rate
+        float timeMultiplier = 1;           // Adjust this value to control the drain rate
 
         if (staminaImage.fillAmount > 0)
         {
-            staminaImage.fillAmount -= staminaDrain * drainSpeedMultiplier * Time.deltaTime;
+            if (Time.timeScale == 1.5)
+            {
+                if(!playerController.isMovingLeft || !playerController.isMovingRight)
+                    timeMultiplier =  0.75f;
+            }
+
+            staminaImage.fillAmount -= staminaDrain * drainSpeedMultiplier * (Time.deltaTime * timeMultiplier);
 
             // If stamina hits zero, take damage but if the current health is greater than zero fill the stamina bar back to 1
             if (staminaImage.fillAmount <= 0)

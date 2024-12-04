@@ -754,7 +754,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2c0c61b23cc41e44baf3ae595b8bb445, type: 3}
+  m_Sprite: {fileID: 21300000, guid: da22a309e668fc44497ea3d29e14de1d, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2693,13 +2693,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1088479729813331613}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5042364509956302486}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -2733,9 +2733,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2c0c61b23cc41e44baf3ae595b8bb445, type: 3}
+  m_Sprite: {fileID: 21300000, guid: da22a309e668fc44497ea3d29e14de1d, type: 3}
   m_Type: 3
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -5875,7 +5875,7 @@ MonoBehaviour:
   gameplayClip: {fileID: 8300000, guid: d825922ffe1863847b91ec14792526ed, type: 3}
   sfxAppleCollectClip: {fileID: 8300000, guid: 6003c58e79e2527468ac727404585c64, type: 3}
   sfxEnergyCollectClip: {fileID: 8300000, guid: 0bc11a478b9433b4d8e6be5ce0e082a5, type: 3}
-  sfxEnergyUseClip: {fileID: 0}
+  sfxEnergyUseClip: {fileID: 8300000, guid: e2f915cddc1164943befc2b77894865c, type: 3}
   sfxCrashClip: {fileID: 8300000, guid: 91d3deed2930389488437dafcca57e84, type: 3}
   sfxStaminaDrainedClip: {fileID: 8300000, guid: 511865a84bc7948449893d097311d45b, type: 3}
   sfxVictoryClip: {fileID: 8300000, guid: 2f464e78f91caaa43854a9c17f705e36, type: 3}
@@ -17830,8 +17830,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8416643989483315820}
   - {fileID: 2563206638228219762}
+  - {fileID: 8416643989483315820}
   m_Father: {fileID: 3817012537832430263}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
@@ -18716,8 +18716,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Collect Apples to Purchase Upgrades
 
-    & Collect Energy for a Quick
-    Boost'
+    & Collect Energy to Boost'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 38f7dd9c573faa34e99167d0c434df45, type: 2}
   m_sharedMaterial: {fileID: -2357846482507374296, guid: 38f7dd9c573faa34e99167d0c434df45, type: 2}
@@ -19536,7 +19535,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &91854954343654439
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21856,7 +21855,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2323196684203377185
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22034,7 +22033,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -23965,7 +23964,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3817012537832430263
 RectTransform:
   m_ObjectHideFlags: 0

@@ -75,6 +75,7 @@ public class InventoryManager : MonoBehaviour
     private void OnEnergyCollected()
     {
         energyAmount++;
+        Actions.OnPlaySFX("EnergyCollection");
         UpdateEnergyUI();
 
         if (energyAmount > 0 && !isUsingEnergy)
@@ -162,6 +163,7 @@ public class InventoryManager : MonoBehaviour
         else
             energyButton.interactable = false;
 
+        energyButton.image.fillAmount = 1;
         energyTimer.ResetTimer();
         canUseEnergy = false;
         isUsingEnergy = false;
