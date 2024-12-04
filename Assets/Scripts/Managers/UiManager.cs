@@ -63,8 +63,6 @@ public class UiManager : MonoBehaviour
                     () =>
                     {
                         Actions.DeleteSave();
-                        toggleManager.SetOnScreenControlsState(true);
-                        toggleManager.SetPauseButtonState(true);
                         Instructions_UI();
                     },
                     () =>

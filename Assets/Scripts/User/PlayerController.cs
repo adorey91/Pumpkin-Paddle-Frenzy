@@ -149,10 +149,10 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-    public void OnTriggerEnter2D(Collider2D other)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        SpawnableBehaviour obstacle = other.GetComponent<SpawnableBehaviour>() ?? other.GetComponentInParent<SpawnableBehaviour>();
-        GameObject obstacleObj = obstacle.gameObject;
+        GameObject obstacleObj = collision.gameObject;
+        SpawnableBehaviour obstacle = obstacleObj.gameObject.GetComponent<SpawnableBehaviour>() ?? obstacleObj.GetComponentInParent<SpawnableBehaviour>();
 
         if (obstacle == null)
         {
@@ -168,7 +168,7 @@ public class PlayerController : MonoBehaviour
                 Actions.OnPlayerHurt();
                 break;
             case PoolType.Collectable:
-                if(spawnable.name == "Apple" || spawnable.name == "GoldenApple")
+                if (spawnable.name == "Apple" || spawnable.name == "GoldenApple")
                 {
                     string collectable = spawnable.collectableValue == 1 ? "apple" : "golden";
                     Actions.OnReturn(PoolType.Collectable, obstacleObj, true);

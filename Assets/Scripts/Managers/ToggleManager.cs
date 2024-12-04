@@ -16,6 +16,7 @@ public class ToggleManager : MonoBehaviour
     public void CheckForKeyboard()
     {
         bool keyboardDetected = InputSystem.GetDevice<Keyboard>() != null;
+
         SetOnScreenControlsState(!keyboardDetected);
         SetPauseButtonState(!keyboardDetected);
     }
