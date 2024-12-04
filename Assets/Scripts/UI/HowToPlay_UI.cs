@@ -30,7 +30,7 @@ public class HowToPlay_UI : MonoBehaviour
         playerSpriteHowTo[0].sprite = upgradeHealth[upgradeIndex].newSprite;
         playerSpriteHowTo[1].sprite = upgradeStamina[upgradeIndex].newSprite;
 
-        // Reset stamina and state
+        // OnGameplayReset stamina and state
         staminaBar.fillAmount = 1;
         maxHealth = (int)upgradeHealth[upgradeIndex].newStats;
         currentHealth = maxHealth;
@@ -84,7 +84,7 @@ public class HowToPlay_UI : MonoBehaviour
         // Check if health is depleted
         if (currentHealth <= 0)
         {
-            // Reset player sprites and health
+            // OnGameplayReset player sprites and health
             changeSprites = true;
         }
 
@@ -110,7 +110,7 @@ public class HowToPlay_UI : MonoBehaviour
             changeSprites = false;
         }
 
-        // Reset stamina
+        // OnGameplayReset stamina
         staminaBar.fillAmount = 1;
         staminaDrained = false;
         startDrain = true;

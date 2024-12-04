@@ -490,7 +490,7 @@ public class ObjectPoolManager : MonoBehaviour
     {
         newSpeed = objectBaseSpeed * Mathf.Pow(timeAlive, obstacleSpeedFactor);
 
-        // Reset interpolation progress
+        // OnGameplayReset interpolation progress
         speedStepProgress = 0f;
         speedIncreasing = true;
     }

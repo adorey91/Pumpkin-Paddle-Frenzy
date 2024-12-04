@@ -54,7 +54,7 @@ public class Spawner : MonoBehaviour
         levelSlider = levelProgressSlider.gameObject;
         UpdateMaxProgressBarValue();
 
-        // Reset the values
+        // OnGameplayReset the values
         ResetValues();
     }
 

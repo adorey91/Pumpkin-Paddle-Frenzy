@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Energy
   m_EditorClassIdentifier: 
   type: 1
-  speed: 1.5
-  size: 3
+  speed: 3.4097636
+  size: 1
   collectableValue: 1

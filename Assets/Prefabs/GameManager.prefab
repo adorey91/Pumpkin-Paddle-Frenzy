@@ -1786,6 +1786,7 @@ MonoBehaviour:
   energyButton: {fileID: 8794878346442484035}
   initialEnergyAmount: 0
   energyDuration: 8
+  energySpeedMultiplier: 1.5
   energyTimer: {fileID: 11400000, guid: 34595c8845d7038488fe732527fe6992, type: 2}
 --- !u!1 &872166941260843626
 GameObject:
@@ -9510,7 +9511,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: v0.5.13
+  m_text: v0.5.16
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 38f7dd9c573faa34e99167d0c434df45, type: 2}
   m_sharedMaterial: {fileID: -2357846482507374296, guid: 38f7dd9c573faa34e99167d0c434df45, type: 2}
@@ -20853,8 +20854,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -20877,7 +20878,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535

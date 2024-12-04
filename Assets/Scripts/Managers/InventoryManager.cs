@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -14,13 +15,14 @@ public class InventoryManager : MonoBehaviour
     [Header("Energy Settings")]
     [SerializeField] private int initialEnergyAmount = 0;
     [SerializeField] private float energyDuration = 10f;
+    [SerializeField] private float energySpeedMultiplier = 1.5f;
 
     [Header("Timer Reference")]
     [SerializeField] private CustomTimerSO energyTimer;
 
     private int energyAmount;
     private bool canUseEnergy;
-    private bool usingEnergy = false;
+    private bool isUsingEnergy = false;
 
 
     private void Awake()
@@ -31,40 +33,30 @@ public class InventoryManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Actions.EnergyCollection += CollectEnergy;
-        Actions.OnUseEnergy += UseEnergy;
-        Actions.OnGameplay += Reset;
+        Actions.EnergyCollection += OnEnergyCollected;
+        Actions.OnUseEnergy += OnEnergyUsed;
+        Actions.OnGameplay += OnGameplayReset;
     }
 
     private void OnDisable()
     {
-        Actions.EnergyCollection -= CollectEnergy;
-        Actions.OnUseEnergy -= UseEnergy;
-        Actions.OnGameplay -= Reset;
+        Actions.EnergyCollection -= OnEnergyCollected;
+        Actions.OnUseEnergy -= OnEnergyUsed;
+        Actions.OnGameplay -= OnGameplayReset;
     }
 
     private void Update()
     {
-        if (usingEnergy)
+        if (isUsingEnergy)
         {
-            Time.timeScale = 2;
+            UpdateEnergyTimerUI();
 
-            energyButton.image.fillAmount = energyTimer.GetRemainingTime() / energyTimer.duration;
-
+            // if the timer completes
             if (energyTimer.UpdateTimer(Time.deltaTime))
             {
-                usingEnergy = false;
-                Time.timeScale = 1;
-                energyButton.image.fillAmount = 1;
-
-                if (energyAmount > 0)
-                {
-                    canUseEnergy = true;
-                    energyButton.interactable = true;
-                }
+                StopUsingEnergy();
             }
         }
-
     }
 
     public int GetEnergyAmount()
@@ -77,44 +69,61 @@ public class InventoryManager : MonoBehaviour
         energyAmount = amount;
     }
 
-    private void CollectEnergy()
+    private void OnEnergyCollected()
     {
         energyAmount++;
-        energyTextAmnt.text = $"x {energyAmount}";
+        UpdateEnergyUI();
 
-        if (energyAmount > 0 && !usingEnergy)
+        if (energyAmount > 0 && !isUsingEnergy)
         {
-            energyButton.interactable = true;
-            canUseEnergy = true;
+            SetEnergyButtonState(true);
         }
     }
 
-    public void UseEnergy()
+    private void SetEnergyButtonState(bool state)
     {
-        if (usingEnergy || energyAmount == 0)
+        canUseEnergy = state;
+        energyButton.interactable = state;
+    }
+
+    public void OnEnergyUsed()
+    {
+        if (isUsingEnergy || energyAmount <= 0)
         {
-            canUseEnergy = false;
-            energyButton.interactable = false;
+            SetEnergyButtonState(false);
             return;
         }
 
         if (energyAmount > 0 && GameManager.instance.isPlaying)
         {
-
-            usingEnergy = true;
-            canUseEnergy = false;
-            energyButton.interactable = false;
-
-            energyAmount--;
-            energyTextAmnt.text = $"x {energyAmount}";
-
-            energyTimer.StartTimer(energyDuration);
-            Debug.Log($"Timer Started: {energyTimer.isRunning}, Duration: {energyTimer.duration}");
-
-            if (energyAmount == 0)
-                energyButton.interactable = false;
+            StartUsingEnergy();
         }
 
+    }
+
+    private void StartUsingEnergy()
+    {
+        isUsingEnergy = true;
+        energyAmount--;
+
+        UpdateEnergyUI();
+        SetEnergyButtonState(false);
+
+        energyTimer.StartTimer(energyDuration);
+        Debug.Log($"Timer Started: {energyTimer.isRunning}, Duration: {energyTimer.duration}");
+    }
+
+    private void StopUsingEnergy()
+    {
+        isUsingEnergy = false;
+        Time.timeScale = 1;
+
+        if (energyAmount > 0)
+        {
+            SetEnergyButtonState(true);
+        }
+
+        ResetTimerUI();
     }
 
     private void UpdateEnergyUI()
@@ -124,12 +133,16 @@ public class InventoryManager : MonoBehaviour
 
     private void UpdateEnergyTimerUI()
     {
-        Time.timeScale = 2;
+        Time.timeScale = energySpeedMultiplier;
         energyButton.image.fillAmount = energyTimer.GetRemainingTime() / energyTimer.duration;
     }
 
-
-    private void Reset()
+    private void ResetTimerUI()
+    {
+        energyButton.image.fillAmount = 1;
+    }
+     
+    private void OnGameplayReset()
     {
         energyTextAmnt.text = $"x {energyAmount}";
 
@@ -143,6 +156,6 @@ public class InventoryManager : MonoBehaviour
 
         energyTimer.ResetTimer();
         canUseEnergy = false;
-        usingEnergy = false;
+        isUsingEnergy = false;
     }
 }

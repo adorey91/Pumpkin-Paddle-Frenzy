@@ -65,7 +65,7 @@ public class LoopingBackground : MonoBehaviour
         // Adjust the growth curve of speed to control how fast it increases
         newSpeed = baseSpeed * Mathf.Pow(timeAlive, 0.2f);
 
-        // Reset interpolation progress
+        // OnGameplayReset interpolation progress
         speedStepProgress = 0f;
         increasingSpeed = true;
 
