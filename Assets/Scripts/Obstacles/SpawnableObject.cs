@@ -9,4 +9,10 @@ public class SpawnableObject : ScriptableObject
     public float speed;
     public int size; // spawn count
     public int collectableValue;
+
+    public float minXspawn;
+    public float maxXspawn;
+
+    public float kayakXminSpawn;
+    public float kayakXmaxSpawn;
 }

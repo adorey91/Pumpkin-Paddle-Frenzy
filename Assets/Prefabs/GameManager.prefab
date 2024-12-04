@@ -1755,8 +1755,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4346719038102037349}
   m_HandleRect: {fileID: 1260733944238496828}
   m_Direction: 0
-  m_Value: 0.50015557
-  m_Size: 0.9994945
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2241,7 +2241,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -8, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 10, z: 0.6}
+  m_LocalScale: {x: 0.1, y: 16, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3218335630324230443}
@@ -7527,8 +7527,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5614958986019420539}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0.5091405}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -7758,7 +7758,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: -0.000061035156, y: 0}
-  m_SizeDelta: {x: 1552, y: 0}
+  m_SizeDelta: {x: 1552, y: 1311.1}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &9026222759913097524
 CanvasRenderer:
@@ -12535,7 +12535,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 6783359901653297082}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.49085948
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -15559,6 +15559,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a252255d7563c9944a726fd0cc1090a3, type: 2}
   - {fileID: 11400000, guid: c4a5b78ee84680644bee16eb60e62a46, type: 2}
   - {fileID: 11400000, guid: f14b6b5ff34a0064aa0f8f0eb5e7e22d, type: 2}
+  - {fileID: 11400000, guid: c597cd8a074de9d4aaa31272d01e87cd, type: 2}
+  - {fileID: 11400000, guid: 24557d9c2c101b64186e0df26daa1bcb, type: 2}
   splitAppleObject: {fileID: 1475980636802886061, guid: cf66a2e9b259ea54c9d6ec3fff743278, type: 3}
   appleTargetPos: {fileID: 8152346019739540887}
   scoreManager: {fileID: 9145115147999723359}
@@ -19597,7 +19599,8 @@ MonoBehaviour:
   decelerationFactor: 8.5
   isMovingLeft: 0
   isMovingRight: 0
-  forceSpawnCount: 14
+  movementTimer: {fileID: 11400000, guid: 6ab19153538faa948a66b83e8f46372e, type: 2}
+  forceSpawnCount: 10
 --- !u!1 &6462362140833953100
 GameObject:
   m_ObjectHideFlags: 0
@@ -19899,7 +19902,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6738705782959009580
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20810,7 +20813,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 8, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 10, z: 0.6}
+  m_LocalScale: {x: 0.1, y: 16, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3218335630324230443}

@@ -159,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d671a5d50d881a04494cac373a83dfac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnableObject: {fileID: 11400000, guid: a252255d7563c9944a726fd0cc1090a3, type: 2}
+  spawnableObject: {fileID: 11400000, guid: c597cd8a074de9d4aaa31272d01e87cd, type: 2}
 --- !u!58 &6689073885938616471
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -10,9 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 46f3ec71f2d3b2f468c925f54aa49b3e, type: 3}
-  m_Name: Obstacle
+  m_Name: Racer
   m_EditorClassIdentifier: 
   type: 0
   speed: 1
   size: 4
   collectableValue: 0
+  minXspawn: -5.95
+  maxXspawn: 5.95
+  kayakXminSpawn: 0
+  kayakXmaxSpawn: 0

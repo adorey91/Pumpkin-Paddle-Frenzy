@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     private bool isNotMoving = true; // tracking current movement state
     private bool wasNotMoving = true; // used to track previous movement state
 
-    public CustomTimer movementTimer;
+    public CustomTimerSO movementTimer;
     public float forceSpawnCount = 14f;
     bool restartedTimer = false;
 
@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         baseMoveSpeed = moveSpeed;
-        movementTimer = new CustomTimer(forceSpawnCount);
     }
 
     private void Update()

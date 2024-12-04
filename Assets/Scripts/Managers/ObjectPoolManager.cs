@@ -142,11 +142,13 @@ public class ObjectPoolManager : MonoBehaviour
     // Spawns an INACTIVE object from a designated pool, sets the rotation and position
     private GameObject SpawnFromPool(PoolType type)
     {
-        float leftSpawnX = -6f;
-        float rightSpawnX = 6f;
-        float randomXSpawnMin = -6.7f;
-        float randomXSpawnMax = 6.7f;
-        float randomX = Random.Range(randomXSpawnMin, randomXSpawnMax);
+        //float leftSpawnX = -6f;
+        //float rightSpawnX = 6f;
+        //float randomXSpawnMin = -6.7f;
+        //float randomXSpawnMax = 6.7f;
+
+
+        //float randomX = Random.Range(randomXSpawnMin, randomXSpawnMax);
 
         if (!poolDictionary.ContainsKey(type))
         {
@@ -184,6 +186,8 @@ public class ObjectPoolManager : MonoBehaviour
         objectToSpawn.SetActive(true);
         Vector2 spawnPosition = transform.position;
         Quaternion spawnRotation = Quaternion.identity;
+        SpawnableObject spawnable = objectToSpawn.GetComponent<SpawnableBehaviour>().GetSpawnableObject();
+        float randomX = Random.Range(spawnable.minXspawn, spawnable.maxXspawn);
 
         switch (type)
         {
@@ -191,7 +195,7 @@ public class ObjectPoolManager : MonoBehaviour
                 spawnPosition = transform.position;
                 break;
             case PoolType.Kayak:
-                spawnPosition = new Vector2((randomX <= 0 ? leftSpawnX : rightSpawnX), transform.position.y);
+                spawnPosition = new Vector2((randomX <= 0 ? spawnable.kayakXminSpawn : spawnable.kayakXmaxSpawn), transform.position.y);
                 spawnRotation = randomX <= 0 ? Quaternion.Euler(0, 180, 0) : Quaternion.identity;
                 break;
             case PoolType.Collectable:
