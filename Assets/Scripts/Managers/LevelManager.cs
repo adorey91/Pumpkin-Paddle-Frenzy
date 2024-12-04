@@ -26,7 +26,7 @@ public class LevelManager : MonoBehaviour
         LoadScene("GameEnd");
     }
 
-    public void LoadScene(string sceneName)
+    private void LoadScene(string sceneName)
     {
         _sceneName = sceneName;
         LoadAsync(sceneName);
@@ -65,6 +65,14 @@ public class LevelManager : MonoBehaviour
         scenesToLoad.Remove(operation);
         operation.completed -= OperationCompleted;
 
-        GameManager.instance.LoadState(_sceneName);
+        if (GameManager.instance.loadUpgrade)
+        {
+            GameManager.instance.LoadState("Upgrades");
+            GameManager.instance.loadUpgrade = false;
+        }
+        else
+        {
+            GameManager.instance.LoadState(_sceneName);
+        }
     }
 }

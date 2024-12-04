@@ -10,10 +10,11 @@ public class GameManager : MonoBehaviour
 
     [Header("Managers")]
     [SerializeField] private UiManager uiManager;
+    [SerializeField] private ScoreManager scoreManager;
 
     [Header("Gamestate")]
     public GameState state;
-    public enum GameState { MainMenu, Gameplay, Pause, Options, GameEnd, Upgrade };
+    public enum GameState { MainMenu, Gameplay, Pause, Options, GameEnd, Results, Upgrades };
     private GameState currentState;
     private GameState beforeOptions;
 
@@ -22,6 +23,8 @@ public class GameManager : MonoBehaviour
     public bool gameIsEndless = false;
     internal bool isPlaying;
     private bool isNewRun = true;
+
+    internal bool loadUpgrade = false;
 
     private void Awake()
     {
@@ -40,24 +43,34 @@ public class GameManager : MonoBehaviour
         SetState(GameState.MainMenu);
     }
 
+    // USE FOR DEBUGGING ONLY
+    //private void Update()
+    //{
+    //    if (state != currentState)
+    //        SetState(state);
+    //}
+
     private void OnEnable()
     {
-        Actions.OnGameOver += Upgrades;
-        Actions.OnGameWin += GameWin;
+        Actions.OnGameOver += Results;
     }
 
     private void OnDisable()
     {
-        Actions.OnGameOver -= Upgrades;
-        Actions.OnGameWin -= GameWin;
+        Actions.OnGameOver -= Results;
     }
 
+    // loads state using string or trys to parse it into a gamestate
     public void LoadState(string stateName)
     {
+        if (stateName == "beforeOptions")
+        {
+            LoadState(beforeOptions);
+            return;
+        }
+        
         if (Enum.TryParse(stateName, out GameState gamestate))
             LoadState(gamestate);
-        else if (stateName == "beforeOptions")
-            LoadState(beforeOptions);
         else
             Debug.LogError(stateName + " doesn't exist");
     }
@@ -83,7 +96,8 @@ public class GameManager : MonoBehaviour
             case GameState.Options: Options(); break;
             case GameState.Pause: Pause(); break;
             case GameState.GameEnd: GameWin(); break;
-            case GameState.Upgrade: Upgrades(); break;
+            case GameState.Results: Results(); break;
+            case GameState.Upgrades: Upgrades(); break;
         }
     }
 
@@ -100,6 +114,7 @@ public class GameManager : MonoBehaviour
     {
         PlayingState(false, true, true);
         Actions.OnPlayMusic("MainMenu");
+        Actions.ResetStats();
         uiManager.MainMenu_UI();
     }
 
@@ -112,12 +127,18 @@ public class GameManager : MonoBehaviour
         PlayingState(true, false, false);
         uiManager.Gameplay_UI();
     }
-    private void Upgrades()
+
+    private void Results()
     {
         PlayingState(false, true, true);
         uiManager.Results_UI();
     }
 
+    private void Upgrades()
+    {
+        PlayingState(false, true, true);
+        uiManager.Upgrades_UI();
+    }
 
     private void Pause()
     {
@@ -146,14 +167,19 @@ public class GameManager : MonoBehaviour
         if (isPlaying)
         {
             Actions.ChangeSpriteVisibility("Enable");
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             Time.timeScale = 1;
         }
         else
         {
             Actions.ChangeSpriteVisibility("Disable");
+            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.visible = true;
             Time.timeScale = 0;
         }
-        if(returnToPool)
+
+        if (returnToPool)
             Actions.ReturnAllToPool();
     }
 
@@ -162,7 +188,10 @@ public class GameManager : MonoBehaviour
         gameIsEndless = endless;
 
         if (gameIsEndless)
+        {
             Actions.ChangeEndlessVisibility("Disable");
+            Actions.ResetStats();
+        }
         else
             Actions.ChangeEndlessVisibility("Enable");
     }

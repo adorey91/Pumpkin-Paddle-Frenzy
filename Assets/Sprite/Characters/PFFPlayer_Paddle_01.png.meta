@@ -93,6 +93,58 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -111,8 +163,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 299cc97a9b6105340a9f623864cb8285
-      internalID: 1723109229
+      spriteID: 36fcaf23dfd28374481dcdbb16df5c40
+      internalID: 878081119
       vertices: []
       indices: 
       edges: []
@@ -132,35 +184,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 418c5a711cd63f74d9660380c4fb3925
-      internalID: 261350176
+      spriteID: e1932551d312cf34ba7c358aeade244f
+      internalID: -2110483478
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
       name: PFFPlayer_Paddle_01_2
-      rect:
-        serializedVersion: 2
-        x: 4320
-        y: 0
-        width: 2160
-        height: 2160
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e4651f52730acc041a15c8ca4a155787
-      internalID: -1077881768
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: PFFPlayer_Paddle_01_3
       rect:
         serializedVersion: 2
         x: 6480
@@ -174,8 +205,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 10304b59c5aa1924b8fab89c8e25abd2
-      internalID: -473237642
+      spriteID: ab8bd1af9984fbe4c9bb6234967067a8
+      internalID: 1273246910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PFFPlayer_Paddle_01_3
+      rect:
+        serializedVersion: 2
+        x: 4320
+        y: 0
+        width: 2160
+        height: 2160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: daa5b35a04d639c4d9529818e140343a
+      internalID: -330044842
       vertices: []
       indices: 
       edges: []
@@ -191,10 +243,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      PFFPlayer_Paddle_01_0: 1723109229
-      PFFPlayer_Paddle_01_1: 261350176
-      PFFPlayer_Paddle_01_2: -1077881768
-      PFFPlayer_Paddle_01_3: -473237642
+      PFFPlayer_Paddle_01_0: 878081119
+      PFFPlayer_Paddle_01_1: -2110483478
+      PFFPlayer_Paddle_01_2: 1273246910
+      PFFPlayer_Paddle_01_3: -330044842
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -2,14 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class ScoreManager : MonoBehaviour
 {
     [Header("Counts needed for score")]
-    private int totalAppleCount;
-    private int appleCount;
+    
+    private int currentRunAppleCount;
+    private int availableAppleCount;
+    private int lifetimeAppleCount;
+
     private int attemptNumber;
     private float runTime;
     private float bestRunFloat; // best run in float
@@ -19,9 +23,7 @@ public class ScoreManager : MonoBehaviour
     private void Start()
     {
         attemptNumber = 0;
-        appleCount = 0;
-        Actions.UpdateAttemptText(attemptNumber);
-        Actions.UpdateAppleText(appleCount, totalAppleCount);
+        currentRunAppleCount = 0;
     }
 
     private void Update()
@@ -54,12 +56,14 @@ public class ScoreManager : MonoBehaviour
             case "apple": value = 1; break;
             case "golden": value = 3; break;
             default: value = 0; break;
-
         }
-        appleCount += value;
-        totalAppleCount += value;
-        Actions.OnPlaySFX("Collection");
-        Actions.UpdateAppleText(appleCount, totalAppleCount);
+
+        currentRunAppleCount += value;
+        availableAppleCount += value;
+        lifetimeAppleCount += value;
+
+        Actions.OnPlaySFX("AppleCollection");
+        Actions.UpdateAppleText(currentRunAppleCount, availableAppleCount, lifetimeAppleCount);
     }
 
     /// <summary>
@@ -67,17 +71,16 @@ public class ScoreManager : MonoBehaviour
     /// </summary>
     public void ResetRun()
     {
-        appleCount = 0;
+        currentRunAppleCount = 0;
         runTime = 0;
         attemptNumber++;
-        Actions.UpdateAttemptText(attemptNumber);
-        Actions.UpdateAppleText(appleCount, totalAppleCount);
+        Actions.UpdateAppleText(currentRunAppleCount, availableAppleCount, lifetimeAppleCount);
     }
 
     public void BuyUpgrade(int cost)
     {
-        totalAppleCount -= cost;
-        Actions.UpdateAppleText(appleCount, totalAppleCount);
+        availableAppleCount -= cost;
+        Actions.UpdateAppleText(currentRunAppleCount, availableAppleCount, lifetimeAppleCount);
     }
 
     public void Results()
@@ -90,9 +93,10 @@ public class ScoreManager : MonoBehaviour
         }
         TimeSpan runTimeSpan = TimeSpan.FromSeconds(runTime);
 
-        Actions.UpdateResultsText(runTimeSpan, bestTime, newBestRun, appleCount);
+        Actions.UpdateResultsText(runTimeSpan, bestTime, newBestRun, currentRunAppleCount);
+        Actions.UpdateAttemptText(attemptNumber);
 
-        newBestRun = false; 
+        newBestRun = false;
     }
 
     public float GetBestRun()
@@ -109,15 +113,24 @@ public class ScoreManager : MonoBehaviour
 
     public int GetTotalAppleCount()
     {
-        return totalAppleCount;
+        return availableAppleCount;
     }
 
-    public void SetTotalAppleCount(int value)
+    public int GetLifetimeAppleCount()
     {
-        if (value >= 0)
-            totalAppleCount = value;
-        else
-            totalAppleCount = 0;
+        return lifetimeAppleCount;
+    }
+
+    public void SetTotalAppleCount(int AvailableCount, int LifetimeCount)
+    {
+        if (AvailableCount >= 0)
+            availableAppleCount = AvailableCount;
+
+        lifetimeAppleCount = LifetimeCount;
+
+        //Debug.Log($"Set Total Apple Count: {availableAppleCount}/ Lifetime apple count: {lifetimeAppleCount}");
+
+        Actions.UpdateAppleText(currentRunAppleCount, availableAppleCount, lifetimeAppleCount);
     }
 
     public int GetAttemptCount()
@@ -128,5 +141,6 @@ public class ScoreManager : MonoBehaviour
     public void SetAttempt(int attempt)
     {
         attemptNumber = attempt;
+        Actions.UpdateAttemptText(attemptNumber);
     }    
 }

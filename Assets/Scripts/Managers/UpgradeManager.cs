@@ -11,6 +11,7 @@ public class UpgradeManager : MonoBehaviour
 
     [Header("Health & Stamina Upgrades")]
     public UpgradeUI[] upgradeAssets;
+    internal int totalCost;
 
     [Header("Player Components")]
     [SerializeField] private CircleCollider2D playerCollider;
@@ -49,6 +50,7 @@ public class UpgradeManager : MonoBehaviour
     {
         if (CanPurchaseUpgrade(upgradeAsset))
         {
+            Actions.OnPlaySFX("Upgrade");
             scoreManager.BuyUpgrade(upgradeAsset.cost);
 
             // Add to the list of purchased upgrades
@@ -133,5 +135,15 @@ public class UpgradeManager : MonoBehaviour
             upgradeAsset.cost = upgradeAsset.baseCost;
 
         upgrade.costText.text = upgradeAsset.cost.ToString();  
+    }
+
+    public int GetTotalCost()
+    {
+        foreach(UpgradeAsset upgrade in purchasedUpgrades)
+        {
+            totalCost += upgrade.cost;
+        }
+
+        return totalCost;
     }
 }

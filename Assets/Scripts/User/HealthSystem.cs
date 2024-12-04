@@ -9,7 +9,8 @@ public class HealthSystem : MonoBehaviour
     [Header("UI Stats")]
     [SerializeField] private GameObject[] stamina;
     [SerializeField] private Image staminaImage;
-    [SerializeField] private TMP_Text healthText;
+    [SerializeField] private Image healthFillImage;
+    [SerializeField] private Image[] healthIcons;
 
     // PlayerUpgrades
     [Header("Upgrades")]
@@ -29,19 +30,26 @@ public class HealthSystem : MonoBehaviour
     private int curHealth;
     private float staminaDrain;
 
-    [Header("Player Collider")]
+    [Header("Player")]
     private CircleCollider2D playerCollider;
+    private PlayerController playerController;
 
     [Header("Damage Flicker Settings")]
-    public int flickerAmount = 3;
-    public float flickerDuration = 0.1f;
-    public Color flickerColor = Color.red;
+    [SerializeField] private int flickerAmount = 3;
+    [SerializeField] private float flickerDuration = 0.1f;
+    [SerializeField] private Color damageColor = Color.red;
+    [SerializeField] private Color staminaDrainColor;
     [SerializeField] private SpriteRenderer[] playerSprites;
+    private bool staminaHurt;
+
+    [Header("Spawner / Drain control")]
+    [SerializeField] private Spawner spawner;
 
     public void Awake()
     {
         playerSprites = GetComponentsInChildren<SpriteRenderer>();
         playerCollider = GetComponent<CircleCollider2D>();
+        playerController = GetComponent<PlayerController>();
     }
 
     private void Start()
@@ -51,8 +59,11 @@ public class HealthSystem : MonoBehaviour
 
     public void Update()
     {
-        if (GameManager.instance.isPlaying && !GameManager.instance.gameIsEndless)
-            StaminaDrain();
+        if (GameManager.instance.isPlaying && !GameManager.instance.gameIsEndless && spawner.spawnedFirstObstacle)
+        {
+            if(playerController.isMovingLeft || playerController.isMovingRight || Time.timeScale == 1.5)
+                StaminaDrain();
+        }
     }
 
     #region EnableDisable
@@ -83,14 +94,24 @@ public class HealthSystem : MonoBehaviour
     private void StaminaDrain()
     {
         float drainSpeedMultiplier = 0.1f;  // Adjust this value to control the drain rate
+        float timeMultiplier = 1;           // Adjust this value to control the drain rate
 
         if (staminaImage.fillAmount > 0)
         {
-            staminaImage.fillAmount -= staminaDrain * drainSpeedMultiplier * Time.deltaTime;
+            if (Time.timeScale == 1.5)
+            {
+                if(!playerController.isMovingLeft || !playerController.isMovingRight)
+                    timeMultiplier =  0.5f;
+                else
+                    timeMultiplier = 0.75f;
+            }
+
+            staminaImage.fillAmount -= staminaDrain * drainSpeedMultiplier * (Time.deltaTime * timeMultiplier);
 
             // If stamina hits zero, take damage but if the current health is greater than zero fill the stamina bar back to 1
             if (staminaImage.fillAmount <= 0)
             {
+                staminaHurt = true;
                 TakeDamage();
                 if (curHealth > 0)
                     staminaImage.fillAmount = 1;
@@ -104,8 +125,19 @@ public class HealthSystem : MonoBehaviour
     public void TakeDamage()
     {
         curHealth--;
-        healthText.text = $"x {curHealth}";
-        Actions.OnPlaySFX("Obstacle");
+
+        for (int i = curHealth; i < maxHealth; i++)
+        {
+            healthIcons[i].color = new Color32(120,120,120, 255);
+        }
+
+        if (staminaHurt)
+        {
+            Actions.OnPlaySFX("Stamina");
+        }
+        else
+            Actions.OnPlaySFX("Obstacle");
+
         StartCoroutine(DamageFlicker());
     }
 
@@ -115,7 +147,13 @@ public class HealthSystem : MonoBehaviour
     {
         staminaImage.fillAmount = 1;
         curHealth = maxHealth;
-        healthText.text = $"x {curHealth}";
+
+        for (int i = 0; i < maxHealth; i++)
+        {
+            healthIcons[i].color = Color.white;
+        }
+
+        //healthFillImage.fillAmount = (float)curHealth / (float)maxHealth;
     }
 
     // Updates Stamina visibility based on if the game is endless or not
@@ -146,20 +184,29 @@ public class HealthSystem : MonoBehaviour
     private IEnumerator DamageFlicker()
     {
         playerCollider.enabled = false;
+        Color damageFlickerColor;
+
+        if (staminaHurt)
+        {
+            damageFlickerColor = staminaDrainColor;
+            staminaHurt = false;
+        }
+        else
+            damageFlickerColor = damageColor;
+
 
         for (int i = 0; i < flickerAmount; i++)
         {
             foreach (SpriteRenderer sprite in playerSprites)
             {
-                sprite.color = flickerColor;
+                sprite.color = damageFlickerColor;
             }
-
-            yield return new WaitForSeconds(flickerDuration);
+            yield return new WaitForSecondsRealtime(flickerDuration);
             foreach (SpriteRenderer sprite in playerSprites)
             {
                 sprite.color = Color.white;
             }
-            yield return new WaitForSeconds(flickerDuration / 2);
+            yield return new WaitForSecondsRealtime(flickerDuration / 2);
         }
         if (curHealth <= 0)
             Actions.OnGameOver();
@@ -172,6 +219,12 @@ public class HealthSystem : MonoBehaviour
     {
         staminaDrain = baseStaminaDrain;
         maxHealth = baseMaxHealth;
+
+        for (int i = 0; i < maxHealth; i++)
+        {
+            healthIcons[i].color = new Color(255, 255, 255, 255);
+        }
+
         playerSprites[0].sprite = baseHealthSprite;
         playerSprites[1].sprite = baseStaminaSprite;
     }
@@ -189,9 +242,9 @@ public class HealthSystem : MonoBehaviour
         {
             curStaminaUpgrade = upgrade;
             SetStaminaDrain(upgrade.newStats);
-        }    
+        }
     }
-   
+
     private float GetStaminaDrain()
     { return staminaDrain; }
 

@@ -17,12 +17,19 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioControl musicControl;
     [SerializeField] private AudioControl masterControl;
 
-    [Header("Audio Clips")]
+    [Header("Background Clips")]
     [SerializeField] private AudioClip mainClip;
     [SerializeField] private AudioClip gameplayClip;
-    [SerializeField] private AudioClip sfxCollectClip;
+
+    [Header("SFX Clips")]
+    [SerializeField] private AudioClip sfxAppleCollectClip;
+    [SerializeField] private AudioClip sfxEnergyCollectClip;
+    [SerializeField] private AudioClip sfxEnergyUseClip;
     [SerializeField] private AudioClip sfxCrashClip;
+    [SerializeField] private AudioClip sfxStaminaDrainedClip;
     [SerializeField] private AudioClip sfxVictoryClip;
+    [SerializeField] private AudioClip sfxUpgradeClip;
+    [SerializeField] private AudioClip sfxSelectionClip;
 
 
     public void Start()
@@ -33,6 +40,7 @@ public class SoundManager : MonoBehaviour
         SetVolume(musicControl.mixer, musicControl.audioImage.fillAmount);
         SetVolume(masterControl.mixer, masterControl.audioImage.fillAmount);
     }
+
 
     #region EnableDisable
     private void OnEnable()
@@ -69,9 +77,19 @@ public class SoundManager : MonoBehaviour
         switch (type)
         {
             case "Victory": sfxSource.PlayOneShot(sfxVictoryClip, 1f); break;
-            case "Collection": sfxSource.PlayOneShot(sfxCollectClip, 1f); break;
+            case "AppleCollection": sfxSource.PlayOneShot(sfxAppleCollectClip, 1f); break;
+            case "EnergyCollection": sfxSource.PlayOneShot(sfxEnergyCollectClip, 1f); break;
+            case "EnergyUsed": sfxSource.PlayOneShot(sfxEnergyUseClip, 1f); break; // Changed "OnUseEnergy" to "EnergyUsed
             case "Obstacle": sfxSource.PlayOneShot(sfxCrashClip, 1f); break;
+            case "Stamina": sfxSource.PlayOneShot(sfxStaminaDrainedClip, 1f); break;
+            case "Upgrade": sfxSource.PlayOneShot(sfxUpgradeClip, 1f); break;
+            default: Debug.LogError($"SFX for '{type}' not recognized."); break;
         }
+    }
+
+    public void PlaySelectionSFX()
+    {
+        sfxSource.PlayOneShot(sfxSelectionClip, 1f);
     }
 
     #region VolumeControls
@@ -96,9 +114,6 @@ public class SoundManager : MonoBehaviour
     {
         control.audioImage.fillAmount = Mathf.Clamp(control.audioImage.fillAmount + changeAmount, 0f, 1f);
         SetVolume(control.mixer, control.audioImage.fillAmount);
-
-        if (control.audioImage.fillAmount <= 1f)
-            Debug.Log("Its at 1");
 
         control.increaseButton.interactable = control.audioImage.fillAmount <= 1f;
         control.decreaseButton.interactable = control.audioImage.fillAmount >= 0.0001f;

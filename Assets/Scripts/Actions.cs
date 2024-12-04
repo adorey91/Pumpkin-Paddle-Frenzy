@@ -9,6 +9,8 @@ public static class Actions
     // Player Actions - Apple Collection, change player sprite visibility, player hurt, reset upgrade and player health stats
     public static Action<string> AppleCollection;
     public static Action<string> ChangeSpriteVisibility;
+    public static Action EnergyCollection;
+    public static Action OnUseEnergy;
     public static Action OnPlayerHurt;
     public static Action ResetStats;
 
@@ -26,16 +28,16 @@ public static class Actions
     // UI Actions
     public static Action OnScreenLoad;
     public static Action<int> UpdateAttemptText;
-    public static Action<int, int> UpdateAppleText;
+    public static Action<int, int, int> UpdateAppleText;
     public static Action<TimeSpan, TimeSpan, bool, int> UpdateResultsText;
     public static Action<TimeSpan> UpdateMenuBestRun;
     public static Action<float> SpeedChange;
-    public static Action<int> LevelChange;
 
     // Spawnable Actions
     public static Action<PoolType> OnSpawn;
-    public static Action<PoolType, GameObject> OnReturn;
+    public static Action<PoolType, GameObject, bool> OnReturn;
     public static Action ReturnAllToPool;
+    public static Action<float> ForceSpawn;
 
     // Music Actions
     public static Action<string> OnPlaySFX;

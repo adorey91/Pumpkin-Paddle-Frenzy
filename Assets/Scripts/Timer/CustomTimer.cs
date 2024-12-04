@@ -3,21 +3,21 @@ using UnityEngine;
 public class CustomTimer
 {
     public float duration;
-    public float elapedTime = 0f;
+    public float elapsedTime = 0f;
     public bool isRunning = false;
 
 
-    public CustomTimer(float duration)
+    public CustomTimer(float newDuration)
     {
-        this.duration = duration;
-        this.elapedTime = 0f;
+        this.duration = newDuration;
+        this.elapsedTime = 0f;
         this.isRunning = false;
     }
 
-    public void StartTimer(float duration)
+    public void StartTimer(float newDuration)
     {
-        elapedTime = 0;
-        this.duration = duration;
+        elapsedTime = 0;
+        this.duration = newDuration;
         isRunning = true;
     }
 
@@ -26,8 +26,8 @@ public class CustomTimer
         if (!isRunning)
             return false;
 
-        elapedTime += deltaTime;
-        if (elapedTime >= duration)
+        elapsedTime += deltaTime;
+        if (elapsedTime >= duration)
         {
             isRunning = false;
             return true;
@@ -35,9 +35,16 @@ public class CustomTimer
         return false;
     }
 
+    public float GetRemainingTime()
+    {
+        if (!isRunning)
+            return 0;
+
+        return Mathf.Max(duration - elapsedTime, 0);
+    }
+
     public void ResetTimer()
     {
-        elapedTime = 0;
-        isRunning = false;
+        StartTimer(duration);
     }
 }
