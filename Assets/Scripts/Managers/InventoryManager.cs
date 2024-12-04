@@ -118,7 +118,7 @@ public class InventoryManager : MonoBehaviour
         SetEnergyButtonState(false);
 
         energyTimer.StartTimer(energyDuration);
-        Debug.Log($"Timer Started: {energyTimer.isRunning}, Duration: {energyTimer.duration}");
+        //Debug.Log($"Timer Started: {energyTimer.isRunning}, Duration: {energyTimer.duration}");
     }
 
     // Stop using energy, sets everything back to normal

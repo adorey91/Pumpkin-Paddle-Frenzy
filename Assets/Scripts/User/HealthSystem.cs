@@ -101,7 +101,9 @@ public class HealthSystem : MonoBehaviour
             if (Time.timeScale == 1.5)
             {
                 if(!playerController.isMovingLeft || !playerController.isMovingRight)
-                    timeMultiplier =  0.75f;
+                    timeMultiplier =  0.5f;
+                else
+                    timeMultiplier = 0.75f;
             }
 
             staminaImage.fillAmount -= staminaDrain * drainSpeedMultiplier * (Time.deltaTime * timeMultiplier);
