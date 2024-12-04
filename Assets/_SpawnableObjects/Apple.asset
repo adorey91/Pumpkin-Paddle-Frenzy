@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: Apple
   m_EditorClassIdentifier: 
   type: 1
-  speed: 1
+  speed: 1.5
   size: 10
   collectableValue: 1
+  minXspawn: -7.5
+  maxXspawn: 7.5
+  kayakXminSpawn: 0
+  kayakXmaxSpawn: 0
