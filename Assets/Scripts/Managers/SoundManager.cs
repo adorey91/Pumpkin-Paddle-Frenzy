@@ -79,7 +79,7 @@ public class SoundManager : MonoBehaviour
             case "Victory": sfxSource.PlayOneShot(sfxVictoryClip, 1f); break;
             case "AppleCollection": sfxSource.PlayOneShot(sfxAppleCollectClip, 1f); break;
             case "EnergyCollection": sfxSource.PlayOneShot(sfxEnergyCollectClip, 1f); break;
-                case "EnergyUsed": sfxSource.PlayOneShot(sfxEnergyUseClip, 1f); break; // Changed "OnUseEnergy" to "EnergyUsed
+            case "EnergyUsed": sfxSource.PlayOneShot(sfxEnergyUseClip, 1f); break; // Changed "OnUseEnergy" to "EnergyUsed
             case "Obstacle": sfxSource.PlayOneShot(sfxCrashClip, 1f); break;
             case "Stamina": sfxSource.PlayOneShot(sfxStaminaDrainedClip, 1f); break;
             case "Upgrade": sfxSource.PlayOneShot(sfxUpgradeClip, 1f); break;
