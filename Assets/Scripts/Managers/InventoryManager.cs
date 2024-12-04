@@ -23,9 +23,10 @@ public class InventoryManager : MonoBehaviour
     private bool usingEnergy = false;
 
 
-    private void Start()
+    private void Awake()
     {
         energyAmount = initialEnergyAmount;
+        UpdateEnergyUI();
     }
 
     private void OnEnable()
