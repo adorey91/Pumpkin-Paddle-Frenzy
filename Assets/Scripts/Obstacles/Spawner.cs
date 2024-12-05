@@ -7,8 +7,11 @@ using UnityEngine.UI;
 public class Spawner : MonoBehaviour
 {
     // Timers for spawning and recalculating
-    private CustomTimer obstacleSpawnTimer; // used to count how long until next spawn
-    private CustomTimer recalculateTimer; // used to recalculate spawning speeds/spawn values 
+    [Header("Timers for Spawning & Recalculating")]
+    //private CustomTimer obstacleSpawnTimer; // used to count how long until next spawn
+    [SerializeField] private CustomTimerSO obstacleSpawnTimer; // used to count how long until next spawn
+    //private CustomTimer recalculateTimer; // used to recalculate spawning speeds/spawn values 
+    [SerializeField] private CustomTimerSO recalculateTimer; // used to recalculate spawning speeds/spawn values
 
     [Header("Spawning Base Values")]
     [SerializeField] private float obstacleSpawnTime = 5f; // time between spawns
@@ -43,10 +46,6 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
-        // Set up the timers
-        obstacleSpawnTimer = new CustomTimer(obstacleSpawnTime);
-        recalculateTimer = new CustomTimer(calculateTime);
-
         // Get the winning level from the game manager
         winningLevel = GameManager.instance.winningLevel;
 
