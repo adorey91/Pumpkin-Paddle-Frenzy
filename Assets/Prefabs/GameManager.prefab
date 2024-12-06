@@ -2825,11 +2825,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5042364509956302486}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -70.1, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 150, y: 150}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &3655843317901955740
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -18241,7 +18241,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 50, y: 0}
-  m_SizeDelta: {x: 150, y: 150}
+  m_SizeDelta: {x: 175, y: 150}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &1048160635591632144
 CanvasRenderer:
@@ -18297,7 +18297,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7633441328771349784}
         m_TargetAssemblyTypeName: InventoryManager, Assembly-CSharp
-        m_MethodName: UseEnergy
+        m_MethodName: OnEnergyUsed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

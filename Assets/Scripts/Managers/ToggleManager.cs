@@ -8,14 +8,35 @@ public class ToggleManager : MonoBehaviour
     public ToggleSync onScreenControlToggle;
     public ToggleSync pauseButtonToggle;
 
+    private bool keyboardDetected;
+
     private void Start()
     {
         CheckForKeyboard();
+
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            Debug.Log("Running on Android");
+        }
+        else if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            Debug.Log("Running on Windows PC");
+        }
     }
 
     public void CheckForKeyboard()
     {
-        bool keyboardDetected = InputSystem.GetDevice<Keyboard>() != null;
+        switch (Application.platform)
+        {
+            case RuntimePlatform.WindowsPlayer:
+                Debug.Log("Running on Windows Player");
+                keyboardDetected = true;
+                break;
+            case RuntimePlatform.Android:
+                Debug.Log("Running on Android");
+                keyboardDetected = false;
+                break;
+        }
 
         SetOnScreenControlsState(!keyboardDetected);
         SetPauseButtonState(!keyboardDetected);

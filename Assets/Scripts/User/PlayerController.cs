@@ -127,14 +127,14 @@ public class PlayerController : MonoBehaviour
     {
         isMovingLeft = true;
         isMovingRight = false;
-        playerMovement = Vector2.Lerp(playerMovement, new Vector2(-1, 0), decelerationFactor * Time.deltaTime);
+        playerMovement = new Vector2(-1,0);
     }
 
     public void MoveRightButtonPress()
     {
         isMovingRight = true;
         isMovingLeft = false;
-        playerMovement = Vector2.Lerp(playerMovement, new Vector2(1, 0), decelerationFactor * Time.deltaTime);
+        playerMovement = new Vector2(1,0);
     }
 
     // Optional: if you want to stop movement when the button is released
