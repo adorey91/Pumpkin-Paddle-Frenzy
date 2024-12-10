@@ -139,17 +139,9 @@ public class ObjectPoolManager : MonoBehaviour
     }
 
 
-    // Spawns an INACTIVE object from a designated pool, sets the rotation and position
+    // Spawns an inactive object from a designated pool, sets the rotation and position
     private GameObject SpawnFromPool(PoolType type)
     {
-        //float leftSpawnX = -6f;
-        //float rightSpawnX = 6f;
-        //float randomXSpawnMin = -6.7f;
-        //float randomXSpawnMax = 6.7f;
-
-
-        //float randomX = Random.Range(randomXSpawnMin, randomXSpawnMax);
-
         if (!poolDictionary.ContainsKey(type))
         {
             Debug.LogWarning("Pool with tag " + type + " doesn't exist");

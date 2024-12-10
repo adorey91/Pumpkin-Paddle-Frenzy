@@ -186,6 +186,7 @@ public class Spawner : MonoBehaviour
 
     private void PickSpawn()
     {
+        // this value decides if a collectable or obstacle is spawned
         float randomValue = Random.Range(0f, 1f);
 
         // Spawn collectable
@@ -209,7 +210,6 @@ public class Spawner : MonoBehaviour
             Actions.OnSpawn(PoolType.Obstacle);
             canSpawnKayak = true;
         }
-
     }
     #endregion
 
